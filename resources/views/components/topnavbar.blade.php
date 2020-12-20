@@ -168,11 +168,11 @@
 
             <div class="dropdown-menu dropdown-menu-right mt-3">
                 {{-- <a class="dropdown-item" href="{{route('profile')}}">Profile</a> --}}
-                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign out</a>
                 <a class="dropdown-item" href="{{ route('profile-update') }}" >Change Password</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" uk-hidden>
                     @csrf
-                  </form>
+                </form>
+                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign out</a>
             </div>
         </div>
     </div>

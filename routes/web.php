@@ -8,6 +8,8 @@ use App\Http\Controllers\SupportController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\UploadImages;
+use App\Http\Controllers\UploadImagesController;
 use App\Models;
 use Illuminate\Support\Facades\Route;
 /*
@@ -102,6 +104,8 @@ Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(functio
 	Route::get('/edit/{id}', [UserController::class, 'edit'])->name("user-edit");
 	Route::post('/edit/{id}', [UserController::class, 'update'])->name("user-update");
 	Route::get('/delete/{id}', [UserController::class, 'delete'])->name("user-delete");
+	Route::get('/upload/{id}', [UploadImagesController::class, 'index'])->name('uploadimage-view');
+	Route::post('/upload', [UploadImagesController::class, 'store'])->name('image-upload');
 });
 Route::view('profile', 'profile.edit')
 	->name('profile.edit')
