@@ -1,0 +1,25 @@
+id: 16305
+name: entrytrakr
+
+environments:
+    production:
+        memory: 1024
+        cli-memory: 512
+        domain: app.entrytrakr.com
+        runtime: php-7.4
+        database: entrytrakr
+        build:
+            - 'composer install --no-dev'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run prod && rm -rf node_modules'
+        
+    staging:
+        memory: 1024
+        cli-memory: 512
+        runtime: php-7.4
+        database: entrytrakr
+        build:
+            - 'composer install'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run dev && rm -rf node_modules'
+
