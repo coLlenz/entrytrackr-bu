@@ -1,12 +1,13 @@
 TODO
 - Manual Signin not showing on dashboard
+
 - Add Tab
 	- User Management for Customers
 
-Change heading on Pier
-- Currently Signed In by Visitor Type
+Change heading on Pie
+- "Currently Signed In by Visitor Type"
 
-Add Automatic Signed in features after 12 Hours
+Add Automatic Signed out features after 12 Hours
 
 Hide User Account tab if customer
 
@@ -14,4 +15,6 @@ Change order from top menu
 
 Change Account Name on top menu
 
-Full Buttons with entrytrakr purple
+Fill Buttons with entrytrakr purple
+
+Default Trakrid should be phone number
