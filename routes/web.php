@@ -101,7 +101,7 @@ Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(functio
 	Route::post('/add', [UserController::class, 'create'])->name("user-store");
 	Route::get('/edit/{id}', [UserController::class, 'edit'])->name("user-edit");
 	Route::post('/edit/{id}', [UserController::class, 'update'])->name("user-update");
-	Route::get('/delete/{id}', [UserController::class, 'destroy'])->name("user-delete");
+	Route::get('/delete/{id}', [UserController::class, 'delete'])->name("user-delete");
 });
 Route::view('profile', 'profile.edit')
 	->name('profile.edit')
