@@ -50,13 +50,23 @@ class DashBoard extends Model
     public function getdast_pie(){
         $counts = DB::table('trakrs')
                  ->select('trakr_type_id', DB::raw('count(*) as total'))
+                 ->where([
+                     'checked_in_status' =>0,
+                     'user_id' => auth()->user()->id
+                 ])
                  ->groupBy('trakr_type_id')
                  ->get();
         return $counts;
     }
     
     public function total_sign_in(){
-        $total_signin = DB::table('trakrs')->where('checked_in_status' , 0)->orderBy('trakrs.check_in_date','desc')->get();
+        $total_signin = DB::table('trakrs')
+        ->where([
+            'checked_in_status' =>0,
+            'user_id' => auth()->user()->id
+        ])
+        ->orderBy('trakrs.check_in_date','desc')
+        ->get();
         $total_count = $total_signin->count();
         return $total_count;
     }
