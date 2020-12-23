@@ -5,7 +5,7 @@
     <h1>trakrID</h1>
     <div class="top-right-button-container">
         <button type="button" class="btn btn-primary btn-lg top-right-button  mr-1"
-    onclick="window.location.href='{{route("trakr-view",auth()->user()->uuid)}}'">CheckIn Page</button>
+    onclick="window.location.href='{{route("trakr-view",auth()->user()->uuid)}}'">Check In Page</button>
         <button type="button" class="btn btn-primary btn-lg top-right-button  mr-1"
     onclick="window.location.href='{{route("trakr-add")}}'">ADD NEW</button>
     </div>

@@ -79,9 +79,10 @@ Route::prefix('templates')->middleware(['auth', 'verified'])->group(function () 
 });
 Route::prefix('trakr')->group(function () {
 	Route::get('/{id}/visitor-checkin', [TrakrViewController::class, 'index'])->name("trakr-view");
-	Route::post('/{id}/visitor-checkin', [TrakrViewController::class, 'create'])->name("trakr-post");
-	Route::post('/trakrid/check', [TrakrViewController::class, 'trakrid'])->name("trakrid-post");
+	Route::post('/trakrid/check', [TrakrViewController::class, 'trakrid'])->name("trakrid-post"); //for simple check in
+	Route::post('/{id}/visitor-checkin', [TrakrViewController::class, 'create'])->name("trakr-post"); //for manual check in new visitors
 	Route::post('/trakrid/checkout', [TrakrViewController::class, 'trakrcheckout'])->name("trakrid-signout");
+	Route::post('/trakr/visiting_who', [TrakrViewController::class, 'visitingWho'])->name("visiting-who");
 });
 
 Route::prefix('support')->middleware(['auth', 'verified'])->group(function () {

@@ -58,7 +58,7 @@
                                 <div class="col-md-12">
                                     <div class="card mt-2">
                                         <div class="card-body text-left">
-                                            <h5 class="card-title">Visitors Chart Currently Signed-in</h5>
+                                            <h5 class="card-title">Currently Signed In by Visitor Type</h5>
                                             <div class="chart-container chart">
                                                 <canvas id="pieChart"></canvas>
                                             </div>
@@ -270,7 +270,7 @@
         var myChart = new Chart(pieChart, {
           type: "PieWithShadow",
           data: {
-            labels: ["Visitors", "Contractors" , "Employees"],
+            labels: ["Visitors",  "Employees" , "Contractors"],
             datasets: [
               {
                 label: "",
