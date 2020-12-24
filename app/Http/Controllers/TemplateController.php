@@ -12,10 +12,16 @@ class TemplateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $templates = Template::where("user_id", auth()->user()->id)->get();
         return view('template.index',compact("templates"));
+    }
+    
+    public function test(Request $request){
+        echo "<pre>";
+            print_r($request->all());
+        echo "</pre>";
+        exit();
     }
 
     /**
@@ -34,8 +40,7 @@ class TemplateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $this->validate($request, [
             'content' => 'required',
             'name' => 'required',
@@ -113,6 +118,10 @@ class TemplateController extends Controller
     }
     public function formstore(Request $request)
     {
+        echo "<pre>";
+            print_r($request->all());
+        echo "</pre>";
+        exit();
         // dd($request->all());
         $this->validate($request, [
             'content' => 'required',
