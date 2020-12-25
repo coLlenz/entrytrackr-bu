@@ -26,7 +26,7 @@ class SettingsController extends Controller
             $new_admin->contactName = $request->admin_contact_name;
             $new_admin->email = $request->admin_email;
             $new_admin->password = Hash::make($request->admin_password);
-            $new_admin->is_admin = 1;
+            $new_admin->is_admin = 0;
             
             if ($new_admin->save()) {
                 return response()->json(['msg' => 'New admin added']);

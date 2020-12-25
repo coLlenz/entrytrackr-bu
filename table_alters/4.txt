@@ -1,0 +1,44 @@
+ALTER TABLE `templates` DROP `user_id`, DROP `status`;
+
+CREATE TABLE `template_copy` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `content` longtext NOT NULL,
+  `status` tinyint(1) NOT NULL COMMENT '0-disabled,1-activated',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `template_copy` ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `template_copy` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; COMMIT;
+
+// NEW
+ALTER TABLE `templates` CHANGE `content` `content_html` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+
+ALTER TABLE `templates` ADD `content_json` LONGTEXT NOT NULL AFTER `content_html`;
+
+ALTER TABLE `templates` CHANGE `template_type` `template_type` BOOLEAN NOT NULL COMMENT '0-questionnaire, 1-Notifications';
+
+ALTER TABLE `templates` CHANGE `content_json` `content_json` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
+
+ALTER TABLE `template_copy` CHANGE `content` `content_html` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
+
+ALTER TABLE `template_copy` ADD `content_json` LONGTEXT NULL AFTER `content_html`;
+
+ALTER TABLE `template_copy` ADD `template_type` INT NOT NULL AFTER `content_json`;
+
+ALTER TABLE `template_copy` CHANGE `template_type` `template_type` INT(11) NOT NULL COMMENT '0-questionnaire, 1-Notifications ';
+
+ALTER TABLE `templates` ADD `user_id` INT NULL AFTER `id`;
+
+ALTER TABLE `templates` DROP COLUMN `user_id`;
+
+ALTER TABLE `templates` CHANGE `content_html` `content_html` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
+
+ALTER TABLE `template_copy` CHANGE `content_html` `content_html` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
+
+ALTER TABLE `template_copy` CHANGE `status` `status` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '0-disabled,1-activated';
+
+ALTER TABLE `templates` CHANGE `name` `title` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;

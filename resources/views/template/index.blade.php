@@ -14,60 +14,58 @@
 </div>
 <div class="card">
     <div class="card-body">
-        <table class="data-table data-table-feature">
+        <table class="table ">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Type</th>
                     <th>Date Created</th>
                     <th>Date Last Updated</th>
-                    <th></th>
+                    <th class="text-center" >Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($templates as $template )
+                @if(!empty($templates))
+                    @foreach ($templates as $template )
                     <tr>
-                        
-                    <td>{{$template->name}} @if($template->status)<span class="badge badge-pill badge-primary mb-1">Active</span> @endif</td>
-                        <td>{{$template->template_type}}</td>
-                        <td>{{$template->created_at->format('M-d-Y')}}</td>
-                        <td>{{$template->updated_at->format('M-d-Y')}}</td>
-                        <td>
-                            <button class="btn btn-outline-primary dropdown-toggle mb-1" type="button"
-                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                        Actions
-                            </button>
-                            @if($template->template_type == 'Notification')
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                @if($template->status)
-                                <a class="dropdown-item" href="{{route("deactivate",$template->id)}}">Deactivate</a>
-                                @else
-                                <a class="dropdown-item" href="{{route("activate",$template->id)}}">Activate</a>
-                                @endif
-                                <a class="dropdown-item" href="{{route("notification-edit",$template->id)}}">Edit</a>
-                                <a class="dropdown-item" href="{{route("template-delete",$template->id)}}">Delete</a>
-                            </div>
+                        <td>{{$template->title}} @if($template->status)<span class="badge badge-pill badge-primary mb-1">Active</span> @endif</td>
+                        <td>{{$template->template_type == 1 ? 'Notification/Alert' : 'Questionnaire' }}</td>
+                        <td>{{$template->created_at}}</td>
+                        <td>{{$template->updated_at}}</td>
+                        <td class="text-center">
+                        <button class="btn btn-outline-primary dropdown-toggle mb-1" type="button"
+                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            Actions
+                        </button>
+                        @if($template->template_type == 1)
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            @if($template->status)
+                            <a class="dropdown-item" href="{{route("deactivate",$template->id)}}">Deactivate</a>
                             @else
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                @if($template->status)
-                                <a class="dropdown-item" href="{{route("deactivate",$template->id)}}">Deactivate</a>
-                                @else
-                                <a class="dropdown-item" href="{{route("activate",$template->id)}}">Activate</a>
-                                @endif
-                                <a class="dropdown-item" href="{{route("form-edit",$template->id)}}">Edit</a>
-                                <a class="dropdown-item" href="{{route("template-delete",$template->id)}}">Delete</a>
-                            </div>
+                            <a class="dropdown-item" href="{{route("activate",$template->id)}}">Activate</a>
                             @endif
-                        </td>
-                    </tr>
+                            <a class="dropdown-item" href="{{route("notification-edit",$template->id)}}">Edit</a>
+                            <a class="dropdown-item" href="{{route("template-delete",$template->id)}}">Delete</a>
+                        </div>
+                        @else
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            @if($template->status)
+                            <a class="dropdown-item" href="{{route("deactivate",$template->id)}}">Deactivate</a>
+                            @else
+                            <a class="dropdown-item" href="{{route("activate",$template->id)}}">Activate</a>
+                            @endif
+                            <a class="dropdown-item" href="{{route("form-edit",$template->id)}}">Edit</a>
+                            <a class="dropdown-item" href="{{route("template-delete",$template->id)}}">Delete</a>
+                        </div>
+                        @endif
+                    </td>
+                </tr>
                 @endforeach
-                
-                
-            </div>
-
+            @endif
             </tbody>
         </table>
+        <p class="text-center">{{ (empty($templates) ? 'No records found.' : '') }}</p>
     </div>
 </div>
 @endsection
