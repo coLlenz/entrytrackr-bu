@@ -4,116 +4,120 @@ namespace App\Http\Controllers;
 
 use App\Models\Template;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
+use DB;
 class TemplateController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $templates = Template::where("user_id", auth()->user()->id)->get();
-        return view('template.index',compact("templates"));
+
+    public function index(){
+        if ( auth()->user()->is_admin ) {
+            $templates = Template::paginate(10);
+            return view('template.index')->with('templates' , $templates);
+        }
+        
+        $templates = DB::table('template_copy')->where('user_id' , auth()->user()->id)->paginate(10);
+        return view('template.index')->with('templates' , $templates);
+    }
+    
+    public function notificationcreate(){
+        //get all avaialable templates create by super admin
+        $templates = Template::all();
+        return view("template.notificationAdd")->with('templates' , $templates);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function notificationcreate()
-    {
-        return view("template.notificationAdd");
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $this->validate($request, [
-            'content' => 'required',
-            'name' => 'required',
+    public function save_new_notifications(Request $request){
+        
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'jsondata' => 'required',
         ]);
-
-        $trakr = Template::create([
-            "name" => $request->name,
-            "content"=> $request->content,
-            "template_type"=> "Notification",
-            "user_id"=>auth()->user()->id,
+        
+        if (!$validator->passes()) {
+            return response()->json(['status' => 'error' , 'form_validation' => $validator->errors()->all()] , 200);
+        }
+        
+        if ( auth()->user()->is_admin ) {
+            $template = new Template();
+            $template->title = $request->title;
+            $template->content_json = $request->jsondata;
+            $template->template_type = 1;
+            
+            if ( $template->save() ) {
+                return response()->json(['status' => 'success'] , 200);
+            }else{
+                return response()->json(['status' => 'error' , 'msg' => 'Error Saving template.'] , 200);
+            }
+            
+        }
+        
+        
+        $template = DB::table('template_copy')
+        ->insert([
+            'user_id' => auth()->user()->id,
+            'title' => $request->title,
+            'content_html' => '',
+            'content_json' => $request->jsondata,
+            'template_type' => 1
         ]);
-        return redirect()->route("template-index")->with('success', 'Notification Added Successfully');
-
+        
+        if ($template) {
+            return response()->json(['status' => 'success'] , 200);
+        }else{
+            return response()->json(['status' => 'error' , 'msg' => 'Error Saving template.'] , 200);
+        }
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Template  $template
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Template $template)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Template  $template
-     * @return \Illuminate\Http\Response
-     */
-    public function notificationedit(Template $id)
-    {
-        $template = $id; 
+    
+    public function notificationedit($template_id){
+        
+        if ( auth()->user()->is_admin ) {
+            $template = Template::findOrfail($template_id);
+            return view("template.notificationEdit", compact("template"));
+        }
+        
+        $template = DB::table('template_copy')->where(['id' => $template_id , 'user_id' => auth()->user()->id])->first();
         return view("template.notificationEdit", compact("template"));
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Template  $template
-     * @return \Illuminate\Http\Response
-     */
-    public function notificationupdate(Request $request, Template $id)
-    {
+    
+    public function notificationupdate(Request $request, $template_id){
+        //for super admin
+        if( auth()->user()->is_admin ){
+            $template = Template::findOrfail($template_id);
+            $template->title = $request->title;
+            $template->content_json = $request->jsondata;
+            $template->updated_at = date('Y-m-d H:i:s');
+            if ( $template->save() ) {
+                return response()->json(['status' => 'success'] , 200);
+            }else{
+                return response()->json(['status' => 'error'] , 200);
+            }
+        }
         
-        $this->validate($request, [
-            'content' => 'required',
-            'name' => 'required',
-        ]);
-         $id->update([
-            "name" => $request->name,
-            "content"=> $request->content,
-        ]);
-        return redirect()->route("template-index")->with('success', 'Notification Updated Successfully');
+        //for customer
+        $template = DB::table('template_copy')->where(['id' => $template_id , 'user_id' => auth()->user()->id])->update(
+            [
+                'title' => $request->title,
+                'content_json' => $request->jsondata,
+                'updated_at' => date('Y-m-d H:i:s')
+            ]
+        );
+        if ($template) {
+            return response()->json(['status' => 'success'] , 200);
+        }else{
+            return response()->json(['status' => 'error'] , 200);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Template  $template
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Template $template)
     {
         $template->delete();
         return redirect()->route("template-index")->with('success', 'Template Deleted Successfully');
     }
 
-    public function formcreate()
-    {
+    public function formcreate(){
         return view("template.formAdd");
     }
-    public function formstore(Request $request)
-    {
-        // dd($request->all());
+    
+    public function formstore(Request $request){
         $this->validate($request, [
             'content' => 'required',
             'name1' => 'required',
@@ -128,10 +132,8 @@ class TemplateController extends Controller
         return redirect()->route("template-index")->with('success', 'Form Added Successfully');
 
     }
-    public function formedit(Template $id)
-    {
-        // dd(simplexml_load_string($id->content));
-        $template = $id; 
+    public function formedit($template_id){
+        $template = DB::table('template_copy')->where(['id' => $template_id , 'user_id' => auth()->user()->id])->get();
         return view("template.formEdit", compact("template"));
     }
     public function formupdate(Request $request, Template $id)

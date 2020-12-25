@@ -72,7 +72,7 @@ Route::prefix('templates')->middleware(['auth', 'verified'])->group(function () 
 	Route::post('/form-edit/{id}', [TemplateController::class, 'formupdate'])->name("form-update");
 	Route::get('/activate/{id}', [TemplateController::class, 'activate'])->name("activate");
 	Route::get('/deactivate/{id}', [TemplateController::class, 'deactivate'])->name("deactivate");
-	Route::post('/add', [TemplateController::class, 'store'])->name("template-store");
+	Route::post('/add', [TemplateController::class, 'save_new_notifications'])->name("template-store");
 	Route::get('/edit/{template}', [TemplateController::class, 'edit'])->name("template-edit");
 	Route::post('/edit/{template}', [TemplateController::class, 'update'])->name("template-update");
 	Route::get('/delete/{template}', [TemplateController::class, 'destroy'])->name("template-delete");

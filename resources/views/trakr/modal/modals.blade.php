@@ -29,7 +29,7 @@
                 </div>
                 <div class="form-group">
                     <label for="phone" class="col-form-label">Phone #</label>
-                    <input type="text" class="form-control" name="phone" required>
+                    <input type="text" class="form-control" name="phoneNumber" required>
                     <div class="invalid-feedback">
                         <h3>Phone number is required.</h3>
                     </div>
@@ -77,21 +77,21 @@
                 @csrf
                 <div class="form-group">
                     <label for="first_name" class="col-form-label">First Name</label>
-                    <input type="text" class="form-control" name="first_name_checkout" required>
+                    <input type="text" class="form-control" name="first_name" required>
                     <div class="invalid-feedback">
                         <h3>First Name is require.</h3>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="last_name" class="col-form-label">Last Name</label>
-                    <input type="text" class="form-control" name="last_name_checkout" required>
+                    <input type="text" class="form-control" name="last_name" required>
                     <div class="invalid-feedback">
                         <h3>Last Name is require.</h3>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="last_name" class="col-form-label">Phone #</label>
-                    <input type="text" class="form-control" name="phoneNumber_checkout" required>
+                    <input type="text" class="form-control" name="phoneNumber" required>
                     <div class="invalid-feedback">
                         <h3>Phone Number is required.</h3>
                     </div>
@@ -107,6 +107,71 @@
     </div>
 </div>
 <script type="text/javascript">
+    $('#simple_checkin').on('click', function() {
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+            Swal.fire({
+            title: 'Provide your trakr ID',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Check In',
+            showLoaderOnConfirm: true,
+            preConfirm: (trakrid) => {
+                if (trakrid) {
+                    return fetch(`{{route('trakrid-post')}}` , {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        method: 'POST',
+                        body : JSON.stringify({trakrid:trakrid})
+                    })
+                    .then(response => {
+                        console.log(response);
+                        if (!response.ok) {
+                            throw new Error('Please input required field');
+                        }
+                        return response.json()
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage('Trakr ID not found');
+                    })
+                }else{
+                    Swal.showValidationMessage('Input data is required');
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (result.value.status == 'loggedin') {
+                        Swal.fire({
+                            title:'<strong> You already been signed in at </strong> <br/>',
+                            html : '<b>'+result.value.check_date+'</b>',
+                            allowOutsideClick : false,
+                            showCloseButton: true,
+                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> Great!',
+                            confirmButtonAriaLabel: 'Thumbs up, great!',
+                        })
+                    }else{
+                        Swal.fire({
+                            title: '<strong>Welcome, '+result.value.name+'</strong>',
+                            icon: 'success',
+                            allowOutsideClick : false,
+                            html:
+                            'You have successfully been signed in at <br />' +
+                            '<b>'+result.value.check_date+'</b>',
+                            showCloseButton: true,
+                            focusConfirm: false,
+                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> Great!',
+                            confirmButtonAriaLabel: 'Thumbs up, great!',
+                        })
+                    }
+                }
+            })
+    })
     // forms;
     let form = $('#form_checkin');
     let form2 = $('#form_checkout');
@@ -114,12 +179,41 @@
     $(form).on('submit' , function(e) {
         e.preventDefault();
         if (this.checkValidity()) {
-            Swal.showLoading();
             $.ajax({
                 url : form.attr('action'),
                 type: form.attr('method'),
                 data : form.serialize(),
                 success:function(response){
+                    if (response.status = 'has_record') {
+                        $('#checkinModal').modal('hide');
+                        Swal.fire({
+                            icon: 'info',
+                            title: '<strong>Existing record found</strong>',
+                            showCloseButton:false,
+                            allowOutsideClick: false,
+                            showCancelButton:true,
+                            cancelButtonText: 'Cancel',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Sign me in'
+                        }).then(confirm => {
+                            Swal.fire({
+                                title: 'Enter phone number for validation.',
+                                input: 'text',
+                                inputPlaceholder: 'Type here...',
+                                showCancelButton: false,
+                                showCloseButton: false,
+                                confirmButtonText: 'Submit',
+                                allowOutsideClick : false,
+                                inputValidator: (value) => {
+                                    if (!value) {
+                                        return 'Please provide your phone number.'
+                                    }
+                                },
+                            }).then(confirm=> {
+                                console.log(confirm);
+                            })
+                        })
+                    }
                     if (response.status == 'success') {
                         $('#checkinModal').modal('hide');
                         form[0].reset();
@@ -139,8 +233,6 @@
                             flowCheckpoint(response);
                         })
                     }
-                    // check possible notifications/alerts/questionaires
-                    
                 }
             })
         }
@@ -252,4 +344,7 @@
         // code block
         }
     }
+</script>
+<script type="text/javascript">
+
 </script>
