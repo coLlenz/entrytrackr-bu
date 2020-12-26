@@ -107,9 +107,18 @@ class TemplateController extends Controller
         }
     }
 
-    public function destroy(Template $template)
-    {
-        $template->delete();
+    public function destroy($template_id){
+        
+        if (auth()->user()->is_admin) {
+            $template = Template::findOrFail($template_id);
+            $template->delete();
+            return redirect()->route("template-index")->with('success', 'Template Deleted Successfully');
+        }
+        
+        $template = DB::table('template_copy')->where([
+            'user_id' => auth()->user()->id,
+            'id' => $template_id
+        ])->delete();
         return redirect()->route("template-index")->with('success', 'Template Deleted Successfully');
     }
 
@@ -149,30 +158,21 @@ class TemplateController extends Controller
         ]);
         return redirect()->route("template-index")->with('success', 'Form Updated Successfully');
     }
-    public function activate( Template $id)
-    {
-        if($id->template_type == "Notification"){
-            $template = Template::where("user_id",auth()->user()->id)->where("template_type","Notification")->where("status","1")->update([
-                "status"=> 0
-            ]);
-        }else{
-            $template = Template::where("user_id",auth()->user()->id)->where("template_type","Form")->where("status","1")->update([
-                "status"=> 0
-            ]);
+    public function activate($template_id){
+        //check existing active template
+        $active_template = DB::table('template_copy')->select('status' , 'id')->where(['user_id' => auth()->user()->id,'status' => 1])->first();
+        
+        if (!empty($active_template) && $active_template->status) {
+            DB::table('template_copy')->where([
+                'id' => $active_template->id
+            ])->update(['status' => 0 , 'updated_at' => date('Y-m-d H:i:s')]);
         }
         
-        $id->update([
-            "status"=> 1
-        ]);
-        
+        DB::table('template_copy')->where(['user_id' => auth()->user()->id , 'id' => $template_id])->update(['status' => 1]);
         return redirect()->route("template-index")->with('success', 'Template Activated Successfully');
     }
-    public function deactivate( Template $id)
-    {
-        $id->update([
-            "status"=> 0
-        ]);
-        
+    public function deactivate($tempalte_id){
+        DB::table('template_copy')->where('id' , $tempalte_id)->update(["status"=> 0]);
         return redirect()->route("template-index")->with('success', 'Template Deactivated Successfully');
     }
 }

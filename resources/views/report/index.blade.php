@@ -141,7 +141,7 @@
                                                 <td>{{$list->check_in_date}}</td>
                                                 <td>{{$list->check_out_date}}</td>
                                                 <td class="text-center">
-                                                    @if($list->status == 0)
+                                                    @if($list->assistance == 1)
                                                         <span class="badge badge-pill badge-primary">{{'Yes'}}</span>
                                                     @else
                                                         <span class="badge badge-pill badge-warning">{{'No'}}</span>

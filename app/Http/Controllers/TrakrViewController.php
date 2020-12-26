@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\TrakrView;
 use App\Models\Trakr;
 use App\Models\Template;
 use App\Models\User;
@@ -40,9 +38,27 @@ class TrakrViewController extends Controller
         if ($validator->passes()) {
             // check if existing data 
             $checking = $this->checkIfLoggedIn($request->all());
-            
-            if (!empty($checking) && !empty($checking['has_record'])) {
-                return response()->json(['status' => 'has_record' , 'check_date' => $this->carbonFormat($checking['check_date'])] , 200 );
+            if (isset($checking['has_record']) && $checking['has_record']) {
+                $visitor = Trakr::findOrFail($checking['visitor_id']);
+                $visitor->checked_in_status = 0;
+                $visitor->check_in_date = date('Y-m-d H:i:s');
+                $visitor->check_out_date = null;
+                $visitor->trakr_type_id = $request->visitor_type;
+                $formated_date = Carbon::parse($visitor->check_in_date)->format('d F Y g:i A');
+                
+                if ( !$visitor->save() ) {
+                    return response()->json(['status' => 'fail','msg' => 'There\'s a problem creating your record.'],200);
+                }
+                
+                return response()->json(
+                    [
+                        'status' => 'success',
+                        'msg' => 'Checked-In' , 
+                        'name' => $visitor->firstName , 
+                        'check_date' => $formated_date,
+                        'type_of_visitor' => $visitor->trakr_type_id,
+                        'trakrid' => $visitor->id
+                    ],200);
             }
             
             $trakr_new = new Trakr();
@@ -77,28 +93,6 @@ class TrakrViewController extends Controller
         }
     }
     
-    public function setUsernameAttribute($value)
-    {
-        $firstName = $value['firstName'];
-        $lastName = strtolower($value['lastName']);
-
-        $username = $firstName[0] . $lastName;
-
-        $i = 0;
-        while(Trakr::whereTrakrId($username)->exists())
-        {
-            $i++;
-            $username = $firstName[0] . $lastName . $i;
-        }
-
-        return $username;
-    }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function trakrid(Request $request){
         // SIMPLE CHECK IN
         $validator = Validator::make($request->all(), [
@@ -118,7 +112,15 @@ class TrakrViewController extends Controller
             //get updated data
             $check_in_data = Trakr::where('trakr_id' ,$request->trakrid)->first();
             $date = $this->carbonFormat($check_in_data->check_in_date);
-            return response()->json(['check_date' =>$date , 'name' => $check_in_data->firstName] , 200);
+            return response()->json(
+                [
+                    'check_date' =>$date , 
+                    'name' => $check_in_data->firstName,
+                    'status' => 'success',
+                    'msg' => 'Checked-In' , 
+                    'type_of_visitor' => $check_in_data->trakr_type_id,
+                    'trakrid' => $check_in_data->id
+                ] , 200);
         }else{
             return response()->json(['validation_error' => $validator->errors()->all()] , 200 );
         }
@@ -153,7 +155,12 @@ class TrakrViewController extends Controller
             $trakr->check_out_date = date('Y-m-d H:i:s');
             if ($trakr->save()) {
                 $updated_data = Trakr::select('check_out_date')->where('phoneNumber' , $request->phoneNumber)->first();
-                return response()->json(['status' => 'success' ,'name' => $trakr->firstName ,'check_date' => $this->carbonFormat($updated_data->check_out_date)] , 200 );
+                return response()->json(
+                    [
+                        'status' => 'success' ,
+                        'name' => $trakr->firstName ,
+                        'check_date' => $this->carbonFormat($updated_data->check_out_date)
+                    ] , 200 );
             }
         }else{
             // validation errors
@@ -171,6 +178,17 @@ class TrakrViewController extends Controller
         
         return response()->json(['status' => 'fail'] , 200);
     }
+    
+    public function business(Request $request){
+        $trakr = Trakr::findOrFail($request->trakrid);
+        $trakr->name_of_company = $request->name_of_business;
+        
+        if ($trakr->save()) {
+            return response()->json(['status' => 'success'] , 200);
+        }
+        
+        return response()->json(['status' => 'fail'] , 200);
+    }
 
     public function carbonFormat($date){
         return Carbon::parse($date)->format('d F Y g:i A');
@@ -179,7 +197,7 @@ class TrakrViewController extends Controller
     public function checkIfLoggedIn($condition){
         $returndata = [];
         $checker_query = Trakr::query();
-        $checker_query->select('checked_in_status' , 'check_in_date','check_out_date');
+        $checker_query->select('checked_in_status' , 'check_in_date','check_out_date' , 'id as visitor_id');
         
         
         // 
@@ -204,6 +222,7 @@ class TrakrViewController extends Controller
         $isLoggedIn = $checker_query->first();
         
         if ($isLoggedIn) {
+            $returndata['visitor_id'] = $isLoggedIn->visitor_id;
             $returndata['is_loggedin'] = $isLoggedIn->checked_in_status;
             $returndata['check_date'] = $isLoggedIn->check_in_date;
             $returndata['check_out_date'] = $isLoggedIn->check_out_date;
@@ -212,5 +231,16 @@ class TrakrViewController extends Controller
         }
         
         return $isLoggedIn ? $returndata : false;
+    }
+    
+    public function notificationCheck(){
+        $template = DB::table('template_copy')->where(['status' => 1 , 'template_type' => 1 , 'user_id' => auth()->user()->id])->first();
+        
+        if ($template) {
+            return response()->json(['status' => 'success' , 'has_notif' => true , 'notif' => $template] , 200);
+        }
+        
+        return response()->json(['status' => 'success' , 'has_notif' => false , 'notif' => [] ] , 200);
+        
     }
 }
