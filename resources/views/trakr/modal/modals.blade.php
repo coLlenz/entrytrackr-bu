@@ -105,8 +105,38 @@
         </div>
       </div>
     </div>
+    
+    <!-- NOTIFICATION MODAL -->
+    <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationModalTitle">Notification</h5>
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button> -->
+                </div>
+                <div class="modal-body">
+                    <div class="" id="editor_container"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="continue">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
+
+    var container = document.getElementById('editor_container');
+    var editor = new Quill( container ,{
+        theme : 'snow',
+        modules : {
+            toolbar : false,
+        },
+    });
+    editor.enable(false);
+    
     $('#simple_checkin').on('click', function() {
             $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
             Swal.fire({
@@ -145,6 +175,7 @@
             },
             allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {
+                console.log(result);
                 if (result.isConfirmed) {
                     if (result.value.status == 'loggedin') {
                         Swal.fire({
@@ -169,6 +200,7 @@
                             confirmButtonAriaLabel: 'Thumbs up, great!',
                         })
                     }
+                    flowCheckpoint(result.value);
                 }
             })
     })
@@ -184,36 +216,6 @@
                 type: form.attr('method'),
                 data : form.serialize(),
                 success:function(response){
-                    if (response.status = 'has_record') {
-                        $('#checkinModal').modal('hide');
-                        Swal.fire({
-                            icon: 'info',
-                            title: '<strong>Existing record found</strong>',
-                            showCloseButton:false,
-                            allowOutsideClick: false,
-                            showCancelButton:true,
-                            cancelButtonText: 'Cancel',
-                            showConfirmButton: true,
-                            confirmButtonText: 'Sign me in'
-                        }).then(confirm => {
-                            Swal.fire({
-                                title: 'Enter phone number for validation.',
-                                input: 'text',
-                                inputPlaceholder: 'Type here...',
-                                showCancelButton: false,
-                                showCloseButton: false,
-                                confirmButtonText: 'Submit',
-                                allowOutsideClick : false,
-                                inputValidator: (value) => {
-                                    if (!value) {
-                                        return 'Please provide your phone number.'
-                                    }
-                                },
-                            }).then(confirm=> {
-                                console.log(confirm);
-                            })
-                        })
-                    }
                     if (response.status == 'success') {
                         $('#checkinModal').modal('hide');
                         form[0].reset();
@@ -296,6 +298,29 @@
         }
     });
     
+    $('#modalCheckin').on('click' , function() {
+        $.ajax({
+            url : "{{route('notification-check')}}",
+            method: 'GET',
+            success:function(response){
+                if (response.status == 'success') {
+                    if (response.has_notif) {
+                        var json_content = JSON.parse(response.notif.content_json);
+                        editor.setContents(json_content);
+                        $('#notificationModal').modal({backdrop: 'static', keyboard: false})  
+                    }else{
+                        $('#checkinModal').modal('show');
+                    }
+                }
+            }
+        })
+    });
+    
+    $('#continue').on('click' , function() {
+        $('#notificationModal').modal('toggle');
+        $('#checkinModal').modal('show');
+    });
+    
     function flowCheckpoint(response){
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         switch(response.type_of_visitor) {
@@ -334,8 +359,42 @@
                         }
                     });
             break;
-            case 2:
-                alert('Contractor');
+            case '2':
+                    Swal.fire({
+                        input: 'textarea',
+                        inputLabel: 'Name of Company/Business',
+                        inputPlaceholder:'Type here...',
+                        showCancelButton:false,
+                        showCloseButton:false,
+                        allowOutsideClick:false,
+                        inputValidator: (value)=>{
+                            if (!value) {
+                                return 'Please provide name of company/business.';
+                            }
+                        },
+                    }).then(complete => {
+                        if (complete.isConfirmed) {
+                            Swal.showLoading;
+                            $.ajax({
+                                url : "{{route('business')}}",
+                                method: 'POST',
+                                data:{trakrid:response.trakrid, name_of_business:complete.value },
+                                success:function(response){
+                                    if (response.status == 'success') {
+                                        if (response.status == 'success') {
+                                            Swal.fire({
+                                                position: 'top-end',
+                                                icon: 'success',
+                                                title: 'Data has been added to your logs.',
+                                                showConfirmButton: false,
+                                                timer: 3000
+                                            })
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    })
             break;
             case 3:
                 alert('Employee');

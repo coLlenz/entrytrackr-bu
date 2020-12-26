@@ -11,7 +11,7 @@ class DashBoard extends Model
     
     public function getdash_data(){
         $dash = DB::table('trakrs')
-        ->select('trakrs.id as trakr_id','firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','trakr_types.name as type')
+        ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','trakr_types.name as type')
         ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
         ->where('user_id' , auth()->user()->id)
         ->where('checked_in_status' , 0)

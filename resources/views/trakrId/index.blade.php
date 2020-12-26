@@ -19,7 +19,7 @@
                     <th class="">Name</th>
                     <th class="">Date Created</th>
                     <th class="">Visitor Type</th>
-                    <th class="text-center">#</th>
+                    <th class="text-center">Action</th>
                 </tr>
             </thead>
             <tbody>
