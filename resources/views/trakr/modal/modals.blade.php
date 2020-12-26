@@ -175,7 +175,6 @@
             },
             allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {
-                console.log(result);
                 if (result.isConfirmed) {
                     if (result.value.status == 'loggedin') {
                         Swal.fire({
@@ -198,9 +197,12 @@
                             focusConfirm: false,
                             confirmButtonText:'<i class="fa fa-thumbs-up"></i> Great!',
                             confirmButtonAriaLabel: 'Thumbs up, great!',
+                        }).then(data => {
+                            if (data.isConfirmed) {
+                                flowCheckpoint(result.value);
+                            }
                         })
                     }
-                    flowCheckpoint(result.value);
                 }
             })
     })
