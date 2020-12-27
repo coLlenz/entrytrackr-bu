@@ -122,24 +122,15 @@ class TemplateController extends Controller
         return redirect()->route("template-index")->with('success', 'Template Deleted Successfully');
     }
 
-    public function formcreate(){
-        return view("template.formAdd");
+    public function questionView(){
+        return view("template.questionnaire");
     }
     
-    public function formstore(Request $request){
-        $this->validate($request, [
-            'content' => 'required',
-            'name1' => 'required',
-        ]);
-
-        $trakr = Template::create([
-            "name" => $request->name1,
-            "content"=> $request->content,
-            "template_type"=> "Form",
-            "user_id"=>auth()->user()->id,
-        ]);
-        return redirect()->route("template-index")->with('success', 'Form Added Successfully');
-
+    public function questionAdd(Request $request){
+        echo "<pre>";
+            print_r($request->all());
+        echo "</pre>";
+        exit();
     }
     public function formedit($template_id){
         $template = DB::table('template_copy')->where(['id' => $template_id , 'user_id' => auth()->user()->id])->get();

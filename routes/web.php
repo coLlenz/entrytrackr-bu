@@ -66,8 +66,8 @@ Route::prefix('templates')->middleware(['auth', 'verified'])->group(function () 
 	Route::get('/notification-add', [TemplateController::class, 'notificationcreate'])->name("notification-add");
 	Route::get('/notification-edit/{id}', [TemplateController::class, 'notificationedit'])->name("notification-edit");
 	Route::post('/notification-edit/{id}', [TemplateController::class, 'notificationupdate'])->name("notification-update");
-	Route::get('/form-add', [TemplateController::class, 'formcreate'])->name("form-add");
-	Route::post('/form-add', [TemplateController::class, 'formstore'])->name("form-store");
+	Route::get('/questionnaire/add', [TemplateController::class, 'questionView'])->name("questionnaire-add");
+	Route::post('/questionnaire/add/new', [TemplateController::class, 'questionAdd'])->name("questionnaire-add-new");
 	Route::get('/form-edit/{id}', [TemplateController::class, 'formedit'])->name("form-edit");
 	Route::post('/form-edit/{id}', [TemplateController::class, 'formupdate'])->name("form-update");
 	Route::get('/activate/{id}', [TemplateController::class, 'activate'])->name("activate");
