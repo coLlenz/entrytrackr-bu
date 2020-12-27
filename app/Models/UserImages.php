@@ -12,4 +12,8 @@ class UserImages extends Model
     protected $fillable = [
         'user_id','filename', 'url'
     ];
+
+    public function user() {
+       return $this->belongsTo(User::class);
+    }
 }

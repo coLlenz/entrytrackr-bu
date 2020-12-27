@@ -14,6 +14,7 @@
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Profile</th>
                     <th>Account Name</th>
                     <th>Contact Name</th>
                     <th>Email</th>
@@ -24,6 +25,11 @@
                 @foreach ($users as $key=>$user)
                     <tr>
                         <td>{{$key+1}}</td>
+                       @if (!isset($user->file))
+                        <td><img src= "{{ asset('img/imgplaceholder.png') }}" alt="" style="height: 50px; width: 50px;"></td>
+                       @else
+                       <td><img src= "" alt="" style="height: 50px; width: 50px;"></td>
+                       @endif
                         <td>{{$user->name}}</td>
                         <td>{{$user->contactName}}</td>
                         <td>{{$user->email}}</td>

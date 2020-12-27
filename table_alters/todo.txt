@@ -11,10 +11,10 @@ Add Automatic Signed out features after 12 Hours
 
 Hide User Account tab if customer
 
-Change order from top menu
+Change order from top menu - Done
 
 Change Account Name on top menu
 
-Fill Buttons with entrytrakr purple
+Fill Buttons with entrytrakr purple 
 
 Default Trakrid should be phone number
