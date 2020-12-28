@@ -50,6 +50,7 @@ Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
 	Route::view('/', 'profile.show')->name('profile');
 	Route::view('/changepassword', 'profile.update_password')->name('profile-update');
 	Route::post('/add_admin' , [SettingsController::class , 'new_admin'])->name('add-new-admin');
+	Route::get('/manage/all/admins' , [SettingsController::class , 'customerAdmins'])->name('customerAdmins');
 });
 Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/', [TrakrController::class, 'index'])->name("trakr-index");
@@ -109,6 +110,7 @@ Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(functio
 	Route::get('/delete/{id}', [UserController::class, 'delete'])->name("user-delete");
 	Route::get('/upload/{id}', [UploadImagesController::class, 'index'])->name('uploadimage-view');
 	Route::post('/upload', [UploadImagesController::class, 'store'])->name('image-upload');
+	Route::get('/qrcode' , [UserController::class , 'qrtest']);
 });
 Route::view('profile', 'profile.edit')
 	->name('profile.edit')

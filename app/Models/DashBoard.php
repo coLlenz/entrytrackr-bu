@@ -10,6 +10,30 @@ class DashBoard extends Model
     use HasFactory;
     
     public function getdash_data(){
+        //super admin user
+        if ( auth()->user()->is_admin ) {
+            $dash = DB::table('trakrs')
+            ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','trakr_types.name as type')
+            ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
+            ->where('checked_in_status' , 0)
+            ->orderBy('trakrs.check_in_date','desc')
+            ->paginate(5);
+            return $dash;
+        }
+        
+        //is sub accounts
+        if ( auth()->user()->sub_account ) {
+            $dash = DB::table('trakrs')
+            ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','trakr_types.name as type')
+            ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
+            ->where('user_id' , auth()->user()->sub_account_id)
+            ->where('checked_in_status' , 0)
+            ->orderBy('trakrs.check_in_date','desc')
+            ->paginate(5);
+            return $dash;
+        }
+        
+        //for customers
         $dash = DB::table('trakrs')
         ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','trakr_types.name as type')
         ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
@@ -18,6 +42,7 @@ class DashBoard extends Model
         ->orderBy('trakrs.check_in_date','desc')
         ->paginate(5);
         return $dash;
+        
     }
     
     public function getdash_assistance(){
@@ -35,7 +60,9 @@ class DashBoard extends Model
     }
     
     public function getdash_evac(){
-        $assist = DB::table('trakrs')
+        // for super admin
+        if ( auth()->user()->is_admin ) {
+            $assist = DB::table('trakrs')
             ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'safe' , 'date_marked_safe')
             ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
             ->where([
@@ -44,6 +71,32 @@ class DashBoard extends Model
             ->where('checked_in_status' , 0)
             ->orderBy('trakrs.check_in_date','desc')
             ->get();
+            return $assist;
+        }
+        
+        // sub accounts
+        if ( auth()->user()->sub_account ) {
+            $assist = DB::table('trakrs')
+            ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'safe' , 'date_marked_safe')
+            ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
+            ->where([
+                ['user_id' , '=' , auth()->user()->sub_account_id],
+            ])
+            ->where('checked_in_status' , 0)
+            ->orderBy('trakrs.check_in_date','desc')
+            ->get();
+            return $assist;
+        }
+        
+        $assist = DB::table('trakrs')
+        ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'safe' , 'date_marked_safe')
+        ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
+        ->where([
+            ['user_id' , '=' , auth()->user()->id],
+        ])
+        ->where('checked_in_status' , 0)
+        ->orderBy('trakrs.check_in_date','desc')
+        ->get();
         return $assist;
     }
     
@@ -60,6 +113,32 @@ class DashBoard extends Model
     }
     
     public function total_sign_in(){
+        // for super admins
+        if ( auth()->user()->is_admin ) {
+            $total_signin = DB::table('trakrs')
+            ->where([
+                'checked_in_status' =>0,
+            ])
+            ->orderBy('trakrs.check_in_date','desc')
+            ->get();
+            $total_count = $total_signin->count();
+            return $total_count;
+        }
+        
+        // for sub accounts
+        if ( auth()->user()->sub_account ) {
+            $total_signin = DB::table('trakrs')
+            ->where([
+                'checked_in_status' =>0,
+                'user_id' => auth()->user()->sub_account_id
+            ])
+            ->orderBy('trakrs.check_in_date','desc')
+            ->get();
+            $total_count = $total_signin->count();
+            return $total_count;
+        }
+        
+        // customers
         $total_signin = DB::table('trakrs')
         ->where([
             'checked_in_status' =>0,

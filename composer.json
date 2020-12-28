@@ -19,8 +19,8 @@
         "laravel/tinker": "^2.0",
         "laravel/vapor-cli": "^1.10",
         "laravel/vapor-core": "^2.9",
-        "simplesoftwareio/simple-qrcode": "~4",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "simplesoftwareio/simple-qrcode": "^4.1",
         "yajra/laravel-datatables-oracle": "~9.0",
         "zacksmash/fortify-ui": "^1.3"
     },

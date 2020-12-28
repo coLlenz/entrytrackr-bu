@@ -5,7 +5,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use QrCode;
 class UserController extends Controller
 {
     /**
@@ -13,9 +13,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        
+    public function index(){
         $users = User::all();
         return view('user.index', compact( 'users'));
     }
@@ -29,8 +27,7 @@ class UserController extends Controller
     {
         return view('user.add');
     }
-    public function create(Request $request)
-    {
+    public function create(Request $request){
         $this->validate($request, [
             'email' => 'required|unique:users',
             'name' => 'required',
@@ -126,9 +123,15 @@ class UserController extends Controller
 
         return redirect()->route("user-index")->with('success', 'User Updated Successfully');
     }
-    public function delete(User $id)
-    {
+    
+    public function delete(User $id){
         $id->delete();
         return redirect()->route("user-index")->with('success', 'User Deleted Successfully');
+    }
+    
+    public function qrtest(){
+        QrCode::format('png')
+        ->size(300)
+        ->generate('Make me into a QrCode!' , public_path().'/qrcodes/test.png');
     }
 }
