@@ -50,6 +50,7 @@ Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
 	Route::view('/', 'profile.show')->name('profile');
 	Route::view('/changepassword', 'profile.update_password')->name('profile-update');
 	Route::post('/add_admin' , [SettingsController::class , 'new_admin'])->name('add-new-admin');
+	Route::get('/manage/all/admins' , [SettingsController::class , 'customerAdmins'])->name('customerAdmins');
 });
 Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/', [TrakrController::class, 'index'])->name("trakr-index");
@@ -66,8 +67,8 @@ Route::prefix('templates')->middleware(['auth', 'verified'])->group(function () 
 	Route::get('/notification-add', [TemplateController::class, 'notificationcreate'])->name("notification-add");
 	Route::get('/notification-edit/{id}', [TemplateController::class, 'notificationedit'])->name("notification-edit");
 	Route::post('/notification-edit/{id}', [TemplateController::class, 'notificationupdate'])->name("notification-update");
-	Route::get('/form-add', [TemplateController::class, 'formcreate'])->name("form-add");
-	Route::post('/form-add', [TemplateController::class, 'formstore'])->name("form-store");
+	Route::get('/questionnaire/add', [TemplateController::class, 'questionView'])->name("questionnaire-add");
+	Route::post('/questionnaire/add/new', [TemplateController::class, 'questionAdd'])->name("questionnaire-add-new");
 	Route::get('/form-edit/{id}', [TemplateController::class, 'formedit'])->name("form-edit");
 	Route::post('/form-edit/{id}', [TemplateController::class, 'formupdate'])->name("form-update");
 	Route::get('/activate/{id}', [TemplateController::class, 'activate'])->name("activate");
@@ -109,6 +110,7 @@ Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(functio
 	Route::get('/delete/{id}', [UserController::class, 'delete'])->name("user-delete");
 	Route::get('/upload/{id}', [UploadImagesController::class, 'index'])->name('uploadimage-view');
 	Route::post('/upload', [UploadImagesController::class, 'store'])->name('image-upload');
+	Route::get('/qrcode' , [UserController::class , 'qrtest']);
 });
 Route::view('profile', 'profile.edit')
 	->name('profile.edit')

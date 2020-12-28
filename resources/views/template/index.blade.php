@@ -8,7 +8,7 @@
     aria-expanded="false">ADD NEW</button> 
     <div class="dropdown-menu dropdown-menu-right mt-3">
         <a class="dropdown-item" href="{{route('notification-add')}}">Notification/Alert</a>
-        <a class="dropdown-item" href="{{route('form-add')}}">Questionnaire</a>
+        <a class="dropdown-item" href="{{route('questionnaire-add')}}">Questionnaire</a>
     </div>
     </div>
 </div>

@@ -1,1 +1,3 @@
 ALTER TABLE `trakrs` ADD `name_of_company` VARCHAR(50) NULL DEFAULT NULL AFTER `who`;
+
+ALTER TABLE `users` ADD `qr_path` VARCHAR(100) NULL AFTER `is_admin`;

@@ -20,21 +20,32 @@
 </style>
     <section class="uk-section">
         <div class="uk-container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="row icon-cards-row mb-4">
-                        <div class="col-md-3 col-lg-2 col-sm-4 col-6 mb-4 entry_box">
-                            <a href="facebook.com" class="card" data-toggle="modal" data-target="#add_user_modal">
-                                <div class="card-body text-center">
-                                <i class="iconsminds-add-user"></i>
-                                <p class="card-text font-weight-semibold mb-0">Add User</p>
-                                <!-- <p class="lead text-center">10</p> -->
-                                </div>
-                            </a>
+            @if( !auth()->user()->sub_account && !auth()->user()->is_admin )
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row icon-cards-row mb-4">
+                            <div class="col-md-3 col-lg-2 col-sm-4 col-6 mb-4 entry_box">
+                                <a href="" class="card" data-toggle="modal" data-target="#add_user_modal">
+                                    <div class="card-body text-center">
+                                    <i class="iconsminds-add-user"></i>
+                                    <p class="card-text font-weight-semibold mb-0">Add User</p>
+                                    <!-- <p class="lead text-center">10</p> -->
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-lg-2 col-sm-4 col-6 mb-4 entry_box">
+                                <a href="{{route('customerAdmins')}}" class="card">
+                                    <div class="card-body text-center">
+                                    <i class="iconsminds-business-mens"></i>
+                                    <p class="card-text font-weight-semibold mb-0">Manage Users</p>
+                                    <!-- <p class="lead text-center">10</p> -->
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updateProfileInformation()))
                 @include('profile.update-profile-information-form')
             @endif

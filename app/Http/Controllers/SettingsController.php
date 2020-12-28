@@ -7,8 +7,19 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Hash;
 use Str;
-class SettingsController extends Controller
-{
+class SettingsController extends Controller{
+    
+    public function customerAdmins(){
+        $userlist = User::where(
+            [
+                'sub_account_id' => auth()->user()->id,
+                'sub_account' => 1,
+                'uuid' => auth()->user()->uuid
+            ]
+        )->get();
+        return view('settings.index')->with('lists' , $userlist);
+    }
+    
     public function new_admin(Request $request){
         $validator = Validator::make($request->all(), [
             'admin_name' => 'required',
@@ -19,7 +30,7 @@ class SettingsController extends Controller
         ]);
         if ($validator->passes()) {
             $new_admin = new User;
-            $new_admin->uuid = Str::uuid();
+            $new_admin->uuid = auth()->user()->uuid;
             $new_admin->sub_account = 1;
             $new_admin->sub_account_id = auth()->user()->id;
             $new_admin->name = $request->admin_name;
