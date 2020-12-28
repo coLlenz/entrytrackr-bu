@@ -6,6 +6,7 @@ use Storage;
 use App\Models\User;
 use App\Models\UserImages;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class UploadImagesController extends Controller
 {
@@ -15,15 +16,15 @@ class UploadImagesController extends Controller
     }
 
     public function index(User $id) {
-        $url = 'https://s3.' . env('AWS_DEFAULT_REGION') . '.amazonaws.com/' . env('AWS_BUCKET') . '/';
-        $images = [];
-        $files = Storage::disk('s3')->files('file');
-            foreach ($files as $file) {
-                $images[] = [
-                    'name' => str_replace('images/', '', $file),
-                    'src' => $url . $file
-                ];
-            }
+        // $url = 'https://s3.' . env('AWS_DEFAULT_REGION') . '.amazonaws.com/' . env('AWS_BUCKET') . '/';
+        // $images = [];
+        // $files = Storage::disk('s3')->files('file');
+        //     foreach ($files as $file) {
+        //         $images[] = [
+        //             'name' => str_replace('images/', '', $file),
+        //             'src' => $url . $file
+        //         ];
+        //     }
        
         return view('user.upload', compact('id'));
     
@@ -35,24 +36,36 @@ class UploadImagesController extends Controller
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
+        dd(asset('public'));
+
+        $imageName = date('Y-m-d').uniqid().'.'.$request->file->extension();
+        $user_id = $_GET['user_id'];
+        $filePath = 'images/' . $imageName;
+        $request->file->move(public_path('img'), $imageName);
+
         if ($request->hasFile('file')) {
-            $user_id = $_GET['user_id'];
-            $path = $request->file('file')->store('images', 's3');
-            // $filePath = 'images/' . $imageName;
-            // $request->file('file')->store('docs');
-            // $request->file->move(public_path('img'), $imageName);
+
+            $find = UserImages::where('user_id' ,$user_id)->first();
+            if ($find) {
+
+                $find->user_id = $user_id;
+                $find->filename = basename($imageName);
+                $find->url =  $filePath;
+                $find->save();
+
+                return redirect()->back()
+                ->with('status', 'User Image Updated');
+            }
 
             $image = UserImages::create([
                 'user_id' =>  $user_id,
-                'filename' => basename($path),
-                'url' => Storage::disk('s3')->url($path)
+                'filename' => basename($imageName),
+                'url' => $filePath
             ]);
             
-            dd($image);
-
-            return redirect()->back()
-            ->with('status', 'Image uploaded')
-            ->with('file', $image);
+                return redirect()->back()
+                ->with('status', 'Image uploaded')
+                ->with('file', $image);
         }
     }
 }

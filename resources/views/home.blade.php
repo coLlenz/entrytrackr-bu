@@ -1,4 +1,4 @@
-@extends('layouts.app')
+  @extends('layouts.app')
 
 @section('content')
     {{-- <div class="container">
@@ -181,6 +181,7 @@
 <script src="{{ asset('js/vendor/datatables.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+  
   function checkbox(i){
     if($("#switch"+i).is(':checked'))
     {
