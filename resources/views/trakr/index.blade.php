@@ -13,7 +13,7 @@
         <div class="col-sm-12 col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <div class="jumbotron">
+                    <div class="card-header" style="padding: 20px">
                         <h1 class="display-4">Welcome to entrytrakr.</h1>
                     </div>
                     <div class="row icon-cards-row justify-content-md-center">
@@ -44,10 +44,12 @@
                             </a>
                         </div>
                     </div> 
-                    
-                    <!-- <div class="row icon-cards-row justify-content-md-center">
-                        {{QrCode::size(250)->backgroundColor(255,255,204)->generate('MyNotePaper')}}
-                    </div> -->
+                    <br>
+                    <div class="row icon-cards-row justify-content-md-center">
+                        <div class="col-md-12 text-center">
+                            <img class=""  src="{{ auth()->user()->qr_path }}" alt="" height="250" width="250">
+                        </div>
+                    </div>
                     
                     <hr>
                     <div class="row justify-content-md-center">

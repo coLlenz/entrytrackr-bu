@@ -139,7 +139,7 @@ class UserController extends Controller
         $s3_url = '';
         $url = url('/trakr/qr/login/'.$uuid.'/'.$userid);
         $filename = $uuid.'_'.strtotime( date('Y-m-d H:i') ).'.png';
-        $image = QrCode::format('png')->size(500)->generate($url);
+        $image = QrCode::format('png')->size(250)->generate($url);
 		$path = Storage::disk('s3')->put($filename, $image);
 		if ($path) {
 			$s3_url = Storage::disk('s3')->url($filename);
