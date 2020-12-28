@@ -4,7 +4,7 @@
 <div class="mb-2">
     <h1>User Accounts</h1>
     <div class="top-right-button-container">
-        <button type="button" class="btn btn-outline-primary btn-lg top-right-button  mr-1"
+        <button type="button" class="btn btn-primary btn-lg top-right-button  mr-1"
     onclick="window.location.href='{{route("user-add")}}'">ADD NEW</button>
     </div>
 </div>

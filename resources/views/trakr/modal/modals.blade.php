@@ -11,7 +11,7 @@
           </div>
           <div class="modal-body">
             <p class="text-info"> <i>NOTE: Phone number will be automatically set as a trakr ID for simple check-in</i> </p>
-            <form id="form_checkin" action="{{route( 'trakr-post' , auth()->user()->uuid )}}" method="post" class="needs-validation" novalidate>
+            <form id="form_checkin" action="{{ !$view_data['is_mobile'] ?  route( 'trakr-post' , auth()->user()->uuid ) : route( 'qr-login' ,$view_data['userid']) }}" method="post" class="needs-validation" novalidate>
                 @csrf
                 <div class="form-group">
                     <label for="first_name" class="col-form-label">First Name</label>
@@ -302,7 +302,7 @@
     
     $('#modalCheckin').on('click' , function() {
         $.ajax({
-            url : "{{route('notification-check')}}",
+            url : "{{ $view_data['is_mobile'] ? route('notification-check' , $view_data['userid']) : route('notification-check') }}",
             method: 'GET',
             success:function(response){
                 if (response.status == 'success') {
