@@ -15,10 +15,10 @@ class TrakrViewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return view('trakr.index');
-
+    public function index(){
+        $view_data = [];
+        $view_data['is_mobile'] = false;
+        return view('trakr.index')->with('view_data' , $view_data);
     }
 
     /**
@@ -26,7 +26,7 @@ class TrakrViewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request){
+    public function create(Request $request , $userid = false){
         $validator = Validator::make($request->all() , [
             'first_name' => 'required',
             'last_name' => 'required',
@@ -69,7 +69,7 @@ class TrakrViewController extends Controller
             $trakr_new->phoneNumber = $request->phoneNumber;
             $trakr_new->email = $request->email;
             $trakr_new->trakr_type_id = $request->visitor_type;
-            $trakr_new->user_id = auth()->user()->id;
+            $trakr_new->user_id = ($userid) ? $userid : auth()->user()->id;
             $trakr_new->status = 0;
             $trakr_new->checked_in_status = 0;
             $trakr_new->check_in_date = date('Y-m-d H:i:s');
@@ -233,14 +233,26 @@ class TrakrViewController extends Controller
         return $isLoggedIn ? $returndata : false;
     }
     
-    public function notificationCheck(){
-        $template = DB::table('template_copy')->where(['status' => 1 , 'template_type' => 1 , 'user_id' => auth()->user()->id])->first();
+    public function notificationCheck($userid = false){
+        $template = DB::table('template_copy')->where(['status' => 1 , 'template_type' => 1 , 'user_id' => ($userid) ? $userid :  auth()->user()->id])->first();
         
         if ($template) {
             return response()->json(['status' => 'success' , 'has_notif' => true , 'notif' => $template] , 200);
         }
         
         return response()->json(['status' => 'success' , 'has_notif' => false , 'notif' => [] ] , 200);
+        
+    }
+    
+    public function QRLoginView( $uuid , $userid ){
+        $view_data = [];
+        $view_data['is_mobile'] = true;
+        $view_data['uuid'] = $uuid;
+        $view_data['userid'] = $userid;
+        return view('trakr.mobile')->with('view_data' , $view_data);
+    }
+    
+    public function QRLoginViewPost( $uuid , $userid ){
         
     }
 }

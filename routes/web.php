@@ -79,13 +79,16 @@ Route::prefix('templates')->middleware(['auth', 'verified'])->group(function () 
 	Route::get('/delete/{template}', [TemplateController::class, 'destroy'])->name("template-delete");
 });
 Route::prefix('trakr')->group(function () {
-	Route::get('/notification-checking' , [TrakrViewController::class , 'notificationCheck'])->name('notification-check');
+	Route::get('/notification-checking/{userid?}' , [TrakrViewController::class , 'notificationCheck'])->name('notification-check');
 	Route::get('/{id}/visitor-checkin', [TrakrViewController::class, 'index'])->name("trakr-view");
 	Route::post('/trakrid/check', [TrakrViewController::class, 'trakrid'])->name("trakrid-post"); //for simple check in
-	Route::post('/{id}/visitor-checkin', [TrakrViewController::class, 'create'])->name("trakr-post"); //for manual check in new visitors
+	Route::post('/visitor-checkin', [TrakrViewController::class, 'create'])->name("trakr-post"); //for manual check in new visitors
 	Route::post('/trakrid/checkout', [TrakrViewController::class, 'trakrcheckout'])->name("trakrid-signout");
 	Route::post('/trakr/visiting_who', [TrakrViewController::class, 'visitingWho'])->name("visiting-who");
 	Route::post('/trakr/business', [TrakrViewController::class, 'business'])->name("business");
+	// qr
+	Route::get('/qr/login/{uuid}/{userid}' , [TrakrViewController::class,'QRLoginView'])->name('qr-login-view');
+	Route::post('/qr/login/{userid?}' , [TrakrViewController::class,'create'])->name('qr-login');
 });
 
 Route::prefix('support')->middleware(['auth', 'verified'])->group(function () {
@@ -109,8 +112,18 @@ Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(functio
 	Route::post('/edit/{id}', [UserController::class, 'update'])->name("user-update");
 	Route::get('/delete/{id}', [UserController::class, 'delete'])->name("user-delete");
 	Route::get('/upload/{id}', [UploadImagesController::class, 'index'])->name('uploadimage-view');
-	Route::post('/upload', [UploadImagesController::class, 'store'])->name('image-upload');
-	Route::get('/qrcode' , [UserController::class , 'qrtest']);
+	Route::post('/upload', [UploadImagesController::class, 'store'])->name('image-upload');	
+	Route::get('/test' , function() {
+		$image = QrCode::format('png')->size(500)->generate('A simple example of QR code!');
+		$path = Storage::disk('s3')->put('test.png', $image, 'public');
+		if ($path) {
+			$url = Storage::disk('s3')->url('test.png');
+			echo "<pre>";
+			    print_r($url);
+			echo "</pre>";
+			exit();
+		}
+	});
 });
 Route::view('profile', 'profile.edit')
 	->name('profile.edit')
