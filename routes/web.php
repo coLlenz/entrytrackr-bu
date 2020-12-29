@@ -112,18 +112,7 @@ Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(functio
 	Route::post('/edit/{id}', [UserController::class, 'update'])->name("user-update");
 	Route::get('/delete/{id}', [UserController::class, 'delete'])->name("user-delete");
 	Route::get('/upload/{id}', [UploadImagesController::class, 'index'])->name('uploadimage-view');
-	Route::post('/upload', [UploadImagesController::class, 'store'])->name('image-upload');	
-	Route::get('/test' , function() {
-		$image = QrCode::format('png')->size(500)->generate('A simple example of QR code!');
-		$path = Storage::disk('s3')->put('test.png', $image, 'public');
-		if ($path) {
-			$url = Storage::disk('s3')->url('test.png');
-			echo "<pre>";
-			    print_r($url);
-			echo "</pre>";
-			exit();
-		}
-	});
+	Route::post('/upload/{id}', [UploadImagesController::class, 'store'])->name('image-upload');	
 });
 Route::view('profile', 'profile.edit')
 	->name('profile.edit')

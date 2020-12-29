@@ -30,42 +30,22 @@ class UploadImagesController extends Controller
     
     }
 
-    public function store(Request $request) {
+    public function store(Request $request , $id) {
         
         $this->validate($request, [
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'profile' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
-
-        dd(asset('public'));
-
-        $imageName = date('Y-m-d').uniqid().'.'.$request->file->extension();
-        $user_id = $_GET['user_id'];
-        $filePath = 'images/' . $imageName;
-        $request->file->move(public_path('img'), $imageName);
-
-        if ($request->hasFile('file')) {
-
-            $find = UserImages::where('user_id' ,$user_id)->first();
-            if ($find) {
-
-                $find->user_id = $user_id;
-                $find->filename = basename($imageName);
-                $find->url =  $filePath;
-                $find->save();
-
-                return redirect()->back()
-                ->with('status', 'User Image Updated');
-            }
-
-            $image = UserImages::create([
-                'user_id' =>  $user_id,
-                'filename' => basename($imageName),
-                'url' => $filePath
-            ]);
+        $extension = $request->file('profile')->getClientOriginalExtension();
+        $filename = strtotime('Y-m-d H:i:s').$extension;
+        
+        $s3_path = $request->file('profile')->store('profiles' , 's3');
+        if ($s3_path) {
+            $user = User::findOrFail($id);
+            $user->profile_path = Storage::disk('s3')->url($s3_path);
             
-                return redirect()->back()
-                ->with('status', 'Image uploaded')
-                ->with('file', $image);
+            if ($user->save()) {
+                return redirect()->back()->with('status', 'User Image Updated');
+            }
         }
     }
 }
