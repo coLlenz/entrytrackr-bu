@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="mb-2">
     <h1>Upload Image</h1>
 </div>
@@ -14,7 +15,7 @@
                 </div>
             @endif
 
-                <form action="{{route('image-upload','user_id='.$id->id)}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('image-upload', $id->id)}}" method="post" enctype="multipart/form-data" class="" id="fileUpload">
                     @csrf
                     @if ($errors->any())
                     <div class="alert alert-danger" role="alert">
@@ -25,22 +26,16 @@
                         </ul>
                     </div>
                     @endif
+                    
                     <div class="form-group">
-                        <input type="file" name="file" class="form-control" id="image">
+                        <input type="file" name="profile" class="form-control" id="image">
                     </div>
                         <center>
-                        <button class="btn btn-primary" type="submit">Upload</button>
+                        <button class="btn btn-primary " type="submit">Upload</button>
                         </center>
                     </form>
             </div>
         </div>
     </div>
 </div>
-@endsection
-
-@section('script')
-
-@endsection
-
-@section('style')
 @endsection
