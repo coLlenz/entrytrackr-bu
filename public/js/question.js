@@ -159,3 +159,11 @@
         myQuestions = JSON.parse( questions );
         checkChanges( myQuestions );
     }
+    
+    function fieldCheck(){
+        var input = $('input[name=question_title]').val();
+        if (!input) {
+            return false;
+        }
+        return true;
+    }

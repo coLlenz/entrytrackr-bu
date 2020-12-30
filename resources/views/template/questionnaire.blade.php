@@ -64,24 +64,28 @@
         form_data.append('question_title' , $('input[name=question_title]').val())
         form_data.append('question_data' , JSON.stringify(myQuestions));
         form_data.append('question_html' , form_container.html() );
-        $.ajax({
-            url : form.attr('action'),
-            method: form.attr('method'),
-            processData: false,
-            contentType: false,
-            data: form_data,
-            success : function(response){
-                if (response.status == 'success') {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Questionnaire has been save.',
-                        showConfirmButton: false,
-                        timer: 2000
-                    })
+        if ( fieldCheck() ) {
+            $.ajax({
+                url : form.attr('action'),
+                method: form.attr('method'),
+                processData: false,
+                contentType: false,
+                data: form_data,
+                success : function(response){
+                    if (response.status == 'success') {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Questionnaire has been save.',
+                            showConfirmButton: false,
+                            timer: 2000
+                        })
+                    }
                 }
-            }
-        })
+            })
+        }else{
+            alert('Title is Required');
+        }
     });
 </script>
 @endsection
