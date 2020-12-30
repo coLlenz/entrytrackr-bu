@@ -25,32 +25,29 @@
                 @foreach ($users as $key=>$user)
                     <tr>
                         <td>{{$key+1}}</td>
-                       @if (!isset($user->file))
-                        <td><img src= "{{ $user->profile_path }}" alt="" style="height: 50px; width: 50px;"></td>
-                       @else
-                       <td><img src= "" alt="" style="height: 50px; width: 50px;"></td>
-                       @endif
-                        <td>{{$user->name}}</td>
-                        <td>{{$user->contactName}}</td>
-                        <td>{{$user->email}}</td>
-                        <td>
-                            <button class="btn btn-primary dropdown-toggle mb-1" type="button"
-                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                        Actions
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="{{route("user-edit",$user->id)}}">Edit</a>
-                                <a class="dropdown-item" href="{{route("user-delete",$user->id)}}">Delete</a>
-                                <a class="dropdown-item" href="{{route("uploadimage-view",$user->id)}}">Upload Image</a>
-                            </div>
-                        </td>
+                        @if ($user->profile_path)
+                            <td><img src= "{{ $user->profile_path }}" alt="" style="height: 40px; width: 45px;"></td>
+                        @else
+                            <td><img src= "https://qrlogins.s3-ap-southeast-2.amazonaws.com/profiles/default.png" alt="" style="height: 40px; width: 45px;"></td>
+                        @endif
+                            <td>{{$user->name}}</td>
+                            <td>{{$user->contactName}}</td>
+                            <td>{{$user->email}}</td>
+                            <td>
+                                <button class="btn btn-primary dropdown-toggle mb-1" type="button"
+                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    Actions
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="{{route("user-edit",$user->id)}}">Edit</a>
+                                    <a class="dropdown-item" href="{{route("user-delete",$user->id)}}">Delete</a>
+                                    <a class="dropdown-item" href="{{route("uploadimage-view",$user->id)}}">Upload Image</a>
+                                </div>
+                            </td>
                     </tr>
                 @endforeach
-                
-                
             </div>
-
             </tbody>
         </table>
     </div>

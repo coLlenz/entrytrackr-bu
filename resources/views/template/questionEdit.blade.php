@@ -5,20 +5,8 @@
     <div class="row justify-content-md-center">
         <div class="col-md-8">
             <div class="float-right">
-                <button type="button" class="btn btn-primary"  name="button" id="saveQuestion" style="display:none;" >Save Changes</button>
+                <button type="button" class="btn btn-primary"  name="button" id="saveQuestion" >Save Changes</button>
                 <button type="button" class="btn btn-primary"  name="button" id="addQuestion">Add Question</button>
-                @if(!empty($templates))
-                    <button class="btn btn-primary dropdown-toggle mb-1" type="button"
-                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        Templates
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        @foreach($templates as $template)
-                            <a class="dropdown-item template_option" href="#" template_data="{{$template->content_html}}" template_question = "{{$template->questions}}">{{$template->title}}</a>
-                        @endforeach
-                    </div>
-                @endif
             </div>
         </div>
     </div> <br>
@@ -26,13 +14,13 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body clone_me">
-                <form action="{{route('questionnaire-add-new')}}" method="POST" id="formQuestion">
+                <form action="{{route('question-update' , $template->id)}}" method="POST" id="formQuestion">
                     @csrf
                     <div class="form-group">
-                        <input type="text" name="question_title" value="" class="form-control"  placeholder="Enter title here.." required />
+                        <input type="text" name="question_title" value="{{ $template->title }}" class="form-control"  placeholder="Enter title here.." required />
                     </div>
                     <div id="generated_container">
-                        
+                        {!!html_entity_decode($template->content_html)!!}
                     </div>
                 </form>
             </div>
@@ -44,6 +32,9 @@
 <script src="{{ asset('js/vendor/sweetalert2@10.js')}}"></script>
 <script src="{{ asset('js/question.js')}}"></script>
 <script type="text/javascript">
+    //set question from database;
+    myQuestions = {!! $template->questions !!};
+    
     generateHtml()
     
     $('#addQuestion').on('click' , function() {
@@ -51,10 +42,6 @@
             generateQuestion( results.value );
         });
     });
-    
-    $('.template_option').on('click' , function() {
-        selectedTemplate( $(this).attr('template_data') , $(this).attr('template_question') )
-    })
     
     $('#saveQuestion').on('click' , function() {
         var form = $('#formQuestion');

@@ -64,10 +64,10 @@
                                 @if($template->status)
                                 <a class="dropdown-item" href="{{route("deactivate",$template->id)}}">Deactivate</a>
                                 @else
-                                <a class="dropdown-item" href="{{route("activate",$template->id)}}">Activate</a>
+                                <a class="dropdown-item" href="{{route("change_status",$template->id)}}">Activate</a>
                                 @endif
                             @endif
-                            <a class="dropdown-item" href="{{route("form-edit",$template->id)}}">Edit</a>
+                            <a class="dropdown-item" href="{{route("question-edit",$template->id)}}">Edit</a>
                             <a class="dropdown-item" href="{{route("template-delete",$template->id)}}">Delete</a>
                         </div>
                         @endif

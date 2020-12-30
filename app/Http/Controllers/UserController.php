@@ -15,7 +15,10 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $users = User::all();
+        $users = User::where([
+            'sub_account' => 0,
+            'is_admin' =>  0
+        ])->get();
         return view('user.index', compact( 'users'));
     }
 

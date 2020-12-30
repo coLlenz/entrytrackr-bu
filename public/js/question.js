@@ -1,38 +1,161 @@
-$(document).ready(function(){
-    var identifier = 0;
-    var label = 0;
-    $('#addQuestion').on('click' , function() {
-        identifier++;
-        generateHtml(identifier);
-    });
+    var myQuestions = [];
     
-    $(document).on('click' , '.question' , function() {
-        var id = $(this).attr('data-id');
-        $('#question'+id+'_answer').val( $(this).val() );
-    })
-    
-    function generateHtml(id){
-        var html = `
-            <div class="form-group">
-                <h2 class="mb-4 text-primary" contenteditable="true">Tap me to edit.</h2>
-                <div class="custom-control custom-radio">
-                    <input type="radio" id="option${label = Math.floor(Math.random() * 1000)}" name="question[]" class="custom-control-input question" value="A" data-id=${id}> 
-                    <label class="custom-control-label" for="option${label}"> <h3 contenteditable="true" >Double tap me to edit.</h3> </label>
-                </div>
-                <div class="custom-control custom-radio">
-                    <input type="radio" id="option${label = Math.floor(Math.random() * 1000)}" name="question[]" class="custom-control-input question" value="B" data-id=${id}> 
-                    <label class="custom-control-label" for="option${label}"><h3 contenteditable="true" >Double tap me to edit.</h3></label>
-                </div>
-                <div class="custom-control custom-radio">
-                    <input type="radio" id="option${label = Math.floor(Math.random() * 1000)}" name="question[]" class="custom-control-input question" value="C" data-id=${id}> 
-                    <label class="custom-control-label" for="option${label}"><h3 contenteditable="true" >Double tap me to edit.</h3></label>
-                </div>
-                <div class="form-group">
-                    <label for="">Set Answer</label>
-                    <input type="text" class="form-control col-md-4" name="question_answer[]" value="" id="question_answer">
-                </div>
-            </div>
-        `;
-        $('#questionsHere').append(html)
+    function generateQuestion( generate ){
+        var questionSet = {};
+        questionSet = {
+            question: generate[0],
+            answers: {
+                a: generate[1],
+                b: generate[2],
+                c: generate[3],
+            },
+            correctAnswer: generate[4]
+        }
+        Merge(questionSet);
     }
-})
+
+    function Merge( data ){
+        myQuestions.push( data );
+        generateHtml(data);
+        checkChanges(myQuestions);
+    }
+
+    function generateHtml(data = false){
+        var options = '';
+        if (data) {
+            var container = $('#generated_container');
+            container.append( `<h2>${data.question}</h2>` );
+            
+            $(data.answers).each( (idx , item) =>{
+                options = `
+                    <div class="mb-4">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="${ this_id = makeid(10) }" name="${  myname = makeid(15) }" class="custom-control-input"> 
+                            <label class="custom-control-label" for="${ this_id }"> ${ item.a } </label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="${ this_id = makeid(10) }" name="${ myname }" class="custom-control-input"> 
+                            <label class="custom-control-label" for="${ this_id }">${ item.b }</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="${ this_id = makeid(10) }" name="${ myname }" class="custom-control-input"> 
+                            <label class="custom-control-label" for="${ this_id }"> ${ item.c } </label>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label for="answer"> Answer </label>
+                            <input name="answer" class="form-control col-md-4" value="${data.correctAnswer}" readonly  />
+                        </div>
+                    </div>
+                    <hr />
+                `;
+            });
+            container.append( options );
+        }
+    }
+
+
+    function checkChanges( myQuestions ){
+        if (myQuestions) {
+            return $('#saveQuestion').fadeIn();
+        }else{
+            return $('#saveQuestion').fadeOut();
+        }
+        
+    }
+
+    function makeid(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+    function setConfig() {
+        var swal = Swal.mixin({
+            input: 'text',
+            confirmButtonText: 'Next &rarr;',
+            showCancelButton: true,
+            showCloseButton: true,
+            allowOutsideClick : false,
+            progressSteps: ['1', '2', '3' ,'4','5']
+        });
+        
+        return swal;
+    }
+
+    function setSteps(){
+        var steps = [
+            {
+                title: 'Add Question',
+                input : 'text',
+                showCancelButton: true,
+                showCloseButton: true,
+                allowOutsideClick : false,
+                inputValidator: function(value){
+                    if (!value) {
+                        return 'Input value is required'
+                    }
+                }
+            },
+            {
+                title: 'Option A',
+                input : 'text',
+                showCancelButton: true,
+                showCloseButton: true,
+                allowOutsideClick : false,
+                inputValidator: function(value){
+                    if (!value) {
+                        return 'Input value is required'
+                    }
+                }
+            },
+            {
+                title: 'Option B',
+                input : 'text',
+                showCancelButton: true,
+                showCloseButton: true,
+                allowOutsideClick : false,
+                inputValidator: function(value){
+                    if (!value) {
+                        return 'Input value is required'
+                    }
+                }
+            },
+            {
+                title: 'Option C',
+                input : 'text',
+                showCancelButton: true,
+                showCloseButton: true,
+                allowOutsideClick : false,
+                inputValidator: function(value){
+                    if (!value) {
+                        return 'Input value is required'
+                    }
+                }
+            },
+            {
+                title: 'Set Answer',
+                input : 'text',
+                showCancelButton: true,
+                showCloseButton: true,
+                allowOutsideClick : false,
+                inputValidator: function(value){
+                    if (!value) {
+                        return 'Input value is required'
+                    }
+                }
+            }
+        ];
+        
+        return steps;
+    }
+    
+    function selectedTemplate(data , questions){
+        $('#generated_container').append( data ).hide().fadeIn(1000);
+        myQuestions = JSON.parse( questions );
+        checkChanges( myQuestions );
+    }
