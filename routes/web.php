@@ -69,13 +69,12 @@ Route::prefix('templates')->middleware(['auth', 'verified'])->group(function () 
 	Route::post('/notification-edit/{id}', [TemplateController::class, 'notificationupdate'])->name("notification-update");
 	Route::get('/questionnaire/add', [TemplateController::class, 'questionView'])->name("questionnaire-add");
 	Route::post('/questionnaire/add/new', [TemplateController::class, 'questionAdd'])->name("questionnaire-add-new");
-	Route::get('/form-edit/{id}', [TemplateController::class, 'formedit'])->name("form-edit");
-	Route::post('/form-edit/{id}', [TemplateController::class, 'formupdate'])->name("form-update");
+	Route::get('/question-edit/{id}', [TemplateController::class, 'questionEdit'])->name("question-edit");
+	Route::post('/question-edit/{id}', [TemplateController::class, 'questionUpdate'])->name("question-update");
 	Route::get('/activate/{id}', [TemplateController::class, 'activate'])->name("activate");
 	Route::get('/deactivate/{id}', [TemplateController::class, 'deactivate'])->name("deactivate");
+	Route::get('/question/change_status/{id}', [TemplateController::class, 'QuestionChangeStatus'])->name("change_status");
 	Route::post('/add', [TemplateController::class, 'save_new_notifications'])->name("template-store");
-	Route::get('/edit/{template}', [TemplateController::class, 'edit'])->name("template-edit");
-	Route::post('/edit/{template}', [TemplateController::class, 'update'])->name("template-update");
 	Route::get('/delete/{template}', [TemplateController::class, 'destroy'])->name("template-delete");
 });
 Route::prefix('trakr')->group(function () {

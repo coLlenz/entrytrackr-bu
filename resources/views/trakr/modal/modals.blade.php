@@ -398,7 +398,7 @@
                         }
                     })
             break;
-            case 3:
+            case '3':
                 alert('Employee');
             break;
         default:

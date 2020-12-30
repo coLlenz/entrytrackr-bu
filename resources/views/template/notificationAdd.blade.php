@@ -7,7 +7,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                @if(!empty($templates))
+                @if(count($templates) > 0)
                     <div class="float-right">
                         <button class="btn btn-primary dropdown-toggle mb-1" type="button"
                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"

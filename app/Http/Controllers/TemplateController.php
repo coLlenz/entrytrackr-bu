@@ -20,8 +20,9 @@ class TemplateController extends Controller
     }
     
     public function notificationcreate(){
-        //get all avaialable templates create by super admin
-        $templates = Template::all();
+        //get all avaialable templates created by super admin
+        $templates = Template::where('template_type' , 1)->get();
+        
         return view("template.notificationAdd")->with('templates' , $templates);
     }
 
@@ -68,7 +69,6 @@ class TemplateController extends Controller
     }
     
     public function notificationedit($template_id){
-        
         if ( auth()->user()->is_admin ) {
             $template = Template::findOrfail($template_id);
             return view("template.notificationEdit", compact("template"));
@@ -123,35 +123,105 @@ class TemplateController extends Controller
     }
 
     public function questionView(){
-        return view("template.questionnaire");
+        $templates = [];
+        
+        if (auth()->user()->is_admin) {
+            $templates = Template::where([
+                'template_type' => 0
+                ])->get();
+        }else{
+            $templates = DB::table('template_copy')->where([
+                'user_id' => auth()->user()->id,
+                'template_type' => 0
+                ])->get();
+        }
+        
+        return view("template.questionnaire" , compact('templates') );
     }
     
     public function questionAdd(Request $request){
-        echo "<pre>";
-            print_r($request->all());
-        echo "</pre>";
-        exit();
-    }
-    public function formedit($template_id){
-        $template = DB::table('template_copy')->where(['id' => $template_id , 'user_id' => auth()->user()->id])->get();
-        return view("template.formEdit", compact("template"));
-    }
-    public function formupdate(Request $request, Template $id)
-    {
-        // dd($request->all());
-        $this->validate($request, [
-            'content' => 'required',
-            'name1' => 'required',
+        if (auth()->user()->is_admin) {
+            $template = new Template();
+            $template->title = $request->question_title;
+            $template->content_html = $request->question_html;
+            $template->questions = $request->question_data;
+            $template->template_type = 0;
+            
+            if ($template->save()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+            return response()->json(['status' => 'fail'], 200);
+        }
+        
+        $template = DB::table('template_copy')->insert([
+            'user_id' => auth()->user()->id,
+            'title' => $request->question_title,
+            'content_html' =>  $request->question_html,
+            'questions' => $request->question_data,
+            'status' => 0,
+            'template_type' => 0
         ]);
-         $id->update([
-            "name" => $request->name1,
-            "content"=> $request->content,
-        ]);
-        return redirect()->route("template-index")->with('success', 'Form Updated Successfully');
+        
+        if ($template) {
+            return response()->json(['status' => 'success'], 200);
+        }
+        return response()->json(['status' => 'fail'], 200);
     }
+    
+    public function questionEdit($template_id){
+        if (auth()->user()->is_admin) {
+            $template = DB::table('templates')->where(['id' => $template_id , 'template_type' => 0])->first();
+            return view("template.questionEdit", compact("template"));
+        }
+        
+        $template = DB::table('template_copy')->where(['id' => $template_id , 'template_type' => 0])->first();
+        return view("template.questionEdit", compact("template"));
+    }
+    
+    public function questionUpdate(Request $request, $template_id){
+        if ( auth()->user()->is_admin ) {
+            $template = Template::findOrFail($template_id);
+            $template->title = $request->question_title;
+            $template->content_html = $request->question_html;
+            $template->questions = $request->question_data;
+            if ($template->save()) {
+                return response()->json(['status' => 'success'], 200);
+            }
+        }
+        
+        $template = DB::table('template_copy')->where([
+            'user_id' => auth()->user()->id,
+            'id' => $template_id
+        ])->update([
+            'title' => $request->question_title,
+            'content_html' => $request->question_html,
+            'questions' => $request->question_data,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+        
+        if ($template) {
+            return response()->json(['status' => 'success'], 200);
+        }
+        
+    }
+    
+    public function QuestionChangeStatus($template_id){
+        //check existing active question template
+        $active_question = DB::table('template_copy')->select('status' , 'id')->where(['template_type' => 0 , 'status' => 1])->first();
+        
+        if (!empty($active_question) && $active_question->status) {
+            $status = DB::table('template_copy')->where([
+                'id' => $active_question->id
+            ])->update(['status' => 0 , 'updated_at' => date('Y-m-d H:i:s')]);
+        }
+        
+        DB::table('template_copy')->where(['user_id' => auth()->user()->id , 'id' => $template_id])->update(['status' => 1]);
+        return redirect()->route("template-index")->with('success', 'Template Activated Successfully');
+    }
+    
     public function activate($template_id){
         //check existing active template
-        $active_template = DB::table('template_copy')->select('status' , 'id')->where(['user_id' => auth()->user()->id,'status' => 1])->first();
+        $active_template = DB::table('template_copy')->select('status' , 'id')->where(['user_id' => auth()->user()->id,'status' => 1 , 'template_type' => 1])->first();
         
         if (!empty($active_template) && $active_template->status) {
             DB::table('template_copy')->where([
