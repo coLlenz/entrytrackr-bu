@@ -155,7 +155,7 @@
     }
     
     function selectedTemplate(data , questions){
-        $('#generated_container').append( data ).hide().fadeIn(1000);
+        $('#generated_container').html( data ).hide().fadeIn(1000);
         myQuestions = JSON.parse( questions );
         checkChanges( myQuestions );
     }
