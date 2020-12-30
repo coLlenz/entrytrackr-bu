@@ -323,6 +323,11 @@
         $('#checkinModal').modal('show');
     });
     
+    $(document).on('click' , '#answerQuiz' , function(e) {
+        e.preventDefault();
+        alert('test');
+    });
+    
     function flowCheckpoint(response){
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         switch(response.type_of_visitor) {
@@ -399,11 +404,27 @@
                     })
             break;
             case '3':
-                alert('Employee');
+                var questions = JSON.parse(response.questions);
+                Swal.fire({
+                    title: 'Employee Questions Coming Soon.',
+                    icon: 'info',
+                    // html: makeHtml(questions),
+                    allowOutsideClick:false,
+                    focusConfirm: false,
+                    confirmButtonText:'Okay',
+                    showConfirmButton:true,
+                })
             break;
         default:
         // code block
         }
+    }
+    
+    function makeHtml(questions){
+        var form = document.createElement('form');
+        $(form).append('<input class="form-control" />');
+        $(form).append('<button type="submit" class="btn btn-primary" id="answerQuiz" > Submit </button>');
+        return form;
     }
 </script>
 <script type="text/javascript">
