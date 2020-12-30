@@ -123,19 +123,7 @@ class TemplateController extends Controller
     }
 
     public function questionView(){
-        $templates = [];
-        
-        if (auth()->user()->is_admin) {
-            $templates = Template::where([
-                'template_type' => 0
-                ])->get();
-        }else{
-            $templates = DB::table('template_copy')->where([
-                'user_id' => auth()->user()->id,
-                'template_type' => 0
-                ])->get();
-        }
-        
+        $templates = Template::where('template_type' , 0)->get();
         return view("template.questionnaire" , compact('templates') );
     }
     
