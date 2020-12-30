@@ -57,7 +57,8 @@ class TrakrViewController extends Controller
                         'name' => $visitor->firstName , 
                         'check_date' => $formated_date,
                         'type_of_visitor' => $visitor->trakr_type_id,
-                        'trakrid' => $visitor->id
+                        'trakrid' => $visitor->id,
+                        'questions' => ($visitor->trakr_type_id == 3) ? $this->getEmployeeQuestions(  $visitor->user_id ) : false
                     ],200);
             }
             
@@ -83,7 +84,8 @@ class TrakrViewController extends Controller
                         'name' => $trakr_new->firstName , 
                         'check_date' => $formated_date,
                         'type_of_visitor' => $trakr_new->trakr_type_id,
-                        'trakrid' => $trakr_new->id
+                        'trakrid' => $trakr_new->id,
+                        'questions' => ($trakr_new->trakr_type_id == 3) ? $this->getEmployeeQuestions(  $trakr_new->user_id ) : false
                 ],200);
             }else{
                 return response()->json(['status' => 'fail','msg' => 'There\'s a problem creating your record.'],200);
@@ -91,6 +93,16 @@ class TrakrViewController extends Controller
         }else {
             return response()->json(['status' => 'fail','validator' => $validator->errors()->all() ],200);
         }
+    }
+    
+    public function getEmployeeQuestions( $user_id = false ){
+        $questions = DB::table('template_copy')->select('questions')->where([
+            'user_id' => $user_id,
+            'template_type' => 0,
+            'status' => 1
+        ])->first();
+        
+        return $questions->questions;
     }
     
     public function trakrid(Request $request){
@@ -250,9 +262,5 @@ class TrakrViewController extends Controller
         $view_data['uuid'] = $uuid;
         $view_data['userid'] = $userid;
         return view('trakr.mobile')->with('view_data' , $view_data);
-    }
-    
-    public function QRLoginViewPost( $uuid , $userid ){
-        
     }
 }
