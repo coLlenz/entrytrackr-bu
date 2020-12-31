@@ -404,29 +404,118 @@
                     })
             break;
             case '3':
-                var questions = JSON.parse(response.questions);
-                Swal.fire({
-                    title: 'Employee Questions Coming Soon.',
-                    icon: 'info',
-                    // html: makeHtml(questions),
-                    allowOutsideClick:false,
-                    focusConfirm: false,
-                    confirmButtonText:'Okay',
-                    showConfirmButton:true,
-                })
+                    console.log(response);
+                    if (response.questions) {
+                        // var questions = JSON.parse(response.questions.questions);
+                        Swal.fire({
+                            title: 'Employee Questions',
+                            icon: 'info',
+                            html: makeHtml(response.questions , response.trakrid),
+                            allowOutsideClick:false,
+                            focusConfirm: false,
+                            showConfirmButton:false,
+                        })
+                    }
+                    return;
             break;
         default:
         // code block
         }
     }
     
-    function makeHtml(questions){
+    function makeHtml(questions , trakrid){
+        var html = questions.content_html;
         var form = document.createElement('form');
-        $(form).append('<input class="form-control" />');
-        $(form).append('<button type="submit" class="btn btn-primary" id="answerQuiz" > Submit </button>');
+        var button = '<br/><button type="submit"  class="btn btn-primary float-right" >Submit</>';
+        var hiddenId = `<input type="hidden" name="questionId" value="${questions.id}" >`;
+        var trakrid = `<input type="hidden" name="trakrid" value="${trakrid}" >`;
+        $(form).attr('action' , "{{route('employee-answer')}}");
+        $(form).attr('method' , 'POST');
+        $(form).attr('id' , 'submitAnswer');
+        $(form).append(html);
+        $(form).append(hiddenId);
+        $(form).append(trakrid);
+        $(form).find('.form-group').remove();
+        $( $(form).find('.custom-control') ).each( (idx , item) => {
+            $(item).css('display' , 'flex');
+            $( $(item).find('input[type=radio]') ).each( (idx2 , item2) => {
+                $(item2).attr('required' , 'true');
+            });
+        })
+        $(form).append(button);
         return form;
     }
-</script>
-<script type="text/javascript">
-
+    
+    $(document).on('submit' ,'#submitAnswer' , function(e) {
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+        e.preventDefault();
+        $.ajax({
+            url : $(this).attr('action'),
+            method: $(this).attr('method'),
+            data: $(this).serialize(),
+            success:function(response){
+                if (response.examStatus) {
+                    Swal.fire({
+                        input: 'textarea',
+                        inputLabel: 'Create Trakr ID',
+                        inputPlaceholder:'eg. Phone number',
+                        showCancelButton:false,
+                        showCloseButton:false,
+                        allowOutsideClick:false,
+                        inputValidator: (value)=>{
+                            if (!value) {
+                                return 'Input value is required.'
+                            }
+                            
+                            if (value) {
+                                $.ajax({
+                                    url : "{{route('check-trakr-id')}}",
+                                    method: 'POST',
+                                    data: {input : value},
+                                    success:function(response){
+                                        if (response.is_existing) {
+                                            return value+' is already taken';
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                    }).then( results => {
+                        if (results.isConfirmed) {
+                            var visitor_id = response.trakrid;
+                            var trakr_id = results.value;
+                            $.ajax({
+                                url : "{{route('save-trakr-id')}}",
+                                method : "POST",
+                                data :{visitor_id : visitor_id , trakr_id: trakr_id},
+                                success : function(response){
+                                    if (response.status == 'success') {
+                                        Swal.fire({
+                                            position: 'center',
+                                            icon: 'success',
+                                            title: 'Trakr ID has been set.',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    })
+                }else{
+                    Swal.fire({
+                        title: '<strong>Access Denied.</strong>',
+                        icon: 'error',
+                        allowOutsideClick : false,
+                        html:'We regret to inform you that you are not permitted to enter. Please report to the reception desk for further assistance',
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText:'Okay',
+                        confirmButtonAriaLabel: 'Okay',
+                    })
+                }
+            }
+        })
+    })
+    
 </script>

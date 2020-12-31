@@ -30,15 +30,15 @@
                 options = `
                     <div class="mb-4">
                         <div class="custom-control custom-radio">
-                            <input type="radio" id="${ this_id = makeid(10) }" name="${  myname = makeid(15) }" class="custom-control-input"> 
+                            <input type="radio" id="${ this_id = makeid(10) }" name="${  myname = makeid(15) }" class="custom-control-input" value="A"> 
                             <label class="custom-control-label" for="${ this_id }"> ${ item.a } </label>
                         </div>
                         <div class="custom-control custom-radio">
-                            <input type="radio" id="${ this_id = makeid(10) }" name="${ myname }" class="custom-control-input"> 
+                            <input type="radio" id="${ this_id = makeid(10) }" name="${ myname }" class="custom-control-input" value="B"> 
                             <label class="custom-control-label" for="${ this_id }">${ item.b }</label>
                         </div>
                         <div class="custom-control custom-radio">
-                            <input type="radio" id="${ this_id = makeid(10) }" name="${ myname }" class="custom-control-input"> 
+                            <input type="radio" id="${ this_id = makeid(10) }" name="${ myname }" class="custom-control-input" value="C"> 
                             <label class="custom-control-label" for="${ this_id }"> ${ item.c } </label>
                         </div>
                         <br />
