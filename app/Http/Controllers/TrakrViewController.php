@@ -66,7 +66,6 @@ class TrakrViewController extends Controller
             
             $trakr_new->firstName = $request->first_name;
             $trakr_new->lastName = $request->last_name;
-            $trakr_new->trakr_id = $request->phoneNumber;
             $trakr_new->phoneNumber = $request->phoneNumber;
             $trakr_new->email = $request->email;
             $trakr_new->trakr_type_id = $request->visitor_type;
@@ -96,13 +95,13 @@ class TrakrViewController extends Controller
     }
     
     public function getEmployeeQuestions( $user_id = false ){
-        $questions = DB::table('template_copy')->select('questions')->where([
+        $questions = DB::table('template_copy')->select('questions' , 'content_html' ,'id')->where([
             'user_id' => $user_id,
             'template_type' => 0,
             'status' => 1
         ])->first();
         
-        return $questions->questions;
+        return $questions ? $questions : false;
     }
     
     public function trakrid(Request $request){
@@ -254,6 +253,49 @@ class TrakrViewController extends Controller
         
         return response()->json(['status' => 'success' , 'has_notif' => false , 'notif' => [] ] , 200);
         
+    }
+    
+    public function employeeAnswer(Request $request){
+        $question = DB::table('template_copy')->select('questions')->where('id' , $request->questionId)->first();
+        $decoded = json_decode( $question->questions );
+        $wrong = 0;
+        $index = 0;
+        
+        foreach ($request->all() as $key => $input) {
+            if ($key != 'questionId' && $key != 'trakrid') {
+                if (strtoupper($decoded[$index]->correctAnswer) != strtoupper($input) ) {
+                    $wrong++;
+                }
+                $index++;
+            }
+        }
+        
+        if ($wrong > 0) {
+            $trakr = Trakr::findOrFail($request->trakrid);
+            $trakr->status = 1;
+            $trakr->save();
+            return response()->json(['status' => 'success' , 'examStatus' => false] , 200);
+        }else{
+            return response()->json(['status' => 'success' , 'examStatus' => true , 'trakrid' => $request->trakrid] , 200);
+        }
+    }
+    
+    function trakrIdCheck(Request $request){
+        $trakr = Trakr::where('trakr_id' , $request->input)->first();
+        if ($trakr) {
+            return response()->json(['status' => 'success' , 'is_existing' => true] , 200);
+        }
+        return response()->json(['status' => 'success' , 'is_existing' => false] , 200);
+    }
+    
+    function saveTrakrId(Request $request){
+        $trakr = Trakr::findOrFail($request->visitor_id);
+        $trakr->trakr_id = $request->trakr_id;
+        if ($trakr->save()) {
+            return response()->json(['status' => 'success']);
+        }
+        
+        return response()->json(['status' => 'fail']);
     }
     
     public function QRLoginView( $uuid , $userid ){
