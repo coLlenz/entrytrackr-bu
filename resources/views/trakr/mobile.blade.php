@@ -42,25 +42,7 @@
                 </div>
             </a>
         </div>
-    </div>
-    
-    <!-- <div class="row justify-content-center">
-        <div class="col-sm-8 col-md-6 col-lg-6 col-xl-4">
-            <a href="#" class="card" data-toggle="modal" data-target="#checkoutModal">
-                <div class="card-body text-center">
-                    <h1>Contactless Entry</h1>
-                    <img class=""  src="{{ auth()->user()->qr_path }}" alt="" height="250" width="250">
-                </div>
-                <div class="card-footer">
-                    <p class="text-center card-text font-weight-semibold mb-0"> 
-                        Scan the QR code with your smartphone camera to <br> 
-                        <strong>Sign In</strong> or <strong>Sign Out</strong> 
-                    </p>
-                </div>
-            </a>
-        </div>
-    </div> -->
-    
+    </div>    
 </div>
 <script src="{{ asset('js/vendor/sweetalert2@10.js')}}"></script>
 <script type="text/javascript" src="{{ asset('js/vendor/quill.min.js') }}"></script>
