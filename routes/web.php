@@ -61,6 +61,8 @@ Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/delete/{trakr}', [TrakrController::class, 'destroy'])->name("trakr-delete");
 	// Safe CheckBox
 	Route::post('update/safe', [TrakrController::class, 'safeupdate'])->name("trakr-safe");
+	// manual sign out
+	Route::post('manual/visitor/signout' , [TrakrController::class , 'manualSignOut'])->name('manualSignOut');
 });
 Route::prefix('templates')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/', [TemplateController::class, 'index'])->name("template-index");

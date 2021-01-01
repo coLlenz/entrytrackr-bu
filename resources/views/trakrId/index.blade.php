@@ -34,13 +34,14 @@
                         <td>{{$trakr->type}}</td>
                         <td class="text-center">
                             <button class="btn btn-primary dropdown-toggle mb-1" type="button"
-                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                        Actions
+                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                Actions
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="{{route("trakr-edit",$trakr->id)}}">Edit</a>
                                 <a class="dropdown-item" href="{{route("trakr-delete",$trakr->id)}}">Delete</a>
+                                <a class="dropdown-item manualSignOut" href="#" data-id="{{$trakr->id}}">Sign Out</a>
                             </div>
                         </td>
                     </tr>
@@ -51,38 +52,36 @@
         {{$list_data->links()}}
     </div>
 </div>
-@endsection
 
-@section('script')
-<script src="{{ asset('js/vendor/datatables.min.js') }}"></script>
-<script>
-      $(document).ready(function() {
-       $table = $(".data-table-feature").DataTable({
-        sDom: '<"row view-filter"<"col-sm-12"<"float-right"l><"float-left"f><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
-        drawCallback: function () {
-          $($(".dataTables_wrapper .pagination li:first-of-type"))
-            .find("a")
-            .addClass("prev");
-          $($(".dataTables_wrapper .pagination li:last-of-type"))
-            .find("a")
-            .addClass("next");
-          $(".dataTables_wrapper .pagination").addClass("pagination-sm");
-        },
-        language: {
-          paginate: {
-            previous: "<i class='simple-icon-arrow-left'></i>",
-            next: "<i class='simple-icon-arrow-right'></i>"
-          },
-          search: "_INPUT_",
-          searchPlaceholder: "Search...",
-          lengthMenu: "Items Per Page _MENU_"
-        },
-      });
-    });
+<script src="{{ asset('js/vendor/jquery-3.3.1.min.js') }}" charset="utf-8"></script>
+<script src="{{ asset('js/vendor/sweetalert2@10.js') }}" charset="utf-8"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.manualSignOut').on('click' , function() {
+        var thiS = $(this);
+        var data_id = $(this).attr('data-id');
+        Swal.fire({
+            title: 'This will manually sign out the visitor.',
+            showCloseButton: true,
+            showCancelButton: true,
+            confirmButtonText: `Procced`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+                Swal.showLoading();
+                $.ajax({
+                    url :`{{route('manualSignOut')}}`,
+                    type : 'POST',
+                    data : {data_id : data_id},
+                    success: function(response){
+                        if (response.status) {
+                            $(thiS).closest('tr').fadeOut();
+                        }
+                    }
+                })
+            }
+        })
+    })
+})
 </script>
-@endsection
-
-@section('style')
-<link rel="stylesheet" href="{{ asset('css/vendor/dataTables.bootstrap4.min.css') }}" />
-<link rel="stylesheet" href="{{ asset('css/vendor/datatables.responsive.bootstrap4.min.css') }}" />
 @endsection
