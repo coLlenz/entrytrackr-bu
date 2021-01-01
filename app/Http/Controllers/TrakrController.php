@@ -167,4 +167,14 @@ class TrakrController extends Controller
             
         return response($response);
     }
+    
+    public function manualSignOut(Request $request){
+        $manual = Trakr::findOrFail($request->data_id);
+        $manual->checked_in_status = 1;
+        $manual->check_out_date = date('Y-m-d H:i:s');
+        if ($manual->save()) {
+            return response()->json(['status' => true] , 200);
+        }
+        return response()->json(['status' => false] , 200);
+    }
 }
