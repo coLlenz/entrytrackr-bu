@@ -4,13 +4,12 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="checkin">Check In</h5>
+            <h5 class="modal-title" id="checkin">Sign In</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <p class="text-info"> <i>NOTE: Phone number will be automatically set as a trakr ID for simple check-in</i> </p>
             <form id="form_checkin" action="{{ !$view_data['is_mobile'] ?  route( 'trakr-post' , auth()->user()->uuid ) : route( 'qr-login' ,$view_data['userid']) }}" method="post" class="needs-validation" novalidate>
                 @csrf
                 <div class="form-group">
@@ -53,8 +52,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary save_check_in">Save</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary save_check_in">Next</button>
                 </div>
             </form>
           </div>
@@ -97,8 +96,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary save_check_out">Check out</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary save_check_out">Sign Out</button>
                 </div>
             </form>
           </div>
@@ -186,22 +185,7 @@
                             confirmButtonAriaLabel: 'Thumbs up, great!',
                         })
                     }else{
-                        Swal.fire({
-                            title: '<strong>Welcome, '+result.value.name+'</strong>',
-                            icon: 'success',
-                            allowOutsideClick : false,
-                            html:
-                            'You have successfully been signed in at <br />' +
-                            '<b>'+result.value.check_date+'</b>',
-                            showCloseButton: true,
-                            focusConfirm: false,
-                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> Great!',
-                            confirmButtonAriaLabel: 'Thumbs up, great!',
-                        }).then(data => {
-                            if (data.isConfirmed) {
-                                flowCheckpoint(result.value);
-                            }
-                        })
+                        flowCheckpoint(result.value)
                     }
                 }
             })
@@ -220,22 +204,7 @@
                 success:function(response){
                     if (response.status == 'success') {
                         $('#checkinModal').modal('hide');
-                        form[0].reset();
-                        form.removeClass('was-validated');
-                        Swal.fire({
-                            title: '<strong>Welcome, '+response.name+'</strong>',
-                            icon: 'success',
-                            allowOutsideClick : false,
-                            html:
-                            'You have successfully been signed in at <br />' +
-                            '<b>'+response.check_date+'</b>',
-                            showCloseButton: true,
-                            focusConfirm: false,
-                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> Great!',
-                            confirmButtonAriaLabel: 'Thumbs up, great!',
-                        }).then(isConfirmed => {
-                            flowCheckpoint(response);
-                        })
+                        flowCheckpoint(response);
                     }
                 }
             })
@@ -274,18 +243,7 @@
                         $('#checkoutModal').modal('hide');
                         form2[0].reset();
                         form2.removeClass('was-validated');
-                        Swal.fire({
-                            title: '<strong>Goodbye, '+response.name+'</strong>',
-                            icon: 'success',
-                            allowOutsideClick : false,
-                            html:
-                            'You have successfully been signed out at <br />' +
-                            '<b>'+response.check_date+'</b>',
-                            showCloseButton: true,
-                            focusConfirm: false,
-                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> Great!',
-                            confirmButtonAriaLabel: 'Thumbs up, great!',
-                        })
+                        showCheckOutMessage(response);
                     }
                     
                     if (response.validation_error) {
@@ -323,10 +281,39 @@
         $('#checkinModal').modal('show');
     });
     
-    $(document).on('click' , '#answerQuiz' , function(e) {
-        e.preventDefault();
-        alert('test');
-    });
+    
+    function showCheckInMessage(details){
+        $('#checkinModal').modal('hide');
+        form[0].reset();
+        form.removeClass('was-validated');
+        Swal.fire({
+            title: '<strong>Welcome, '+details.name+'</strong>',
+            icon: 'success',
+            allowOutsideClick : false,
+            html:
+            'You have successfully been signed in at <br />' +
+            '<b>'+details.check_date+'</b>',
+            showCloseButton: false,
+            showConfirmButton:false,
+            timer: 10000,
+            footer: '<p> This message will automatically close in 10 seconds. </p>'
+        })
+    }
+    
+    function showCheckOutMessage(details){
+        Swal.fire({
+            title: '<strong>Goodbye, '+details.name+'</strong>',
+            icon: 'success',
+            allowOutsideClick : false,
+            html:
+            'You have successfully been signed out at <br />' +
+            '<b>'+details.check_date+'</b>',
+            showCloseButton: false,
+            showConfirmButton:false,
+            timer: 10000,
+            footer: '<p> This message will automatically close in 10 seconds. </p>'
+        })
+    }
     
     function flowCheckpoint(response){
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
@@ -351,15 +338,9 @@
                                 url: "{{route('visiting-who')}}",
                                 method:'POST',
                                 data: {trakrid: response.trakrid , visited: complete.value},
-                                success:function(response){
+                                success:function(data){
                                     if (response.status == 'success') {
-                                        Swal.fire({
-                                            position: 'top-end',
-                                            icon: 'success',
-                                            title: 'Data has been added to your logs.',
-                                            showConfirmButton: false,
-                                            timer: 3000
-                                        })
+                                        showCheckInMessage(response);
                                     }
                                 },
                             })
@@ -386,17 +367,9 @@
                                 url : "{{route('business')}}",
                                 method: 'POST',
                                 data:{trakrid:response.trakrid, name_of_business:complete.value },
-                                success:function(response){
-                                    if (response.status == 'success') {
-                                        if (response.status == 'success') {
-                                            Swal.fire({
-                                                position: 'top-end',
-                                                icon: 'success',
-                                                title: 'Data has been added to your logs.',
-                                                showConfirmButton: false,
-                                                timer: 3000
-                                            })
-                                        }
+                                success:function(data){
+                                    if (data.status == 'success') {
+                                        showCheckInMessage(response);
                                     }
                                 }
                             })
@@ -404,9 +377,7 @@
                     })
             break;
             case '3':
-                    console.log(response);
                     if (response.questions) {
-                        // var questions = JSON.parse(response.questions.questions);
                         Swal.fire({
                             title: 'Employee Questions',
                             icon: 'info',
