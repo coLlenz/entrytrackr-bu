@@ -1,0 +1,29 @@
+Add QR Code on Settings page (DONE)
+
+Reports
+- Change wording - Visitor Log (DONE)
+
+Templates
+- Add Questions
+	- Add Description text (DONE)
+
+Footer
+- update year (DONE)
+
+Check In page move to  Settings
+Change Wording "Visitor Sign in Page"
+
+Sign in
+- Phone Number
+- Change close to Cancel
+- Change Checkout to Sign out
+- Change TrakrID icon to same Sign in Icon
+(DONE)
+
+Modal Sign in
+- Header Change from check in to sign in
+- Button change close to Cancel,  Save to Next
+(DONE)
+Close Swal after 10 seconds
+ - This message will automatically close in 10 seconds
+(DONE)
