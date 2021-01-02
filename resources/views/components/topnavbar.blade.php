@@ -159,7 +159,7 @@
             <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
                 <span>
-                    <i class="simple-icon-user" style="font-size: 14px;"></i>
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                     {{-- <img alt="Profile Picture" src="{{asset("img/profile-pic-l.jpg")}}" /> --}}
                 </span>
                 <span class="name">{{ Auth::user()->contactName }}</span>

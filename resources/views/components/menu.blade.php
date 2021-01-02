@@ -4,28 +4,28 @@
             <ul class="list-unstyled">
                 <li class="{{(request()->is('dashboard') || request()->segment(1) == 'dashboard') ? 'active' : ''}}">
                     <a href="/dashboard">
-                        <i class="simple-icon-grid"></i>
+                        <i class="fa fa-th-large" aria-hidden="true"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="{{(request()->is('reports') || request()->segment(1) == 'reports') ? 'active' : ''}}">
                     <a href="/reports">
-                        <i class="iconsminds-statistic"></i> Reports
+                        <i class="fa fa-line-chart" aria-hidden="true"></i> Reports
                     </a>
                 </li>
                 <li class="{{(request()->is('trakrid') || request()->segment(1) == 'trakrid') ? 'active' : ''}}">
                     <a href="/trakrid">
-                        <i class="iconsminds-id-card"></i> TrakrID
+                        <i class="fa fa-id-card-o" aria-hidden="true"></i> TrakrID
                     </a>
                 </li>
                 <li class="{{(request()->is('templates') || request()->segment(1) == 'templates') ? 'active' : ''}}">
                     <a href="/templates">
-                        <i class="iconsminds-pantone"></i> Templates
+                        <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
                     </a>
                 </li>
                 <li class="{{(request()->is('settings') || request()->segment(1) == 'settings') ? 'active' : ''}}">
                     <a href="/settings">
-                        <i class="simple-icon-settings"></i> Settings
+                        <i class="fa fa-cog" aria-hidden="true"></i> Settings
                     </a>
                 </li>
                 {{-- <li class="active">
@@ -35,7 +35,7 @@
                 </li> --}}
                 <li class="{{(request()->is('support') || request()->segment(1) == 'support') ? 'active' : ''}}">
                     <a href="/support">
-                        <i class="simple-icon-support"></i> Help & Support
+                        <i class="fa fa-life-ring" aria-hidden="true"></i> Help & Support
                     </a>
                 </li>
                 @if(auth()->user()->is_admin)

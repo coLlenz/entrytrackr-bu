@@ -27,7 +27,7 @@
                             <div class="col-md-3 col-lg-2 col-sm-4 col-6 mb-4 entry_box">
                                 <a href="" class="card" data-toggle="modal" data-target="#add_user_modal">
                                     <div class="card-body text-center">
-                                    <i class="iconsminds-add-user"></i>
+                                    <i class="fa fa-user-plus" aria-hidden="true"></i>
                                     <p class="card-text font-weight-semibold mb-0">Add User</p>
                                     <!-- <p class="lead text-center">10</p> -->
                                     </div>
@@ -36,7 +36,7 @@
                             <div class="col-md-3 col-lg-2 col-sm-4 col-6 mb-4 entry_box">
                                 <a href="{{route('customerAdmins')}}" class="card">
                                     <div class="card-body text-center">
-                                    <i class="iconsminds-business-mens"></i>
+                                    <i class="fa fa-users" aria-hidden="true"></i>
                                     <p class="card-text font-weight-semibold mb-0">Manage Users</p>
                                     <!-- <p class="lead text-center">10</p> -->
                                     </div>
