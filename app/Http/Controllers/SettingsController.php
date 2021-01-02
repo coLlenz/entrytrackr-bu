@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Hash;
 use Str;
+use PDF;
 class SettingsController extends Controller{
     
     public function customerAdmins(){
@@ -46,4 +47,10 @@ class SettingsController extends Controller{
         
         return response()->json(['error'=>$validator->errors()->all()]);
     }
+    
+    public function generatePDF(){
+        $pdf = PDF::loadView('pdf.qrpdf');
+        return $pdf->download('QR_LOGIN.pdf');
+    }
+        
 }
