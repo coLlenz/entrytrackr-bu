@@ -49,7 +49,9 @@ class SettingsController extends Controller{
     }
     
     public function generatePDF(){
-        $pdf = PDF::loadView('pdf.qrpdf');
+        // return view('pdf.qrpdf');
+        // PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+        $pdf = PDF::loadView('pdf.qrpdf')->setPaper('a4', 'landscape');
         return $pdf->download('QR_LOGIN.pdf');
     }
         
