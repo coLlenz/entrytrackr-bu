@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 col-sm-6">
-                    <p class="mb-0 text-muted">Copyright ©2020 entrytrakr. All Rights Reserved</p>
+                    <p class="mb-0 text-muted">Copyright © {{ date('Y') }} entrytrakr. All Rights Reserved</p>
                 </div>
                 {{-- <div class="col-sm-6 d-none d-sm-block">
                     <ul class="breadcrumb pt-0 pr-0 float-right">

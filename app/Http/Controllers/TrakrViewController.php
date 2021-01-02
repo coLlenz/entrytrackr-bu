@@ -95,7 +95,7 @@ class TrakrViewController extends Controller
     }
     
     public function getEmployeeQuestions( $user_id = false ){
-        $questions = DB::table('template_copy')->select('questions' , 'content_html' ,'id')->where([
+        $questions = DB::table('template_copy')->select('questions' , 'content_html' ,'id' , 'description')->where([
             'user_id' => $user_id,
             'template_type' => 0,
             'status' => 1
