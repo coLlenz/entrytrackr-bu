@@ -41,7 +41,7 @@
                 @if(auth()->user()->is_admin)
                 <li class="{{(request()->is('user') || request()->segment(1) == 'user') ? 'active' : ''}}">
                     <a href="/user">
-                        <i class="simple-icon-user"></i> User Accounts
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i> User Accounts
                     </a>
                 </li>
                 @endif
