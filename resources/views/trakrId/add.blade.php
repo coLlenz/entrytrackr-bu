@@ -4,10 +4,16 @@
 <div class="mb-2">
     <h1>Add TrakrID</h1>
     <div class="top-right-button-container">
-        
+
     </div>
 </div>
 <div class="card">
+     @if (session('success'))
+        <div class="alert alert-success">
+            <span>{{session('success')}}</span>
+        </div>
+     @endif
+   
     <div class="card-body">
         <form action="{{route("trakr-store")}}" method="post" id="fadd">
             @csrf

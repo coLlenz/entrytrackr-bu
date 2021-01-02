@@ -59,7 +59,9 @@ class TrakrController extends Controller
         $trakrr->check_in_date = date('Y-m-d H:i:s');
         
         if ($trakrr->save()) {
-            return redirect()->back();
+            return redirect()
+            ->back()
+            ->with('success', 'Successfully Added New TrakrID');
         }
         return redirect()->back();
     }
