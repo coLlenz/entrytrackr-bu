@@ -3,7 +3,26 @@
     <head>
         <meta charset="utf-8">
         <title> QR LOGIN </title>
-        <link href="{{ public_path('css/vendor/bootstrap.min.css') }}" rel="stylesheet">
+    <style media="screen">
+        *{
+            font-family: 'Roboto', sans-serif;
+        }
+        .container {
+            margin: auto;
+            width: 50%;
+            border: 3px solid #a3238e;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+        
+        .justify-content-md-center{
+            text-align: center;
+        }
+        .title{
+            font-size: 40px;
+        }
+    </style>
     </head>
     <body>
         <div class="container">
@@ -11,9 +30,11 @@
                 <div class="col-md-8 text-center">
                     <div class="card">
                         <div class="card-body">
-                            <h1 class="card-title"> Contactless Sign In / Sign Out </h1>
-                            <p class="card-text mb-4" > Please scan the QR code with your smartphone camera</p>
-                            <img src=" {{auth()->user()->qr_path}} " alt="">
+                            <h1 class="card-title title"> Contactless</h1>
+                            <h1 class="card-title"> Sign In / Sign Out </h1>
+                            <p class="card-text mb-4" > Please scan the QR code with your smartphone camera</p> 
+                            <br><br><br>
+                            <img src="{{ url(auth()->user()->qr_path) }}">
                         </div>
                     </div>
                 </div>
