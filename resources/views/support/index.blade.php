@@ -33,9 +33,9 @@
                         @foreach ($contacts as $key=>$user)
                         <tr>
                             <td>{{$key+1}}</td>
-                            <td>{{$user->User->name}}</td>
                             <td>{{$user->name}}</td>
-                            <td>{{$user->User->email}}</td>
+                            <td>{{$user->name}}</td>
+                            <td>{{$user->email}}</td>
                             <td>{{$user->message}}</td>
                         </tr>
                         @endforeach
@@ -68,9 +68,7 @@
                             <label class="form-control-label" id="message">Message</label>
                             <textarea name="message" cols="30" class="form-control" rows="10"></textarea>
                         </div>
-                        <center>
-                            <button class="btn btn-success" type="submit">Save</button>
-                        </center>
+                        <button class="btn btn-primary btn-lg float-right" type="submit">Save</button>
                     </form>
                 </div>
             </div>
