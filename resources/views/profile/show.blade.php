@@ -49,7 +49,23 @@
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updateProfileInformation()))
                 @include('profile.update-profile-information-form')
             @endif
-
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="mb-4"> QR Code </h4>
+                    <p style=""> Print your QR code to create additional <strong>Sign In</strong> and <strong>Sign Out</strong> access points. </p>
+                    
+                    <div class="row justify-content-md-center">
+                        <div class="col-md-12">
+                            <a href="{{ route('qrpdf') }}" class="btn btn-primary btn-md" > Print PDF </a>
+                            <button type="button" class="btn btn-primary btn-md top-right-button  mr-1"
+                        onclick="window.location.href='{{route("trakr-view",auth()->user()->uuid)}}'">Visitor Sign in Page</button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div> 
+            
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()))
                 @include('profile.update-password-form')
             @endif

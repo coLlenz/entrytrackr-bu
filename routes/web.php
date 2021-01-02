@@ -51,6 +51,7 @@ Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
 	Route::view('/changepassword', 'profile.update_password')->name('profile-update');
 	Route::post('/add_admin' , [SettingsController::class , 'new_admin'])->name('add-new-admin');
 	Route::get('/manage/all/admins' , [SettingsController::class , 'customerAdmins'])->name('customerAdmins');
+	Route::get('/qr/login/view' , [SettingsController::class , 'generatePDF'])->name('qrpdf');
 });
 Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/', [TrakrController::class, 'index'])->name("trakr-index");
