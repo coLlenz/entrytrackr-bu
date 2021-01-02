@@ -386,6 +386,8 @@
                             focusConfirm: false,
                             showConfirmButton:false,
                         })
+                    }else{
+                        showCheckInMessage(response);
                     }
                     return;
             break;
