@@ -26,7 +26,7 @@
         <div class="col-md-12 col-lg-4 col-sm-12 mb-4 entry_box trakr_box_hover" id="simple_checkin">
             <a href="#" class="card" data-toggle="" data-target="#">
                 <div class="card-body text-center">
-                    <h1><i class="simple-icon-key"></i></h1>
+                    <h1><i class="simple-icon-login"></i><h1>
                     <h2 class="card-text font-weight-semibold mb-0">Sign In with trakrID</h2>
                 </div>
             </a>

@@ -6,7 +6,7 @@
     @if(!auth()->user()->is_admin)
         <div class="top-right-button-container">
             <button type="button" class="btn btn-primary btn-lg top-right-button  mr-1"
-        onclick="window.location.href='{{route("trakr-view",auth()->user()->uuid)}}'">Check In Page</button>
+        onclick="window.location.href='{{route("trakr-view",auth()->user()->uuid)}}'">Visitor Sign in Page</button>
             <button type="button" class="btn btn-primary btn-lg top-right-button  mr-1"
         onclick="window.location.href='{{route("trakr-add")}}'">ADD NEW</button>
         </div>
