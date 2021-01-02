@@ -31,6 +31,9 @@
                     <div class="form-group">
                         <input type="text" name="question_title" value="" class="form-control"  placeholder="Enter title here.." required />
                     </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="question_description" rows="3" placeholder="Description here..."></textarea>
+                    </div>
                     <div id="generated_container">
                         
                     </div>
@@ -62,6 +65,7 @@
         var form_data = new FormData();
         form_data.append('_token' , $('input[name=_token]').val())
         form_data.append('question_title' , $('input[name=question_title]').val())
+        form_data.append('question_description' , $('textarea[name=question_description]').val())
         form_data.append('question_data' , JSON.stringify(myQuestions));
         form_data.append('question_html' , form_container.html() );
         if ( fieldCheck() ) {

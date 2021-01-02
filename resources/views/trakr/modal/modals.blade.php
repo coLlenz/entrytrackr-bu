@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="phone" class="col-form-label">Phone #</label>
+                    <label for="phone" class="col-form-label">Phone Number</label>
                     <input type="text" class="form-control" name="phoneNumber" required>
                     <div class="invalid-feedback">
                         <h3>Phone number is required.</h3>
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="last_name" class="col-form-label">Phone #</label>
+                    <label for="last_name" class="col-form-label">Phone Number</label>
                     <input type="text" class="form-control" name="phoneNumber" required>
                     <div class="invalid-feedback">
                         <h3>Phone Number is required.</h3>
@@ -405,6 +405,7 @@
         $(form).attr('action' , "{{route('employee-answer')}}");
         $(form).attr('method' , 'POST');
         $(form).attr('id' , 'submitAnswer');
+        $(form).append(`<p class="text-left mb-4"> ${questions.description} </p> <hr/>`);
         $(form).append(html);
         $(form).append(hiddenId);
         $(form).append(trakrid);

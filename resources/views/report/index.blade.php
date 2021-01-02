@@ -118,7 +118,7 @@
                 <div class="card-content">
                     <div class="card-body card-dashboard">
                         <div class="card-header">
-                            <h4>Filter Results</h4>
+                            <h4>Visitor Log</h4>
                         </div>
                         <div class="table-responsive">
                             <table class="table zero-configuration" id="zero-configuration">

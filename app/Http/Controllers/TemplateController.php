@@ -131,6 +131,7 @@ class TemplateController extends Controller
         if (auth()->user()->is_admin) {
             $template = new Template();
             $template->title = $request->question_title;
+            $template->description = $request->question_description;
             $template->content_html = $request->question_html;
             $template->questions = $request->question_data;
             $template->template_type = 0;
@@ -144,6 +145,7 @@ class TemplateController extends Controller
         $template = DB::table('template_copy')->insert([
             'user_id' => auth()->user()->id,
             'title' => $request->question_title,
+            'description' => $request->question_description,
             'content_html' =>  $request->question_html,
             'questions' => $request->question_data,
             'status' => 0,
@@ -170,6 +172,7 @@ class TemplateController extends Controller
         if ( auth()->user()->is_admin ) {
             $template = Template::findOrFail($template_id);
             $template->title = $request->question_title;
+            $template->description = $request->question_description;
             $template->content_html = $request->question_html;
             $template->questions = $request->question_data;
             if ($template->save()) {
@@ -182,6 +185,7 @@ class TemplateController extends Controller
             'id' => $template_id
         ])->update([
             'title' => $request->question_title,
+            'description' => $request->question_description,
             'content_html' => $request->question_html,
             'questions' => $request->question_data,
             'updated_at' => date('Y-m-d H:i:s')
