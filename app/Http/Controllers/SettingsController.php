@@ -24,7 +24,6 @@ class SettingsController extends Controller{
     public function new_admin(Request $request){
         $validator = Validator::make($request->all(), [
             'admin_name' => 'required',
-            'admin_contact_name' => 'required',
             'admin_email' => 'required|email:rfc,dns|unique:users,email',
             'admin_password' => 'required|min:5',
             'admin_password_confirmation' => 'required|same:admin_password|min:5',
@@ -35,7 +34,7 @@ class SettingsController extends Controller{
             $new_admin->sub_account = 1;
             $new_admin->sub_account_id = auth()->user()->id;
             $new_admin->name = $request->admin_name;
-            $new_admin->contactName = $request->admin_contact_name;
+            $new_admin->contactName = '';
             $new_admin->email = $request->admin_email;
             $new_admin->password = Hash::make($request->admin_password);
             $new_admin->is_admin = 0;
@@ -51,7 +50,8 @@ class SettingsController extends Controller{
     public function generatePDF(){
         // return view('pdf.qrpdf');
         // PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
-        $pdf = PDF::loadView('pdf.qrpdf')->setPaper('a4', 'landscape');
+        // ->setPaper('a4', 'landscape');
+        $pdf = PDF::loadView('pdf.qrpdf');
         return $pdf->download('QR_LOGIN.pdf');
     }
         

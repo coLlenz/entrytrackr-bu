@@ -20,7 +20,7 @@
                 </div>
                 @endif
                     <div class="form-group">
-                        <label class="form-control-label" for="name">Business Name</label>
+                        <label class="form-control-label" for="name">Account Name</label>
                         <input name="name" type="text" class="form-control" id="name" placeholder="Enter Name" required>
                     </div>
                     <div class="form-group">

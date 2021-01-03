@@ -30,7 +30,7 @@ class DashboardController extends Controller
         $dash = new DashBoard();
         $trakrs = $dash->getdash_evac();
         view()->share('trakrs',$trakrs);
-        $pdf = PDF::loadView('pdf.pdf');
+        $pdf = PDF::loadView('pdf.pdf')->setPaper('a4', 'landscape');
         return $pdf->download($filename.'.pdf');
     }
 }

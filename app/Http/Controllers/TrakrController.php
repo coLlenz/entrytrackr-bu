@@ -13,8 +13,10 @@ class TrakrController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $sign_in = new DashBoard();
-        $list_data = $sign_in->getdash_data();
+        $list_data = Trakr::select('trakr_id','firstName' , 'lastName' , 'trakr_types.name' , 'trakrs.id' , 'check_in_date')
+        ->where('trakr_id', '!=' , '')
+        ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
+        ->paginate(10);
         return view('trakrId.index',compact("list_data"));
     }
 

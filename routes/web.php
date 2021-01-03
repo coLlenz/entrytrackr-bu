@@ -53,6 +53,7 @@ Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/manage/all/admins' , [SettingsController::class , 'customerAdmins'])->name('customerAdmins');
 	Route::get('/qr/login/view' , [SettingsController::class , 'generatePDF'])->name('qrpdf');
 });
+
 Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/', [TrakrController::class, 'index'])->name("trakr-index");
 	Route::get('/add', [TrakrController::class, 'create'])->name("trakr-add");
@@ -85,7 +86,7 @@ Route::prefix('trakr')->group(function () {
 	Route::get('/{id}/visitor-checkin', [TrakrViewController::class, 'index'])->name("trakr-view");
 	Route::post('/trakrid/check', [TrakrViewController::class, 'trakrid'])->name("trakrid-post"); //for simple check in
 	Route::post('/visitor-checkin', [TrakrViewController::class, 'create'])->name("trakr-post"); //for manual check in new visitors
-	Route::post('/trakrid/checkout', [TrakrViewController::class, 'add'])->name("trakrid-signout");
+	Route::post('/trakrid/checkout', [TrakrViewController::class, 'trakrcheckout'])->name("trakrid-signout");
 	Route::post('/trakr/visiting_who', [TrakrViewController::class, 'visitingWho'])->name("visiting-who");
 	Route::post('/trakr/business', [TrakrViewController::class, 'business'])->name("business");
 	Route::post('/employee/answers' , [TrakrViewController::class , 'employeeAnswer'])->name('employee-answer');

@@ -52,14 +52,27 @@
             
             <div class="card mb-4">
                 <div class="card-body">
+                    <h4 class="mb-4"> Visitor Management </h4>
+                    <p style=""> {{ url( 'trakr/qr/login/'.auth()->user()->uuid.'/'.(auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)   ) }} </p>
+                    
+                    <div class="row justify-content-md-center">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-primary btn-md top-right-button  mr-1"
+                        onclick="window.location.href='{{route("trakr-view",auth()->user()->uuid)}}'">Visitor Sign in Page</button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div> 
+            <div class="card mb-4">
+                <div class="card-body">
                     <h4 class="mb-4"> QR Code </h4>
-                    <p style=""> Print your QR code to create additional <strong>Sign In</strong> and <strong>Sign Out</strong> access points. </p>
+                    <p style=""> Print your QR code to create additional Sign In and Sign Out access points. </p>
                     
                     <div class="row justify-content-md-center">
                         <div class="col-md-12">
                             <a href="{{ route('qrpdf') }}" class="btn btn-primary btn-md" > Print PDF </a>
-                            <button type="button" class="btn btn-primary btn-md top-right-button  mr-1"
-                        onclick="window.location.href='{{route("trakr-view",auth()->user()->uuid)}}'">Visitor Sign in Page</button>
+                        
                         </div>
                     </div>
                     
@@ -80,7 +93,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add new user</h5>
+                        <h5 class="modal-title">Add New User</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -91,10 +104,6 @@
                             <div class="form-group">
                                 <label>Name</label> 
                                 <input type="text" class="form-control" placeholder="" name="admin_name">
-                            </div>
-                            <div class="form-group">
-                                <label>Contact Name</label> 
-                                <input type="text" class="form-control" placeholder="" name="admin_contact_name">
                             </div>
                             <div class="form-group">
                                 <label>Email</label> 
@@ -112,7 +121,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button> 
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary">Add User</button>
                             </div>
                         </form>
                         <div class="error_box">
