@@ -50,33 +50,35 @@
                 @include('profile.update-profile-information-form')
             @endif
             
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h4 class="mb-4"> Visitor Management </h4>
-                    <p style=""> {{ url( 'trakr/qr/login/'.auth()->user()->uuid.'/'.(auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)   ) }} </p>
-                    
-                    <div class="row justify-content-md-center">
-                        <div class="col-md-12">
-                            <a target="_blank" class="btn btn-primary btn-md top-right-button  mr-1" href="{{ url( route("trakr-view",auth()->user()->uuid) ) }}"> Visitor Sign in Page</a>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div> 
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h4 class="mb-4"> QR Code </h4>
-                    <p style=""> Print your QR code to create additional Sign In and Sign Out access points. </p>
-                    
-                    <div class="row justify-content-md-center">
-                        <div class="col-md-12">
-                            <a href="{{ route('qrpdf') }}" class="btn btn-primary btn-md" > Print PDF </a>
+            @if(!auth()->user()->is_admin)
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="mb-4"> Visitor Management </h4>
+                        <p style=""> {{ url( 'trakr/qr/login/'.auth()->user()->uuid.'/'.(auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)   ) }} </p>
                         
+                        <div class="row justify-content-md-center">
+                            <div class="col-md-12">
+                                <a target="_blank" class="btn btn-primary btn-md top-right-button  mr-1" href="{{ url( route("trakr-view",auth()->user()->uuid) ) }}"> Visitor Sign in Page</a>
+                            </div>
                         </div>
+                        
                     </div>
-                    
-                </div>
-            </div> 
+                </div> 
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="mb-4"> QR Code </h4>
+                        <p style=""> Print your QR code to create additional Sign In and Sign Out access points. </p>
+                        
+                        <div class="row justify-content-md-center">
+                            <div class="col-md-12">
+                                <a href="{{ route('qrpdf') }}" class="btn btn-primary btn-md" > Print PDF </a>
+                            
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div> 
+            @endif
             
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()))
                 @include('profile.update-password-form')
