@@ -57,7 +57,7 @@
                             <span style="font-size:13px">All</span>
                         </div>
                         <div class="vs-radio-con vs-radio-primary mb-1">
-                            <input type="radio" name="tvis" value="1" {{ ($formdata['tvis'] == 1) ? 'checked' : '' }}>
+                            <input type="radio" name="tvis" value="1" {{ ($formdata['tvis'] == '1') ? 'checked' : '' }}>
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
                                 <span class="vs-radio--circle"></span>
@@ -65,7 +65,7 @@
                             <span style="font-size:13px">Visitor</span>
                         </div>
                         <div class="vs-radio-con vs-radio-primary mb-1">
-                            <input type="radio" name="tvis" value="2" {{ ($formdata['tvis'] == 2) ? 'checked' : '' }}>
+                            <input type="radio" name="tvis" value="2" {{ ($formdata['tvis'] == '2') ? 'checked' : '' }}>
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
                                 <span class="vs-radio--circle"></span>
@@ -73,7 +73,7 @@
                             <span style="font-size:13px" >Contractor</span>
                         </div>
                         <div class="vs-radio-con vs-radio-primary mb-3">
-                            <input type="radio" name="tvis" value="3" {{ ($formdata['tvis'] == 3) ? 'checked' : '' }}>
+                            <input type="radio" name="tvis" value="3" {{ ($formdata['tvis'] == '3') ? 'checked' : '' }}>
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
                                 <span class="vs-radio--circle"></span>
@@ -90,7 +90,7 @@
                             <span style="font-size:13px">All</span>
                         </div>
                         <div class="vs-radio-con vs-radio-primary mb-1">
-                            <input type="radio" name="acc" value="0" {{ ($formdata['acc'] == 0) ? 'checked' : '' }}>
+                            <input type="radio" name="acc" value="0" {{ ($formdata['acc'] == '0') ? 'checked' : '' }}>
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
                                 <span class="vs-radio--circle"></span>
@@ -98,7 +98,7 @@
                             <span style="font-size:13px">Allowed</span>
                         </div>
                         <div class="vs-radio-con vs-radio-primary mb-3">
-                            <input type="radio" name="acc" value="1" {{ ($formdata['acc'] == 1) ? 'checked' : '' }}>
+                            <input type="radio" name="acc" value="1" {{ ($formdata['acc'] == '1') ? 'checked' : '' }}>
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
                                 <span class="vs-radio--circle"></span>

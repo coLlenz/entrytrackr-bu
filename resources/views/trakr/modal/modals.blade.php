@@ -144,7 +144,7 @@
             showCancelButton: true,
             showConfirmButton: true,
             confirmButtonText: 'Sign In',
-            confirmButtonColor: '#922c88',
+            confirmButtonColor: '#a3238e',
             cancelButtonText: 'Cancel',
             reverseButtons: true,
             showLoaderOnConfirm: true,
@@ -323,7 +323,7 @@
         Swal.fire({
             icon:'info',
             html:`
-            <p class="mb-4">For Faster Sign In on future visits, save you contact information as an trakrID.</p>
+            <p class="mb-4">For Faster Sign In on future visits, save your contact information as an trakrID.</p>
             <p>Create your trakrID using letters, numbers and symbols.</p>
             `,
             input:'text',
