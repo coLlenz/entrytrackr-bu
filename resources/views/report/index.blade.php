@@ -150,9 +150,9 @@
                                                 </td>
                                                 <td class="text-center">
                                                     @if($list->status == 0)
-                                                        <span class="badge badge-pill badge-primary">{{ 'Allowed' }}</span>
+                                                        <span class="badge  badge-success">{{ 'Allowed' }}</span>
                                                     @else
-                                                        <span class="badge badge-pill badge-warning">Denied</span>
+                                                        <span class="badge badge-danger">Denied</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center"> {{ $list->trakr_type_id == 1 ? $list->who : $list->name_of_company }}</td>

@@ -36,6 +36,9 @@
                 <div class="form-group">
                     <label for="email" class="col-form-label">Email</label>
                     <input type="text" class="form-control" name="email">
+                    <div class="invalid-email" style="display:none">
+                        <h3 style="color: #dc3545; " >Please provide a valid email</h3>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="visitor_type" class="col-form-label">Visitor type</label>
@@ -89,7 +92,7 @@
                     <label for="last_name" class="col-form-label">Phone Number</label>
                     <input type="text" class="form-control" name="phoneNumber" required>
                     <div class="invalid-feedback">
-                        <h3>Phone Number is required.</h3>
+                        <h3 >Phone Number is required.</h3>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -203,9 +206,14 @@
                 type: form.attr('method'),
                 data : form.serialize(),
                 success:function(response){
+                    console.log(response);
                     if (response.status == 'success') {
                         $('#checkinModal').modal('hide');
                         flowCheckpoint(response);
+                    }
+                    
+                    if (response.status == 'fail') {
+                        $('.invalid-email').show();
                     }
                 }
             })
@@ -522,14 +530,15 @@
                     })
                 }else{
                     Swal.fire({
-                        title: '<strong>Access Denied.</strong>',
+                        title: '<strong>Access Denied</strong>',
                         icon: 'error',
                         allowOutsideClick : false,
-                        html:'We regret to inform you that you are not permitted to enter. Please report to the reception desk for further assistance',
-                        showCloseButton: true,
+                        html:'We regret to inform you that you are not permitted to enter. Please report to the reception desk for further assistance.',
+                        showCloseButton: false,
                         focusConfirm: false,
-                        confirmButtonText:'Okay',
-                        confirmButtonAriaLabel: 'Okay',
+                        showConfirmButton:false,
+                        timer: 10000,
+                        footer: '<p> This message will automatically close in 10 seconds. </p>'
                     })
                 }
             }

@@ -57,8 +57,7 @@
                     
                     <div class="row justify-content-md-center">
                         <div class="col-md-12">
-                            <button type="button" class="btn btn-primary btn-md top-right-button  mr-1"
-                        onclick="window.location.href='{{route("trakr-view",auth()->user()->uuid)}}'">Visitor Sign in Page</button>
+                            <a target="_blank" class="btn btn-primary btn-md top-right-button  mr-1" href="{{ url( route("trakr-view",auth()->user()->uuid) ) }}"> Visitor Sign in Page</a>
                         </div>
                     </div>
                     
