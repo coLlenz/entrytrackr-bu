@@ -39,7 +39,7 @@
                         </div>
                         
                         <div class="vs-radio-con vs-radio-primary mb-3">
-                            <input type="radio" name="ass" {{ ($formdata['ass'] == 0) ? 'checked' : '' }} value="0">
+                            <input type="radio" name="ass" {{ ($formdata['ass'] == '0') ? 'checked' : '' }} value="0">
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
                                 <span class="vs-radio--circle"></span>
@@ -65,7 +65,7 @@
                             <span style="font-size:13px">Visitor</span>
                         </div>
                         <div class="vs-radio-con vs-radio-primary mb-1">
-                            <input type="radio" name="tvis" value="3" {{ ($formdata['tvis'] == 3) ? 'checked' : '' }}>
+                            <input type="radio" name="tvis" value="2" {{ ($formdata['tvis'] == 2) ? 'checked' : '' }}>
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
                                 <span class="vs-radio--circle"></span>
@@ -73,16 +73,16 @@
                             <span style="font-size:13px" >Contractor</span>
                         </div>
                         <div class="vs-radio-con vs-radio-primary mb-3">
-                            <input type="radio" name="tvis" value="2" {{ ($formdata['tvis'] == 2) ? 'checked' : '' }}>
+                            <input type="radio" name="tvis" value="3" {{ ($formdata['tvis'] == 3) ? 'checked' : '' }}>
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
                                 <span class="vs-radio--circle"></span>
                             </span>
-                            <span style="font-size:13px" >Staff</span>
+                            <span style="font-size:13px" >Employee</span>
                         </div>
                         <h6 class="card-title font-bold mb-2">Access</h6>
                         <div class="vs-radio-con vs-radio-primary mb-1">
-                            <input type="radio" name="acc" checked="" value="all" {{ ($formdata['acc'] == 'all') ? 'checked' : '' }} >
+                            <input type="radio" name="acc" value="all" {{ ($formdata['acc'] == 'all') ? 'checked' : '' }} >
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
                                 <span class="vs-radio--circle"></span>
@@ -90,7 +90,7 @@
                             <span style="font-size:13px">All</span>
                         </div>
                         <div class="vs-radio-con vs-radio-primary mb-1">
-                            <input type="radio" name="acc" value="1" {{ ($formdata['acc'] == 1) ? 'checked' : '' }}>
+                            <input type="radio" name="acc" value="0" {{ ($formdata['acc'] == 0) ? 'checked' : '' }}>
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
                                 <span class="vs-radio--circle"></span>
@@ -98,7 +98,7 @@
                             <span style="font-size:13px">Allowed</span>
                         </div>
                         <div class="vs-radio-con vs-radio-primary mb-3">
-                            <input type="radio" name="acc" value="2" {{ ($formdata['acc'] == 2) ? 'checked' : '' }}>
+                            <input type="radio" name="acc" value="1" {{ ($formdata['acc'] == 1) ? 'checked' : '' }}>
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
                                 <span class="vs-radio--circle"></span>
@@ -125,11 +125,12 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Telephone number</th>
+                                        <th class="text-center">Telephone number</th>
                                         <th>Time and date of entry</th>
-                                        <th>Time and date of exit</th>
+                                        <th class="text-center">Time and date of exit</th>
                                         <th class="text-center">Assistance</th>
                                         <th class="text-center">Access</th>
+                                        <th class="text-center">Visiting/Business</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -137,23 +138,24 @@
                                         @foreach($table_data as $list)
                                             <tr>
                                                 <td>{{$list->firstName}} {{$list->lastName}}</td>
-                                                <td>{{$list->phoneNumber}}</td>
+                                                <td class="text-center">{{$list->phoneNumber}}</td>
                                                 <td>{{$list->check_in_date}}</td>
-                                                <td>{{$list->check_out_date}}</td>
+                                                <td class="text-center">{{$list->check_out_date ? $list->check_out_date : 'Pending'}}</td>
                                                 <td class="text-center">
-                                                    @if($list->assistance == 1)
-                                                        <span class="badge badge-pill badge-primary">{{'Yes'}}</span>
+                                                    @if($list->assistance == 0)
+                                                        <span class="badge badge-pill badge-primary">{{'No'}}</span>
                                                     @else
-                                                        <span class="badge badge-pill badge-warning">{{'No'}}</span>
+                                                        <span class="badge badge-pill badge-warning">{{'Yes'}}</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
                                                     @if($list->status == 0)
-                                                        <span class="badge badge-pill badge-primary">Accepted</span>
+                                                        <span class="badge badge-pill badge-primary">{{ 'Allowed' }}</span>
                                                     @else
                                                         <span class="badge badge-pill badge-warning">Denied</span>
                                                     @endif
                                                 </td>
+                                                <td class="text-center"> {{ $list->trakr_type_id == 1 ? $list->who : $list->name_of_company }}</td>
                                             </tr>
                                         @endforeach
                                     @else

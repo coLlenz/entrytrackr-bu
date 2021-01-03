@@ -15,7 +15,7 @@
                 </li>
                 <li class="{{(request()->is('trakrid') || request()->segment(1) == 'trakrid') ? 'active' : ''}}">
                     <a href="/trakrid">
-                        <i class="fa fa-id-card-o" aria-hidden="true"></i> TrakrID
+                        <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
                     </a>
                 </li>
                 <li class="{{(request()->is('templates') || request()->segment(1) == 'templates') ? 'active' : ''}}">

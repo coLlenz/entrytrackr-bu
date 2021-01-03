@@ -16,29 +16,26 @@
                     <label for="first_name" class="col-form-label">First Name</label>
                     <input type="text" class="form-control" name="first_name" required>
                     <div class="invalid-feedback">
-                        <h3>First Name is require.</h3>
+                        <h3>First Name is require</h3>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="last_name" class="col-form-label">Last Name</label>
                     <input type="text" class="form-control" name="last_name" required>
                     <div class="invalid-feedback">
-                        <h3>Last Name is require.</h3>
+                        <h3>Last Name is require</h3>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="phone" class="col-form-label">Phone Number</label>
                     <input type="text" class="form-control" name="phoneNumber" required>
                     <div class="invalid-feedback">
-                        <h3>Phone number is required.</h3>
+                        <h3>Phone number is required</h3>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="email" class="col-form-label">Email</label>
-                    <input type="text" class="form-control" name="email" required>
-                    <div class="invalid-feedback">
-                        <h3>Please provide a valid email</h3>
-                    </div>
+                    <input type="text" class="form-control" name="email">
                 </div>
                 <div class="form-group">
                     <label for="visitor_type" class="col-form-label">Visitor type</label>
@@ -52,8 +49,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary save_check_in">Next</button>
+                    <button type="button" class="btn btn-outline-secondary btn_entry" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary save_check_in btn_entry">Next</button>
                 </div>
             </form>
           </div>
@@ -96,8 +93,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary save_check_out">Sign Out</button>
+                    <button type="button" class="btn btn-outline-secondary btn_entry" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary save_check_out btn_entry">Sign Out</button>
                 </div>
             </form>
           </div>
@@ -139,13 +136,17 @@
     $('#simple_checkin').on('click', function() {
             $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
             Swal.fire({
-            title: 'Provide your trakr ID',
+            title: 'Enter your trakrID',
             input: 'text',
             inputAttributes: {
                 autocapitalize: 'off'
             },
             showCancelButton: true,
+            showConfirmButton: true,
             confirmButtonText: 'Sign In',
+            confirmButtonColor: '#922c88',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
             showLoaderOnConfirm: true,
             preConfirm: (trakrid) => {
                 if (trakrid) {
@@ -222,9 +223,12 @@
                     if (response.status == 'nodata') {
                         Swal.fire({
                             icon: 'warning',
-                            title: 'No records found.',
+                            title: 'No records found',
+                            html:'<p>Please check that you have entered the same information that you provided on entry</p>',
                             showConfirmButton: false,
-                            timer: 3000
+                            showCancelButton: true,
+                            cancelButtonText:'Try Again',
+                            cancelButtonColor: '#a3238e'
                         })
                     }
                     
@@ -315,6 +319,46 @@
         })
     }
     
+    function createTrakrID(trakr_data = false){
+        Swal.fire({
+            icon:'info',
+            html:`
+            <p class="mb-4">For Faster Sign In on future visits, save you contact information as an trakrID.</p>
+            <p>Create your trakrID using letters, numbers and symbols.</p>
+            `,
+            input:'text',
+            inputPlaceholder: 'Type here...',
+            showCancelButton:true,
+            cancelButtonText:'Skip',
+            showConfirmButton:true,
+            confirmButtonText:'Save',
+            allowOutsideClick : false,
+            reverseButtons:true,
+            inputValidator : (value) => {
+                if (!value) {
+                    return 'Input value is required'
+                }
+            },
+        }).then( btnPress => {
+            if (btnPress.isConfirmed) {
+                var trakrID = btnPress.value;
+                var visitor_id = trakr_data.trakrid;
+                $.ajax({
+                    url: "{{ route('save-trakr-id') }}",
+                    method: "POST",
+                    data: {visitor_id:visitor_id , trakr_id:trakrID },
+                    success:function(trakrResponse){
+                        if (trakrResponse.status == 'success') {
+                            showCheckInMessage(trakr_data);
+                        }
+                    }
+                })
+            }else{
+                showCheckInMessage(trakr_data);
+            }
+        })
+    }
+    
     function flowCheckpoint(response){
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         switch(response.type_of_visitor) {
@@ -340,7 +384,7 @@
                                 data: {trakrid: response.trakrid , visited: complete.value},
                                 success:function(data){
                                     if (response.status == 'success') {
-                                        showCheckInMessage(response);
+                                        createTrakrID(response);
                                     }
                                 },
                             })
@@ -369,7 +413,7 @@
                                 data:{trakrid:response.trakrid, name_of_business:complete.value },
                                 success:function(data){
                                     if (data.status == 'success') {
-                                        showCheckInMessage(response);
+                                        createTrakrID(response)
                                     }
                                 }
                             })

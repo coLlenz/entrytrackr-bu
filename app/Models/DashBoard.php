@@ -63,7 +63,7 @@ class DashBoard extends Model
         // for super admin
         if ( auth()->user()->is_admin ) {
             $assist = DB::table('trakrs')
-            ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'safe' , 'date_marked_safe')
+            ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'assistance' , 'safe' , 'date_marked_safe')
             ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
             ->where([
                 ['user_id' , '=' , auth()->user()->id],
@@ -77,7 +77,7 @@ class DashBoard extends Model
         // sub accounts
         if ( auth()->user()->sub_account ) {
             $assist = DB::table('trakrs')
-            ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'safe' , 'date_marked_safe')
+            ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'assistance' , 'safe' , 'date_marked_safe')
             ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
             ->where([
                 ['user_id' , '=' , auth()->user()->sub_account_id],
@@ -89,7 +89,7 @@ class DashBoard extends Model
         }
         
         $assist = DB::table('trakrs')
-        ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'safe' , 'date_marked_safe')
+        ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'assistance' , 'safe' , 'date_marked_safe')
         ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
         ->where([
             ['user_id' , '=' , auth()->user()->id],

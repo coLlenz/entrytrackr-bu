@@ -17,10 +17,9 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Contact Name</th>
                                 <th>Email</th>
-                                <th class="text-center">Created At</th>
-                                <th class="text-center">Updated At</th>
+                                <th class="text-center">Created</th>
+                                <th class="text-center">Updated</th>
                                 <th class="text-center" >Action</th>
                             </tr>
                         </thead>
@@ -30,7 +29,6 @@
                                     @foreach( $lists as $list )
                                     <tr>
                                         <td> {{$list->name}} </td>
-                                        <td> {{$list->contactName}} </td>
                                         <td> {{$list->email}} </td>
                                         <td class="text-center"> 
                                             {{ \Carbon\Carbon::parse($list->created_at)->format('d F Y g:i A') }} 

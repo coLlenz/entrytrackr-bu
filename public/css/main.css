@@ -43,5 +43,8 @@ body.show-spinner::after{
     -webkit-transform: rotate(360deg);
   }
 }
+.btn_entry{
+    width: 100px;
+}
 
 

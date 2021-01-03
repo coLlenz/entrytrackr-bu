@@ -9,7 +9,7 @@
         }
         .container {
             margin: auto;
-            width: 50%;
+            width: 80%;
             border: 3px solid #a3238e;
             padding: 20px;
             border-radius: 8px;
@@ -30,8 +30,10 @@
                 <div class="col-md-8 text-center">
                     <div class="card">
                         <div class="card-body">
-                            <h1 class="card-title title"> Contactless</h1>
-                            <h1 class="card-title"> Sign In / Sign Out </h1>
+                            <h1 class="card-title title"> 
+                                Contactless <br />
+                                Sign In & Sign Out
+                            </h1>
                             <p class="card-text mb-4" > Please scan the QR code with your smartphone camera</p> 
                             <br><br><br>
                             <img src="{{ url(auth()->user()->qr_path) }}">

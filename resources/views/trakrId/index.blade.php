@@ -28,8 +28,8 @@
 
                     <td>{{$trakr->trakr_id}}</td>
                         <td>{{$trakr->firstName}} {{$trakr->lastName}}</td>
-                        <td>{{$trakr->created_at}}</td>
-                        <td>{{$trakr->type}}</td>
+                        <td>{{$trakr->check_in_date}}</td>
+                        <td>{{$trakr->name}}</td>
                         <td class="text-center">
                             <button class="btn btn-primary dropdown-toggle mb-1" type="button"
                                 id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
