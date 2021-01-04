@@ -34,6 +34,7 @@
                     <div class="form-group">
                         <textarea class="form-control" name="question_description" rows="3" placeholder="Description here..."></textarea>
                     </div>
+                    @if( !auth()->user()->is_admin )
                     <div class="form-check form-check-inline">
                         <input type="checkbox" class="form-check-input" id="visitor" name="toVisitor" value=1>
                         <label class="form-check-label" for="visitor">Visitor</label>
@@ -46,6 +47,7 @@
                         <input type="checkbox" class="form-check-input" id="employee"  name="toVisitor" value=3>
                         <label class="form-check-label" for="visitor">Employee</label>
                     </div>
+                    @endif
                     <hr/>
                     <div id="generated_container">
                         
