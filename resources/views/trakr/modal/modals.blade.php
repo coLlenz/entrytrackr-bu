@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary btn_entry" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-secondary btn_entry btnSign_cancel">Cancel</button>
                     <button type="submit" class="btn btn-primary save_check_in btn_entry">Next</button>
                 </div>
             </form>
@@ -197,6 +197,11 @@
     // forms;
     let form = $('#form_checkin');
     let form2 = $('#form_checkout');
+    
+    $('.btnSign_cancel').on('click' , function() {
+        $('#checkinModal').modal('hide');
+        form[0].reset();
+    })
     
     $(form).on('submit' , function(e) {
         e.preventDefault();

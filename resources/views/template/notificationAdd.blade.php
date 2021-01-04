@@ -104,6 +104,9 @@ var toolbarOptions = [
                         showConfirmButton: false,
                         timer: 2000
                     })
+                    setTimeout(function () {
+                        window.location.href = '/templates/notification-edit/'+response.template_id;
+                    }, 1500);
                 }
             }
         })
