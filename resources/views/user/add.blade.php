@@ -21,23 +21,23 @@
                 @endif
                     <div class="form-group">
                         <label class="form-control-label" for="name">Account Name</label>
-                        <input name="name" type="text" class="form-control" id="name" placeholder="Enter Name" required>
+                        <input name="name" type="text" class="form-control" id="name" placeholder="Enter Name" value={{ old('name') }}>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="example3cols1Input">Contact Name</label>
-                    <input name="cname" type="text" class="form-control" id="example3cols1Input" placeholder="Enter Contact Name" required>
+                    <input name="cname" type="text" class="form-control" id="example3cols1Input" placeholder="Enter Contact Name" value={{ old('cname') }}>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="email">Email</label>
-                        <input name="email" type="email" class="form-control" id="email" placeholder="Enter Email" required>
+                        <input name="email" type="email" class="form-control" id="email" placeholder="Enter Email" value={{ old('email') }}>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="pass">Password</label>
-                        <input name="password" type="password" class="form-control" id="pass" placeholder="Set Password" required>
+                        <input name="password" type="password" class="form-control" id="pass" placeholder="Set Password" >
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="pass1">Confirm Password</label>
-                        <input name="confirmpassword" type="password" class="form-control" id="pass1" placeholder="Confirm Password" required>
+                        <input name="password_confirmation" type="password" class="form-control" id="pass1" placeholder="Confirm Password" >
                     </div>
                     <center>
                     <button class="btn btn-primary" type="submit">Save</button>

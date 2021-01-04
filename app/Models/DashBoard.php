@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use DB;
+use App\Models\Trakr;
+use App\Models\TrakrType;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class DashBoard extends Model
 {
     use HasFactory;
@@ -103,13 +106,26 @@ class DashBoard extends Model
     public function getdast_pie(){
         $counts = DB::table('trakrs')
                  ->select('trakr_type_id', DB::raw('count(*) as total'))
-                 ->where([
-                     'checked_in_status' =>0,
-                     'user_id' => auth()->user()->id
-                 ])
+                 ->where(['checked_in_status' => 0])
                  ->groupBy('trakr_type_id')
                  ->get();
         return $counts;
+
+        // $counts = DB::table('trakrs')
+        // ->select('trakr_type_id', DB::raw('count(*) as total'))
+        // ->where([
+        //     'checked_in_status' => 0,
+        //     'user_id' => auth()->user()->id
+        // ])
+        // ->groupBy('trakr_type_id')
+        // ->get();
+        // return $counts;
+                    
+        // return TrakrType::addSelect(['signin-visitors' => Trakr::select('checked_in_status')
+        //     ->whereColumn('id', 'trakr_type_id')
+        //     ->groupBy('trakr_type_id', 'checked_in_status')
+        //     ])->get();
+
     }
     
     public function total_sign_in(){

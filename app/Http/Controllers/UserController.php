@@ -32,19 +32,19 @@ class UserController extends Controller
         return view('user.add');
     }
     public function create(Request $request){
-        // $this->validate($request, [
-        //     'email' => 'required|unique:users',
-        //     'name' => 'required',
-        //     'cname' => 'required',
-        //     'password' => 'min:8|required_with:confirmpassword|same:confirmpassword',
-        //     'confirmpassword' => 'min:8'
-        // ]);
+        $this->validate($request, [
+            'email' => 'required|unique:users|email:rfc,dns',
+            'name' => 'required',
+            'cname' => 'required',
+            'password' => 'min:8|confirmed',
+        ]);
         
         $user = new User();
         $user->name = $request->input('name');
         $user->uuid = Str::uuid()->toString();
         $user->contactName = $request->input('cname');
         $user->sub_account = 0;
+        $user->profile_path = public_path('img/placeholder.png');
         $user->sub_account_id=0;
         $user->email = $request->input('email');
         $user->password = Hash::make($request->input('password'));

@@ -282,7 +282,11 @@
                   themeColor3_10
                 ],
                 borderWidth: 2,
-                data: [{{!empty($piedata[0]->total) ? $piedata[0]->total : 0}} , {{!empty($piedata[1]->total) ? $piedata[1]->total : 0}} , {{!empty($piedata[2]->total) ? $piedata[2]->total : 0}}]
+                data: [
+                  {{!empty($piedata[0]->total) ? $piedata[0]->total : 0}} ,
+                  {{!empty($piedata[1]->total) ? $piedata[1]->total : 0}} , 
+                  {{!empty($piedata[2]->total) ? $piedata[2]->total : 0}}
+                  ]
               }
             ]
           },
