@@ -34,7 +34,7 @@ class ContactController extends Controller
                 'message' => $request->input('message'),
                 'user_id' => auth()->user()->id,
             ]);
-        return redirect()->route("support-index")->with('success', 'Message Send Successfully');
+        return redirect()->route("support-index")->with('success', 'Message Sent Successfully');
     }
 
     /**

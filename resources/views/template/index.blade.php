@@ -17,7 +17,7 @@
         <table class="table ">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Title</th>
                     <th>Type</th>
                     <th>Date Created</th>
                     <th>Date Last Updated</th>
@@ -35,9 +35,9 @@
                         <td>{{$template->updated_at}}</td>
                         <td class="text-center">
                             @if($template->status)
-                                <span class="badge badge-pill badge-primary mb-1">Active</span>
+                                <span class="badge badge-primary mb-1">Active</span>
                             @else
-                                <span class="badge badge-pill badge-warning mb-1">Disabled</span>
+                                <span class="badge badge-warning mb-1">Disabled</span>
                             @endif
                         </td>
                         <td class="text-center">

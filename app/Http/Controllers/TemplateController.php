@@ -46,7 +46,7 @@ class TemplateController extends Controller
             if ( $template->save() ) {
                 return response()->json(['status' => 'success'] , 200);
             }else{
-                return response()->json(['status' => 'error' , 'msg' => 'Error Saving template.'] , 200);
+                return response()->json(['status' => 'error' , 'msg' => 'Error Saving template.' , 'template_id' => $template->id] , 200);
             }
             
         }
@@ -61,8 +61,10 @@ class TemplateController extends Controller
             'template_type' => 1
         ]);
         
+        $template_id = DB::getPdo()->lastInsertId();
+        
         if ($template) {
-            return response()->json(['status' => 'success'] , 200);
+            return response()->json(['status' => 'success' , 'template_id' => $template_id] , 200);
         }else{
             return response()->json(['status' => 'error' , 'msg' => 'Error Saving template.'] , 200);
         }

@@ -15,6 +15,8 @@
         </ul>
     </div>
     <div class="card-body">
+        <p>Complete this form to submit a support request with Customer Support Team. Please provide as much information as possible to help as understand the nature of your request so that we can respond to you quickly</p>
+        <p>In most cases you will receive  a response from us within 24 hours</p>
         <div class="tab-content">
             <div class="tab-pane fade  show active" id="contactus" role="tabpanel" aria-labelledby="contactus-tab">
                 @if(auth()->user()->is_admin)
@@ -68,7 +70,7 @@
                             <label class="form-control-label" id="message">Message</label>
                             <textarea name="message" cols="30" class="form-control" rows="10"></textarea>
                         </div>
-                        <button class="btn btn-primary btn-lg float-right" type="submit">Save</button>
+                        <button class="btn btn-primary btn-lg float-right" type="submit">Send</button>
                     </form>
                 </div>
             </div>
@@ -77,6 +79,7 @@
 
         </div>
         <div class="tab-pane fade" id="userguide" role="tabpanel" aria-labelledby="userguide-tab">
+            <p> Search our library for help on how to use the various feature of Entrytrakr. If you can't find what you are looking for, please contact our customer support team using the 'Contact Support' tab on this page.  </p>
             <div class="row">
                 <div class="col-12" id="accordion">
                     @if(auth()->user()->is_admin)
@@ -144,8 +147,7 @@
 <script>
     @if(Session::has('success'))
     $.notify({
-        message: '{{ session()->get('
-        success ') }}'
+        message: '{{ session()->get('success') }}'
     }, {
         type: 'success',
         placement: {
