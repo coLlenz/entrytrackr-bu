@@ -40,6 +40,7 @@ class TemplateController extends Controller
         if ( auth()->user()->is_admin ) {
             $template = new Template();
             $template->title = $request->title;
+            $template->description = '';
             $template->content_json = $request->jsondata;
             $template->template_type = 1;
             
@@ -56,6 +57,7 @@ class TemplateController extends Controller
         ->insert([
             'user_id' => auth()->user()->id,
             'title' => $request->title,
+            'description' => '';
             'content_html' => '',
             'content_json' => $request->jsondata,
             'template_type' => 1
