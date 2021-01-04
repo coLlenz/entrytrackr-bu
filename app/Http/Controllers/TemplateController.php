@@ -57,7 +57,7 @@ class TemplateController extends Controller
         ->insert([
             'user_id' => auth()->user()->id,
             'title' => $request->title,
-            'description' => '';
+            'description' => '',
             'content_html' => '',
             'content_json' => $request->jsondata,
             'template_type' => 1
