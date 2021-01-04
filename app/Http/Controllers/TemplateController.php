@@ -45,9 +45,9 @@ class TemplateController extends Controller
             $template->template_type = 1;
             
             if ( $template->save() ) {
-                return response()->json(['status' => 'success'] , 200);
+                return response()->json(['status' => 'success' , 'template_id' => $template->id] , 200);
             }else{
-                return response()->json(['status' => 'error' , 'msg' => 'Error Saving template.' , 'template_id' => $template->id] , 200);
+                return response()->json(['status' => 'error' , 'msg' => 'Error Saving template.'] , 200);
             }
             
         }
@@ -152,6 +152,7 @@ class TemplateController extends Controller
             'description' => $request->question_description,
             'content_html' =>  $request->question_html,
             'questions' => $request->question_data,
+            'questions_to_flg' => $request->toVisitor,
             'status' => 0,
             'template_type' => 0
         ]);
