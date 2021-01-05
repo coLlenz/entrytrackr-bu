@@ -5,8 +5,7 @@
 <div class="container">
     <div class="row justify-content-md-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
+            <div class="float-right">
                 @if(count($templates) > 0)
                     <div class="float-right">
                         <button class="btn btn-primary dropdown-toggle mb-1" type="button"
@@ -21,6 +20,14 @@
                         </div>
                     </div>
                 @endif
+                <a href="{{ URL::previous() }}" class="btn btn-primary mr-1">Back to Templates</a>
+            </div>
+        </div>
+    </div> <br>
+    <div class="row justify-content-md-center">
+        <div class="col-md-8">
+            <div class="card">
+            <div class="card-body">
                 <form action="{{route('template-store')}}" method="POST" id="formEditor">
                     @csrf
                     <div class="form-group">

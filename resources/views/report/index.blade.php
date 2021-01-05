@@ -119,7 +119,7 @@
                     <div class="card-body card-dashboard">
                         <div class="card-header">
                             <h4>Visitor Log</h4>
-                            <p>Visitor entry and exit records for the past 24 hours are shown below.<br/>
+                            <p>Visitor entry and exit records for the past 7 days are shown below.<br/>
                             Use the filter options to change the date range and adjust the information that is displayed.</p>
                         </div>
                         <div class="table-responsive">
@@ -128,7 +128,7 @@
                                     <tr>
                                         <th>Name</th>
                                         <th class="text-center">Telephone number</th>
-                                        <th>Time and date of entry</th>
+                                        <th class="text-center">Time and date of entry</th>
                                         <th class="text-center">Time and date of exit</th>
                                         <th class="text-center">Assistance</th>
                                         <th class="text-center">Access</th>
@@ -141,8 +141,8 @@
                                             <tr>
                                                 <td>{{$list->firstName}} {{$list->lastName}}</td>
                                                 <td class="text-center">{{$list->phoneNumber}}</td>
-                                                <td>{{$list->check_in_date}}</td>
-                                                <td class="text-center">{{$list->check_out_date ? $list->check_out_date : 'Pending'}}</td>
+                                                <td class="text-center">{{ \Carbon\Carbon::parse($list->check_in_date)->format('d-m-y H:i') }}</td>
+                                                <td class="text-center">{{$list->check_out_date ? \Carbon\Carbon::parse($list->check_out_date)->format('d-m-y H:i') : 'Pending'}}</td>
                                                 <td class="text-center">
                                                     @if($list->assistance == 0)
                                                         <span class="badge badge-pill badge-primary">{{'No'}}</span>

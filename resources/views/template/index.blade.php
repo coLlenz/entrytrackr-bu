@@ -31,8 +31,8 @@
                     <tr>
                         <td>{{$template->title}}</td>
                         <td>{{$template->template_type == 1 ? 'Notification/Alert' : 'Questionnaire' }}</td>
-                        <td>{{$template->created_at}}</td>
-                        <td>{{$template->updated_at}}</td>
+                        <td>{{ \Carbon\Carbon::parse($template->created_at)->format('d-m-y H:i') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($template->updated_at)->format('d-m-y H:i') }}</td>
                         <td class="text-center">
                             @if($template->status)
                                 <span class="badge badge-primary mb-1">Active</span>

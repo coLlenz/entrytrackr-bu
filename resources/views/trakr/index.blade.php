@@ -52,7 +52,7 @@
                     <img class=""  src="{{ auth()->user()->qr_path }}" alt="" height="250" width="250">
                 </div>
                 <div class="card-footer">
-                    <p class="text-center font-medium card-text font-weight-semibold mb-0" style="font-size: 1.1rem">
+                    <p class="text-center font-medium card-text mb-0" style="font-size: 17px;">
                         Scan the QR code with your smartphone camera to <br>
                         <strong>Sign In</strong> or <strong>Sign Out</strong>
                     </p>

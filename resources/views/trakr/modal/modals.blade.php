@@ -95,8 +95,8 @@
                         <h3 >Phone Number is required.</h3>
                     </div>
                 </div>
-                <div class="modal-footer">w
-                    <button type="button" class="btn btn-outline-secondary btn_entry" data-dismiss="modal">Cancel</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn_entry btnCheckoutCancel">Cancel</button>
                     <button type="submit" class="btn btn-primary save_check_out btn_entry">Sign Out</button>
                 </div>
             </form>
@@ -181,11 +181,11 @@
                 if (result.isConfirmed) {
                     if (result.value.status == 'loggedin') {
                         Swal.fire({
-                            title:'<strong> You already been signed in at </strong> <br/>',
+                            title:'<strong> You have already signed in at </strong> <br/>',
                             html : '<b>'+result.value.check_date+'</b>',
                             allowOutsideClick : false,
                             showCloseButton: true,
-                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> Great!',
+                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> OK',
                             confirmButtonAriaLabel: 'Thumbs up, great!',
                         })
                     }else{
@@ -201,7 +201,15 @@
     $('.btnSign_cancel').on('click' , function() {
         $('#checkinModal').modal('hide');
         form[0].reset();
-    })
+        $(forms).removeClass('was-validated');
+        $('.invalid-email').hide();
+    });
+    
+    $('.btnCheckoutCancel').on('click' , function() {
+        $('#checkoutModal').modal('hide');
+        form2[0].reset();
+        $('#form_checkout').removeClass('was-validated');
+    });
     
     $(form).on('submit' , function(e) {
         e.preventDefault();
@@ -214,6 +222,8 @@
                     if (response.status == 'success') {
                         $('#checkinModal').modal('hide');
                         flowCheckpoint(response);
+                        $(form).removeClass('was-validated');
+                        $('.invalid-email').hide();
                     }
                     
                     if (response.status == 'fail') {
@@ -311,8 +321,8 @@
             '<b>'+details.check_date+'</b>',
             showCloseButton: false,
             showConfirmButton:false,
-            timer: 10000,
-            footer: '<p> This message will automatically close in 10 seconds. </p>'
+            timer: 5000,
+            footer: '<p> This message will automatically close in 5 seconds. </p>'
         })
     }
     
@@ -326,8 +336,8 @@
             '<b>'+details.check_date+'</b>',
             showCloseButton: false,
             showConfirmButton:false,
-            timer: 10000,
-            footer: '<p> This message will automatically close in 10 seconds. </p>'
+            timer: 5000,
+            footer: '<p> This message will automatically close in 5 seconds. </p>'
         })
     }
     
@@ -340,11 +350,11 @@
         Swal.fire({
             icon:'info',
             html:`
-            <p class="mb-4">For Faster Sign In on future visits, save your contact information as an trakrID.</p>
-            <p>Create your trakrID using letters, numbers and symbols.</p>
+            <p class="mb-4">For a Faster Sign In on future visits, save your contact information as a trakrID.</p>
+            <p style="font-size: 17px;">Create your trakrID using letters, numbers and symbols.</p>
             `,
             input:'text',
-            inputPlaceholder: 'Type here...',
+            inputPlaceholder: 'Type trakrID here...',
             showCancelButton:true,
             cancelButtonText:'Skip',
             showConfirmButton:true,
@@ -352,10 +362,38 @@
             allowOutsideClick : false,
             reverseButtons:true,
             inputValidator : (value) => {
-                if (!value) {
-                    return 'Input value is required'
-                }
+                return new Promise((resolve) => {
+                    if (value) {
+                        $.ajax({
+                            url : "{{route('check-trakr-id')}}",
+                            method: 'POST',
+                            data: {input : value},
+                            success: function(response){
+                                if (response.is_existing) {
+                                    resolve('trakrID not available, try again.');
+                                }else {
+                                    resolve();
+                                }
+                            }
+                        });
+                    } else {
+                        resolve('Input data is required');
+                    }
+                })
             },
+            preConfirm:(data) => {
+                $.ajax({
+                    url : "{{route('check-trakr-id')}}",
+                    method: 'POST',
+                    data: {input : data},
+                    success: function(response){
+                        if (response.is_existing) {
+                            console.log('herrrrrrrrrrrrrrrrrrrrrrrreeeeeee');
+                            return Swal.showValidationMessage('trakrID is not Available');
+                        }
+                    }
+                });
+            }
         }).then( btnPress => {
             if (btnPress.isConfirmed) {
                 var trakrID = btnPress.value;
@@ -459,8 +497,9 @@
     }
     
     function showQuestions( data ){
+        console.log(data);
         Swal.fire({
-            title: 'Visitor Questions',
+            title: data.questions.title,
             icon: 'info',
             html: makeHtml(data.questions , data.trakrid),
             allowOutsideClick:false,

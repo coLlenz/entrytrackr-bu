@@ -18,7 +18,7 @@
         </tr>
             @foreach($trakrs as $trakr)
                 <tr>
-                    <td>{{ \Carbon\Carbon::parse($trakr->created_at)->format('d-m-Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($trakr->check_in_date)->format('d-m-Y') }}</td>
                     <td>{{$trakr->firstName}} {{$trakr->lastName}}</td>
                     <td class="color-theme-1">{{$trakr->type}}</td>
                     <td class="color-theme-1">{{$trakr->assistance == 0 ? 'No' : 'Yes'}}</td>
