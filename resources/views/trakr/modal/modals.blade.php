@@ -40,9 +40,13 @@
                         <h3 style="color: #dc3545; " >Please provide a valid email</h3>
                     </div>
                 </div>
+                <div class="form-check" id="sign_assitance" style="color:#000!important">
+                    <input type="checkbox" class="form-check-input" id="need_assistance" name="need_assistance">
+                    <label class="form-check-label" for="need_assistance" >Do you require assistance in the event of an emergency evacuation?</label>
+                </div>
                 <div class="form-group">
                     <label for="visitor_type" class="col-form-label">Visitor type</label>
-                    <select class="form-control" name="visitor_type" required>
+                    <select class="form-control" name="visitor_type" required id="visitor_type">
                         <option value=1>Visitor</option>
                         <option value=2>Contractor</option>
                         <option value=3>Employee</option>
@@ -209,6 +213,16 @@
         $('#checkoutModal').modal('hide');
         form2[0].reset();
         $('#form_checkout').removeClass('was-validated');
+    });
+    
+    $('#visitor_type').on('change' , function() {
+        if ( $(this).val() != 1 ) {
+            $('#sign_assitance').hide();
+            $('#sign_assitance').prop('checked' , false);
+        }else {
+            $('#sign_assitance').show();
+            $('#sign_assitance').prop('checked' , true);
+        }
     });
     
     $(form).on('submit' , function(e) {
@@ -497,7 +511,6 @@
     }
     
     function showQuestions( data ){
-        console.log(data);
         Swal.fire({
             title: data.questions.title,
             icon: 'info',
@@ -528,8 +541,20 @@
                 $(item2).attr('required' , 'true');
             });
         })
+        $(form).append( tempCheck() );
         $(form).append(button);
         return form;
+    }
+    
+    function tempCheck(){
+        var html = `
+            <div class="form-group">
+                <label for="temp_check" class="col-form-label">Temperature Check</label>
+                <input type="number" step="0.01" class="form-control" name="temp_check" placeholder="Enter your Temperature here..." required>
+            </div>
+        `;
+        
+        return html;
     }
     
     $(document).on('submit' ,'#submitAnswer' , function(e) {
