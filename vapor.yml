@@ -6,7 +6,7 @@ environments:
         memory: 1024
         cli-memory: 512
         domain: app.entrytrakr.com
-        scheduler: false
+        scheduler: true
         storage: qrlogins
         layers:
             - 'vapor:php-7.4'
