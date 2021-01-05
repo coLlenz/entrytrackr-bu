@@ -46,7 +46,7 @@
     
     <div class="row justify-content-center">
         <div class="col-sm-8 col-md-6 col-lg-6 col-xl-4">
-            <a href="#" class="card" data-toggle="modal" data-target="#checkoutModal">
+            <a href="#" class="card" data-toggle="modal">
                 <div class="card-body text-center">
                     <h1>Contactless Entry</h1>
                     <img class=""  src="{{ auth()->user()->qr_path }}" alt="" height="250" width="250">
