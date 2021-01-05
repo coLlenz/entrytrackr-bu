@@ -15,9 +15,9 @@
         </ul>
     </div>
     <div class="card-body">
-        <p>Complete this form to submit a support request with Customer Support Team. Please provide as much information as possible to help as understand the nature of your request so that we can respond to you quickly.<br/> In most cases you will receive  a response from us within 24 hours</p><br/>
         <div class="tab-content">
             <div class="tab-pane fade  show active" id="contactus" role="tabpanel" aria-labelledby="contactus-tab">
+                <p>Complete this form to submit a support request with Customer Support Team. Please provide as much information as possible to help as understand the nature of your request so that we can respond to you quickly.<br/> In most cases you will receive  a response from us within 24 hours</p><br/>
                 @if(auth()->user()->is_admin)
                 <table class="data-table data-table-feature">
                     <thead>

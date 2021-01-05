@@ -54,13 +54,17 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <h4 class="mb-4"> Visitor Management </h4>
-                        <p style=""> <span>Visitor Sign in Page URL: </span>{{ url( 'trakr/'.auth()->user()->uuid.'/visitor-checkin') }} </p>
-                        
-                        <div class="row justify-content-md-center">
-                            <div class="col-md-12">
-                                <a target="_blank" class="btn btn-primary btn-md top-right-button  mr-1" href="{{ url( route("trakr-view",auth()->user()->uuid) ) }}"> Visitor Sign in Page</a>
-                            </div>
+
+                        <div class="d-flex row row align-items-center">
+                            <a target="_blank" class="btn btn-primary btn-md top-right-button  mr-2" href="{{ url( route("trakr-view",auth()->user()->uuid) ) }}"> Visitor Sign in Page</a>
+                            <p style="margin-top: 12px;">{{ url( 'trakr/'.auth()->user()->uuid.'/visitor-checkin') }} </p>
                         </div>
+                       
+                        {{-- <div class="">
+                            <div class="col-md-12">
+                               
+                            </div>
+                        </div> --}}
                         
                     </div>
                 </div> 
