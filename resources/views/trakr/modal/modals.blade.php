@@ -95,7 +95,7 @@
                         <h3 >Phone Number is required.</h3>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer">w
                     <button type="button" class="btn btn-outline-secondary btn_entry" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary save_check_out btn_entry">Sign Out</button>
                 </div>

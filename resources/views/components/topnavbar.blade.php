@@ -19,8 +19,7 @@
         <div class="user d-inline-block">
             <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
-                <i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i> 
-                {{ Auth::user()->contactName }}
+                <i class="fa fa-user-circle-o fa-2x" style="padding-right: 5px" aria-hidden="true"></i>{{ Auth::user()->contactName }}
             </button>
 
             <div class="dropdown-menu dropdown-menu-right mt-3">

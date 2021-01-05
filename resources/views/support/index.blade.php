@@ -15,8 +15,7 @@
         </ul>
     </div>
     <div class="card-body">
-        <p>Complete this form to submit a support request with Customer Support Team. Please provide as much information as possible to help as understand the nature of your request so that we can respond to you quickly</p>
-        <p>In most cases you will receive  a response from us within 24 hours</p>
+        <p>Complete this form to submit a support request with Customer Support Team. Please provide as much information as possible to help as understand the nature of your request so that we can respond to you quickly.<br/> In most cases you will receive  a response from us within 24 hours</p><br/>
         <div class="tab-content">
             <div class="tab-pane fade  show active" id="contactus" role="tabpanel" aria-labelledby="contactus-tab">
                 @if(auth()->user()->is_admin)
@@ -62,12 +61,12 @@
                         </div>
                         @endif
                         <div class="form-group">
-                            <label class="form-control-label" for="name">Name</label>
+                            <label class="form-control-label" style="color:red" for="name">Name</label>
                             <input name="name" type="text" class="form-control" id="name" placeholder="Enter Name" required>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-control-label" id="message">Message</label>
+                            <label class="form-control-label" style="color:red" id="message">Message</label>
                             <textarea name="message" cols="30" class="form-control" rows="10"></textarea>
                         </div>
                         <button class="btn btn-primary btn-lg float-right" type="submit">Send</button>

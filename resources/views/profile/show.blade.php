@@ -54,7 +54,7 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <h4 class="mb-4"> Visitor Management </h4>
-                        <p style=""> {{ url( 'trakr/qr/login/'.auth()->user()->uuid.'/'.(auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)   ) }} </p>
+                        <p style=""> <span>Visitor Sign in Page URL: </span>{{ url( 'trakr/'.auth()->user()->uuid.'/visitor-checkin') }} </p>
                         
                         <div class="row justify-content-md-center">
                             <div class="col-md-12">

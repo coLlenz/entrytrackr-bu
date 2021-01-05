@@ -8,7 +8,7 @@
                 <button type="button" class="btn btn-primary"  name="button" id="saveQuestion" style="display:none;" >Save Changes</button>
                 <button type="button" class="btn btn-primary"  name="button" id="addQuestion">Add Question</button>
                 @if(!empty($templates))
-                    <button class="btn btn-primary dropdown-toggle mb-1" type="button"
+                    <button class="btn btn-primary dropdown-toggle" type="button"
                         id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
                         Templates

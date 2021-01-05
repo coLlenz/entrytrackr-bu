@@ -119,6 +119,8 @@
                     <div class="card-body card-dashboard">
                         <div class="card-header">
                             <h4>Visitor Log</h4>
+                            <p>Visitor entry and exit records for the past 24 hours are shown below.<br/>
+                            Use the filter options to change the date range and adjust the information that is displayed.</p>
                         </div>
                         <div class="table-responsive">
                             <table class="table zero-configuration" id="zero-configuration">
