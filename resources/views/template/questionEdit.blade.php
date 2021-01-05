@@ -22,6 +22,21 @@
                     <div class="form-group">
                         <textarea class="form-control" name="question_description"  rows="3" placeholder="Description here..."> {{$template->description}} </textarea>
                     </div>
+                    @if( !auth()->user()->is_admin )
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="visitor" name="toVisitor" value=1 {!! in_array('1', $template->questions_to_flg ) ? 'checked' : '' !!} >
+                        <label class="form-check-label" for="visitor">Visitor</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="contractor"  name="toVisitor" value=2 {!! in_array('2', $template->questions_to_flg ) ? 'checked' : '' !!}>
+                        <label class="form-check-label" for="contractor">Contractor</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input" id="employee"  name="toVisitor" value=3 {!! in_array('3', $template->questions_to_flg ) ? 'checked' : '' !!}>
+                        <label class="form-check-label" for="employee">Employee</label>
+                    </div>
+                    @endif
+                    <hr/>
                     <div id="generated_container">
                         {!!html_entity_decode($template->content_html)!!}
                     </div>
@@ -53,6 +68,7 @@
         form_data.append('_token' , $('input[name=_token]').val())
         form_data.append('question_title' , $('input[name=question_title]').val());
         form_data.append('question_description' , $('textarea[name=question_description]').val());
+        form_data.append('toVisitor' , JSON.stringify( getCheckBoxData() ) );
         form_data.append('question_data' , JSON.stringify(myQuestions));
         form_data.append('question_html' , form_container.html() );
         if ( fieldCheck() ) {
@@ -78,5 +94,14 @@
             alert('Title is Required');
         }
     });
+    
+    function getCheckBoxData(){
+        var check_data = [];
+        $('.form-check-input:checked').each(function (idx , val) {
+           check_data.push( $(this).val() );
+        });
+        
+        return check_data;
+    }
 </script>
 @endsection
