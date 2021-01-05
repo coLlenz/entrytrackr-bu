@@ -139,7 +139,7 @@
                           <tr>
                               <th>Name</th>
                               <th>Visitor Type</th>
-                              <th>Created At</th>
+                              <th>Date & Time Signed In</th>
                               <th>Safe</th>
                               <th class="text-center">Date Marked Safe</th>
                           </tr>
@@ -150,7 +150,7 @@
                                   <tr>
                                     <td>{{$evac->firstName}} {{$evac->lastName}}</td>
                                     <td class="color-theme-1">{{$evac->type}}</td>
-                                    <td>{{$evac->created_at}}</td>
+                                    <td>{{\Carbon\Carbon::parse($evac->check_in_date)->format('d-m-y H:i')}}</td>
                                     <td>
                                         <div class="custom-control custom-switch">
                                             @if($evac->safe == 'safe')

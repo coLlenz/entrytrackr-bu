@@ -16,7 +16,7 @@ class DashBoard extends Model
         //super admin user
         if ( auth()->user()->is_admin ) {
             $dash = DB::table('trakrs')
-            ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','trakr_types.name as type' , 'checked_in_status')
+            ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.check_in_date' ,'trakrs.created_at','trakrs.id','trakr_types.name as type' , 'checked_in_status')
             ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
             ->where('checked_in_status' , 0)
             ->orderBy('trakrs.check_in_date','desc')
@@ -27,7 +27,7 @@ class DashBoard extends Model
         //is sub accounts
         if ( auth()->user()->sub_account ) {
             $dash = DB::table('trakrs')
-            ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','trakr_types.name as type' , 'checked_in_status')
+            ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.check_in_date' ,'trakrs.created_at','trakrs.id','trakr_types.name as type' , 'checked_in_status')
             ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
             ->where('user_id' , auth()->user()->sub_account_id)
             ->where('checked_in_status' , 0)
@@ -38,7 +38,7 @@ class DashBoard extends Model
         
         //for customers
         $dash = DB::table('trakrs')
-        ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','trakr_types.name as type' , 'checked_in_status')
+        ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.check_in_date' ,'trakrs.created_at','trakrs.id','trakr_types.name as type' , 'checked_in_status')
         ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
         ->where('user_id' , auth()->user()->id)
         ->where('checked_in_status' , 0)
@@ -66,7 +66,7 @@ class DashBoard extends Model
         // for super admin
         if ( auth()->user()->is_admin ) {
             $assist = DB::table('trakrs')
-            ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'assistance' , 'safe' , 'date_marked_safe')
+            ->select('firstName' , 'lastName' , 'trakrs.check_in_date','trakrs.id','name as type' , 'assistance' , 'safe' , 'date_marked_safe')
             ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
             ->where([
                 ['user_id' , '=' , auth()->user()->id],
@@ -80,7 +80,7 @@ class DashBoard extends Model
         // sub accounts
         if ( auth()->user()->sub_account ) {
             $assist = DB::table('trakrs')
-            ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'assistance' , 'safe' , 'date_marked_safe')
+            ->select('firstName' , 'lastName' , 'trakrs.check_in_date','trakrs.id','name as type' , 'assistance' , 'safe' , 'date_marked_safe')
             ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
             ->where([
                 ['user_id' , '=' , auth()->user()->sub_account_id],
@@ -92,7 +92,7 @@ class DashBoard extends Model
         }
         
         $assist = DB::table('trakrs')
-        ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'assistance' , 'safe' , 'date_marked_safe')
+        ->select('firstName' , 'lastName' , 'trakrs.check_in_date','trakrs.id','name as type' , 'assistance' , 'safe' , 'date_marked_safe')
         ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
         ->where([
             ['user_id' , '=' , auth()->user()->id],
