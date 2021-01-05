@@ -163,7 +163,7 @@
                         body : JSON.stringify({trakrid:trakrid})
                     })
                     .then(response => {
-                        console.log(response);
+                        
                         if (!response.ok) {
                             throw new Error('Please input required field');
                         }
@@ -211,7 +211,6 @@
                 type: form.attr('method'),
                 data : form.serialize(),
                 success:function(response){
-                    console.log(response);
                     if (response.status == 'success') {
                         $('#checkinModal').modal('hide');
                         flowCheckpoint(response);
@@ -333,6 +332,11 @@
     }
     
     function createTrakrID(trakr_data = false){
+        
+        if (trakr_data.has_trakr) {
+            return showCheckInMessage(trakr_data);
+        }
+        
         Swal.fire({
             icon:'info',
             html:`
@@ -397,7 +401,11 @@
                                 data: {trakrid: response.trakrid , visited: complete.value},
                                 success:function(data){
                                     if (response.status == 'success') {
-                                        createTrakrID(response);
+                                        if (response.questions) {
+                                            showQuestions(response)
+                                        }else{
+                                            createTrakrID(response);
+                                        }
                                     }
                                 },
                             })
@@ -426,7 +434,11 @@
                                 data:{trakrid:response.trakrid, name_of_business:complete.value },
                                 success:function(data){
                                     if (data.status == 'success') {
-                                        createTrakrID(response)
+                                        if (response.questions) {
+                                            showQuestions(response)
+                                        }else{
+                                            createTrakrID(response);
+                                        }
                                     }
                                 }
                             })
@@ -435,14 +447,7 @@
             break;
             case '3':
                     if (response.questions) {
-                        Swal.fire({
-                            title: 'Employee Questions',
-                            icon: 'info',
-                            html: makeHtml(response.questions , response.trakrid),
-                            allowOutsideClick:false,
-                            focusConfirm: false,
-                            showConfirmButton:false,
-                        })
+                        showQuestions(response)
                     }else{
                         showCheckInMessage(response);
                     }
@@ -451,6 +456,17 @@
         default:
         // code block
         }
+    }
+    
+    function showQuestions( data ){
+        Swal.fire({
+            title: 'Visitor Questions',
+            icon: 'info',
+            html: makeHtml(data.questions , data.trakrid),
+            allowOutsideClick:false,
+            focusConfirm: false,
+            showConfirmButton:false,
+        })
     }
     
     function makeHtml(questions , trakrid){
@@ -486,53 +502,7 @@
             data: $(this).serialize(),
             success:function(response){
                 if (response.examStatus) {
-                    Swal.fire({
-                        input: 'textarea',
-                        inputLabel: 'Create Trakr ID',
-                        inputPlaceholder:'eg. Phone number',
-                        showCancelButton:false,
-                        showCloseButton:false,
-                        allowOutsideClick:false,
-                        inputValidator: (value)=>{
-                            if (!value) {
-                                return 'Input value is required.'
-                            }
-                            
-                            if (value) {
-                                $.ajax({
-                                    url : "{{route('check-trakr-id')}}",
-                                    method: 'POST',
-                                    data: {input : value},
-                                    success:function(response){
-                                        if (response.is_existing) {
-                                            return value+' is already taken';
-                                        }
-                                    }
-                                });
-                            }
-                        },
-                    }).then( results => {
-                        if (results.isConfirmed) {
-                            var visitor_id = response.trakrid;
-                            var trakr_id = results.value;
-                            $.ajax({
-                                url : "{{route('save-trakr-id')}}",
-                                method : "POST",
-                                data :{visitor_id : visitor_id , trakr_id: trakr_id},
-                                success : function(response){
-                                    if (response.status == 'success') {
-                                        Swal.fire({
-                                            position: 'center',
-                                            icon: 'success',
-                                            title: 'Trakr ID has been set.',
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        })
-                                    }
-                                }
-                            })
-                        }
-                    })
+                    createTrakrID(response);
                 }else{
                     Swal.fire({
                         title: '<strong>Access Denied</strong>',
@@ -545,6 +515,7 @@
                         timer: 10000,
                         footer: '<p> This message will automatically close in 10 seconds. </p>'
                     })
+                    form[0].reset();
                 }
             }
         })

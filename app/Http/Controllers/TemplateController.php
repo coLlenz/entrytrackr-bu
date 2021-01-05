@@ -170,6 +170,7 @@ class TemplateController extends Controller
         }
         
         $template = DB::table('template_copy')->where(['id' => $template_id , 'template_type' => 0])->first();
+        $template->questions_to_flg = json_decode( $template->questions_to_flg );
         return view("template.questionEdit", compact("template"));
     }
     
@@ -180,6 +181,7 @@ class TemplateController extends Controller
             $template->description = $request->question_description;
             $template->content_html = $request->question_html;
             $template->questions = $request->question_data;
+            $template->questions_to_flg = '';
             if ($template->save()) {
                 return response()->json(['status' => 'success'], 200);
             }
@@ -193,6 +195,7 @@ class TemplateController extends Controller
             'description' => $request->question_description,
             'content_html' => $request->question_html,
             'questions' => $request->question_data,
+            'questions_to_flg' => $request->toVisitor,
             'updated_at' => date('Y-m-d H:i:s')
         ]);
         
