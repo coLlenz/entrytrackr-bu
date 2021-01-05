@@ -41,11 +41,11 @@
                     </div>
                     <div class="form-check form-check-inline">
                         <input type="checkbox" class="form-check-input" id="contractor"  name="toVisitor" value=2>
-                        <label class="form-check-label" for="visitor">Contractor</label>
+                        <label class="form-check-label" for="contractor">Contractor</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input type="checkbox" class="form-check-input" id="employee"  name="toVisitor" value=3>
-                        <label class="form-check-label" for="visitor">Employee</label>
+                        <label class="form-check-label" for="employee">Employee</label>
                     </div>
                     @endif
                     <hr/>

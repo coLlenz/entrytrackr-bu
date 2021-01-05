@@ -53,12 +53,13 @@ class TrakrViewController extends Controller
                 return response()->json(
                     [
                         'status' => 'success',
+                        'has_trakr' => $visitor->trakr_id ? true : false,
                         'msg' => 'Checked-In' , 
                         'name' => $visitor->firstName , 
                         'check_date' => $formated_date,
                         'type_of_visitor' => $visitor->trakr_type_id,
                         'trakrid' => $visitor->id,
-                        'questions' => ($visitor->trakr_type_id == 3) ? $this->getEmployeeQuestions(  $visitor->user_id ) : false
+                        'questions' => $this->getVisitorQuestions(  $visitor->user_id  , $visitor->trakr_type_id)
                     ],200);
             }
             
@@ -79,12 +80,13 @@ class TrakrViewController extends Controller
                 return response()->json(
                     [
                         'status' => 'success',
+                        'has_trakr' => $trakr_new->trakr_id ? true : false,
                         'msg' => 'Checked-In' , 
                         'name' => $trakr_new->firstName , 
                         'check_date' => $formated_date,
                         'type_of_visitor' => $trakr_new->trakr_type_id,
                         'trakrid' => $trakr_new->id,
-                        'questions' => ($trakr_new->trakr_type_id == 3) ? $this->getEmployeeQuestions(  $trakr_new->user_id ) : false
+                        'questions' => $this->getVisitorQuestions(  $trakr_new->user_id  , $trakr_new->trakr_type_id)
                 ],200);
             }else{
                 return response()->json(['status' => 'fail','msg' => 'There\'s a problem creating your record.'],200);
@@ -94,14 +96,21 @@ class TrakrViewController extends Controller
         }
     }
     
-    public function getEmployeeQuestions( $user_id = false ){
-        $questions = DB::table('template_copy')->select('questions' , 'content_html' ,'id' , 'description')->where([
+    public function getVisitorQuestions( $user_id = false , $visitor_type = false){
+        $questions = DB::table('template_copy')->select('questions' , 'content_html' ,'id' , 'description' , 'questions_to_flg')->where([
             'user_id' => $user_id,
             'template_type' => 0,
             'status' => 1
         ])->first();
         
-        return $questions ? $questions : false;
+        if ($questions) {
+            if (in_array( $visitor_type , json_decode($questions->questions_to_flg) )) {
+                return $questions;
+            }else{
+                return false;
+            }
+        }
+        return false;
     }
     
     public function trakrid(Request $request){
@@ -125,12 +134,14 @@ class TrakrViewController extends Controller
             $date = $this->carbonFormat($check_in_data->check_in_date);
             return response()->json(
                 [
+                    'has_trakr' => $check_in_data->trakr_id ? true : false,
                     'check_date' =>$date , 
                     'name' => $check_in_data->firstName,
                     'status' => 'success',
                     'msg' => 'Checked-In' , 
                     'type_of_visitor' => $check_in_data->trakr_type_id,
-                    'trakrid' => $check_in_data->id
+                    'trakrid' => $check_in_data->id,
+                    'questions' => $this->getVisitorQuestions(  $check_in_data->user_id  , $check_in_data->trakr_type_id)
                 ] , 200);
         }else{
             return response()->json(['validation_error' => $validator->errors()->all()] , 200 );
@@ -270,13 +281,26 @@ class TrakrViewController extends Controller
             }
         }
         
+        $trakr = Trakr::findOrFail($request->trakrid);
         if ($wrong > 0) {
-            $trakr = Trakr::findOrFail($request->trakrid);
             $trakr->status = 1;
+            $trakr->checked_in_status = 1;
+            $trakr->check_out_date = date('Y-m-d H:i:s');
             $trakr->save();
             return response()->json(['status' => 'success' , 'examStatus' => false] , 200);
         }else{
-            return response()->json(['status' => 'success' , 'examStatus' => true , 'trakrid' => $request->trakrid] , 200);
+            $formated_date = Carbon::parse($trakr->check_in_date)->format('d F Y g:i A');
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'has_trakr' => $trakr->trakr_id ? true : false,
+                    'msg' => 'Checked-In' , 
+                    'name' => $trakr->firstName ,
+                    'check_date' => $formated_date,
+                    'type_of_visitor' => $trakr->trakr_type_id,
+                    'trakrid' => $trakr->id,
+                    'examStatus' => true
+            ],200);
         }
     }
     
