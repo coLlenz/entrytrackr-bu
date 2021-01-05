@@ -40,6 +40,7 @@ class TrakrViewController extends Controller
             $checking = $this->checkIfLoggedIn($request->all());
             if (isset($checking['has_record']) && $checking['has_record']) {
                 $visitor = Trakr::findOrFail($checking['visitor_id']);
+                $visitor->assistance = isset($request->need_assistance) ? 1:0; 
                 $visitor->checked_in_status = 0;
                 $visitor->check_in_date = date('Y-m-d H:i:s');
                 $visitor->check_out_date = null;
@@ -67,6 +68,7 @@ class TrakrViewController extends Controller
             
             $trakr_new->firstName = $request->first_name;
             $trakr_new->lastName = $request->last_name;
+            $trakr_new->assistance = isset($request->need_assistance) ? 1:0;
             $trakr_new->phoneNumber = $request->phoneNumber;
             $trakr_new->email = $request->email;
             $trakr_new->trakr_type_id = $request->visitor_type;
@@ -266,18 +268,27 @@ class TrakrViewController extends Controller
         
     }
     
-    public function employeeAnswer(Request $request){
+    public function visitorAnswer(Request $request){
         $question = DB::table('template_copy')->select('questions')->where('id' , $request->questionId)->first();
         $decoded = json_decode( $question->questions );
         $wrong = 0;
         $index = 0;
         
+        // Answer with Choices Only
         foreach ($request->all() as $key => $input) {
-            if ($key != 'questionId' && $key != 'trakrid') {
+            if ($key != 'questionId' && $key != 'trakrid' && $key !='temp_check') {
                 if (strtoupper($decoded[$index]->correctAnswer) != strtoupper($input) ) {
                     $wrong++;
                 }
                 $index++;
+            }
+        }
+        
+        // Temperature Check
+        if ($request->temp_check) {
+            $tempCheck = DB::table('entry_allowed_temp')->first();
+            if ($request->temp_check > $tempCheck->temp) {
+                $wrong++;
             }
         }
         

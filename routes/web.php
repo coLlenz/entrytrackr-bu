@@ -89,7 +89,7 @@ Route::prefix('trakr')->group(function () {
 	Route::post('/trakrid/checkout', [TrakrViewController::class, 'trakrcheckout'])->name("trakrid-signout");
 	Route::post('/trakr/visiting_who', [TrakrViewController::class, 'visitingWho'])->name("visiting-who");
 	Route::post('/trakr/business', [TrakrViewController::class, 'business'])->name("business");
-	Route::post('/visitor/answers' , [TrakrViewController::class , 'employeeAnswer'])->name('employee-answer');
+	Route::post('/visitor/answers' , [TrakrViewController::class , 'visitorAnswer'])->name('employee-answer');
 	Route::post('/visitor/checktrakrid' , [TrakrViewController::class , 'trakrIdCheck'])->name('check-trakr-id');
 	Route::post('/visitor/save/trakr' , [TrakrViewController::class , 'saveTrakrId'])->name('save-trakr-id');
 	// qr
