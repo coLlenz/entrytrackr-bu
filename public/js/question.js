@@ -103,7 +103,7 @@
                 }).then( values => {
                     val.question = values.value[0]
                     val.answers.a = values.value[1];
-                    val.answers.n = values.value[2];
+                    val.answers.b = values.value[2];
                     val.correctAnswer = values.value[3];
                     h2_html.text(val.question);
                     optionA.text(val.answers.a);
