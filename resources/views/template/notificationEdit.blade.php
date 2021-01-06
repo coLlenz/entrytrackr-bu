@@ -6,7 +6,7 @@
     <div class="row justify-content-md-center">
         <div class="col-md-8">
             <div class="float-right">
-                <a href="{{ URL::previous() }}" class="btn btn-primary mr-1">Back to Templates</a>
+                <a href="{{ url('/templates') }}" class="btn btn-primary">Back to Templates</a>
             </div>
         </div>
     </div> <br>

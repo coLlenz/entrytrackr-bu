@@ -19,7 +19,7 @@
                         @endforeach
                     </div>
                 @endif
-                <a href="{{ URL::previous() }}" class="btn btn-primary">Back to Templates</a>
+                <a href="{{ url('/templates') }}" class="btn btn-primary">Back to Templates</a>
             </div>
         </div>
     </div> <br>

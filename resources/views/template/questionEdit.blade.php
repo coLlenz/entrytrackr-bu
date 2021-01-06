@@ -7,7 +7,7 @@
             <div class="float-right">
                 <button type="button" class="btn btn-primary"  name="button" id="saveQuestion" >Save Changes</button>
                 <button type="button" class="btn btn-primary"  name="button" id="addQuestion">Add Question</button>
-                <a href="{{ URL::previous() }}" class="btn btn-primary">Back to Templates</a>
+                <a href="{{ url('/templates') }}" class="btn btn-primary">Back to Templates</a>
             </div>
         </div>
     </div> <br>
