@@ -335,10 +335,12 @@ class TrakrViewController extends Controller
     }
     
     public function QRLoginView( $uuid , $userid ){
+        $qr_path = DB::table('users')->where('id' ,$userid)->first();
         $view_data = [];
         $view_data['is_mobile'] = true;
         $view_data['uuid'] = $uuid;
         $view_data['userid'] = $userid;
+        $view_data['qr_path'] = $qr_path->qr_path;
         return view('trakr.mobile')->with('view_data' , $view_data);
     }
 }

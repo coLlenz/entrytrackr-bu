@@ -7,9 +7,8 @@
             answers: {
                 a: generate[1],
                 b: generate[2],
-                c: generate[3],
             },
-            correctAnswer: generate[4]
+            correctAnswer: generate[3]
         }
         Merge(questionSet);
     }
@@ -36,10 +35,6 @@
                         <div class="custom-control custom-radio">
                             <input type="radio" id="${ this_id = makeid(10) }" name="${ myname }" class="custom-control-input" value="B"> 
                             <label class="custom-control-label" for="${ this_id }">${ item.b }</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="${ this_id = makeid(10) }" name="${ myname }" class="custom-control-input" value="C"> 
-                            <label class="custom-control-label" for="${ this_id }"> ${ item.c } </label>
                         </div>
                         <br />
                         <div class="form-group">
@@ -81,7 +76,7 @@
             showCancelButton: true,
             showCloseButton: true,
             allowOutsideClick : false,
-            progressSteps: ['1', '2', '3' ,'4','5']
+            progressSteps: ['1', '2', '3' ,'4']
         });
         
         return swal;
@@ -115,18 +110,6 @@
             },
             {
                 title: 'Option B',
-                input : 'text',
-                showCancelButton: true,
-                showCloseButton: true,
-                allowOutsideClick : false,
-                inputValidator: function(value){
-                    if (!value) {
-                        return 'Input value is required'
-                    }
-                }
-            },
-            {
-                title: 'Option C',
                 input : 'text',
                 showCancelButton: true,
                 showCloseButton: true,

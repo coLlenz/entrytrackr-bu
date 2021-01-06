@@ -205,7 +205,7 @@
     $('.btnSign_cancel').on('click' , function() {
         $('#checkinModal').modal('hide');
         form[0].reset();
-        $(forms).removeClass('was-validated');
+        $(form).removeClass('was-validated');
         $('.invalid-email').hide();
     });
     
