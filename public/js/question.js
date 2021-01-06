@@ -15,19 +15,26 @@
 
     function Merge( data ){
         myQuestions.push( data );
+        
         generateHtml(data);
+        
         checkChanges(myQuestions);
+        
     }
 
     function generateHtml(data = false){
         var options = '';
         if (data) {
             var container = $('#generated_container');
-            container.append( `<h2>${data.question}</h2>` );
-            
+            var innerContainer = $('<div class="target"></div>');
+            innerContainer.append(`<div class="float-right">
+            <a class="editQue"> <i class="fa fa-pencil mr-2" aria-hidden="true"></i> </a>
+            <a class="deleteQue"> <i class="fa fa-trash"></i> </a>
+            </div>`);
+            innerContainer.append( `<h2>${data.question}</h2>` );
             $(data.answers).each( (idx , item) =>{
                 options = `
-                    <div class="mb-4">
+                    <div class="mb-4" id=" ${makeid(15)} ">
                         <div class="custom-control custom-radio">
                             <input type="radio" id="${ this_id = makeid(10) }" name="${  myname = makeid(15) }" class="custom-control-input" value="A"> 
                             <label class="custom-control-label" for="${ this_id }"> ${ item.a } </label>
@@ -45,10 +52,67 @@
                     <hr />
                 `;
             });
-            container.append( options );
+            innerContainer.append( options );
+            container.append(innerContainer);
         }
     }
-
+    
+    $(document).on('click' , '.deleteQue', function(){
+        if (confirm("Do you really want to remove this?")) {
+            var target = $(this).parent().parent();
+            var txt = $(this).parent().next().text();
+            $(myQuestions).each( (idx , val) => {
+                if (val.question === txt) {
+                    myQuestions.splice(idx , 1);
+                }
+            })
+            target.remove();
+        }else{
+            console.log('cancel');
+        }
+    })
+    
+    $(document).on('click' , '.editQue' , function() {
+        var h2_html = $(this).parent().next();
+        var options = $(h2_html).next().children('.custom-control');
+        var optionA = $( options[0] ).find('label');
+        var optionB = $( options[1] ).find('label');
+        var answer = $(h2_html).next().children('.form-group').find('input');
+        
+        var txt = $(this).parent().next().text();
+        $(myQuestions).each( (idx , val) => {
+            if (val.question === txt) {
+                Swal.fire({
+                    title : 'Edit Question',
+                    html : `<textarea class="form-control" rows="4" cols="50" name="question" id="question"/>${val.question}</textarea><br />
+                    <input class="form-control" name="optionA" value="${val.answers.a}" id="optionA"/><br />
+                    <input class="form-control" name="optionB" value="${val.answers.b}" id="optionB" /><br />
+                    <input class="form-control" name="answer" value="${val.correctAnswer}" id="answer"/>
+                    `,
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Save',
+                    showCancelButton : true,
+                    preConfirm: () => {
+                        return [
+                            document.getElementById('question').value,
+                            document.getElementById('optionA').value,
+                            document.getElementById('optionB').value,
+                            document.getElementById('answer').value,
+                        ]
+                    }
+                }).then( values => {
+                    val.question = values.value[0]
+                    val.answers.a = values.value[1];
+                    val.answers.n = values.value[2];
+                    val.correctAnswer = values.value[3];
+                    h2_html.text(val.question);
+                    optionA.text(val.answers.a);
+                    optionB.text(val.answers.b);
+                    answer.attr('value',val.correctAnswer);
+                })
+            }
+        })
+    });
 
     function checkChanges( myQuestions ){
         if (myQuestions) {
@@ -136,6 +200,11 @@
         
         return steps;
     }
+    
+    function removeQuestion(){
+        
+    }
+    
     
     function selectedTemplate(data , questions){
         $('#generated_container').html( data ).hide().fadeIn(1000);
