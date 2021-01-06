@@ -57,7 +57,7 @@
 
                         <div class="d-flex row row align-items-center">
                             <a target="_blank" class="btn btn-primary btn-md top-right-button  mr-2" href="{{ url( route("trakr-view",auth()->user()->uuid) ) }}"> Visitor Sign in Page</a>
-                            <p style="margin-top: 12px;">{{ url( 'trakr/'.auth()->user()->uuid.'/visitor-checkin') }} </p>
+                            <p style="margin-top: 12px;">{{ url( 'trakr/qr/login/'.auth()->user()->uuid.'/'.auth()->user()->id) }} </p>
                         </div>
                        
                         {{-- <div class="">
