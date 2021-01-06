@@ -20,7 +20,7 @@
                         </div>
                     </div>
                 @endif
-                <a href="{{ URL::previous() }}" class="btn btn-primary mr-1">Back to Templates</a>
+                <a href="{{ url('/templates') }}" class="btn btn-primary mr-2">Back to Templates</a>
             </div>
         </div>
     </div> <br>

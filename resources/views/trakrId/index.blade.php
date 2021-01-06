@@ -15,7 +15,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th class="">TrakrID</th>
+                    <th class="">trakrID</th>
                     <th class="">Name</th>
                     <th class="">Date Created</th>
                     <th class="">Visitor Type</th>

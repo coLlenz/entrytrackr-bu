@@ -33,7 +33,7 @@ class UserController extends Controller
     }
     public function create(Request $request){
         $this->validate($request, [
-            'email' => 'required|unique:users|email:rfc,dns',
+            'email' => 'required|unique:users',
             'name' => 'required',
             'cname' => 'required',
             'password' => 'min:8|confirmed',
