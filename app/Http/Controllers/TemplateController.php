@@ -181,7 +181,6 @@ class TemplateController extends Controller
             $template->description = $request->question_description;
             $template->content_html = $request->question_html;
             $template->questions = $request->question_data;
-            $template->questions_to_flg = '';
             if ($template->save()) {
                 return response()->json(['status' => 'success'], 200);
             }
