@@ -29,10 +29,10 @@
                 <label>Phone Number</label>
                 <input type="text" class="form-control" name="number">
             </div>
-            <div class="form-group">
+            {{--<div class="form-group">
                 <label>Email</label>
                 <input type="email" class="form-control" name="email">
-            </div>
+            </div> --}} 
             <div class="form-group">
                 <label>Visitor Type</label>
                 <select class="form-control select2-single" data-width="100%" name="vtype">

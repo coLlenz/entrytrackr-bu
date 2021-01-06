@@ -206,13 +206,13 @@ class TemplateController extends Controller
     
     public function QuestionChangeStatus($template_id){
         //check existing active question template
-        $active_question = DB::table('template_copy')->select('status' , 'id')->where(['template_type' => 0 , 'status' => 1])->first();
-        
-        if (!empty($active_question) && $active_question->status) {
-            $status = DB::table('template_copy')->where([
-                'id' => $active_question->id
-            ])->update(['status' => 0 , 'updated_at' => date('Y-m-d H:i:s')]);
-        }
+        // $active_question = DB::table('template_copy')->select('status' , 'id')->where(['template_type' => 0 , 'status' => 1])->first();
+        // 
+        // if (!empty($active_question) && $active_question->status) {
+        //     $status = DB::table('template_copy')->where([
+        //         'id' => $active_question->id
+        //     ])->update(['status' => 0 , 'updated_at' => date('Y-m-d H:i:s')]);
+        // }
         
         DB::table('template_copy')->where(['user_id' => auth()->user()->id , 'id' => $template_id])->update(['status' => 1]);
         return redirect()->route("template-index")->with('success', 'Template Activated Successfully');

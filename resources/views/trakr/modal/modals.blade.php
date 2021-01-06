@@ -33,13 +33,13 @@
                         <h3>Phone number is required</h3>
                     </div>
                 </div>
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="email" class="col-form-label">Email</label>
                     <input type="text" class="form-control" name="email">
                     <div class="invalid-email" style="display:none">
                         <h3 style="color: #dc3545; " >Please provide a valid email</h3>
                     </div>
-                </div>
+                </div> --}}
                 <div class="form-check" id="sign_assitance" style="color:#000!important">
                     <input type="checkbox" class="form-check-input" id="need_assistance" name="need_assistance">
                     <label class="form-check-label" for="need_assistance" >Do you require assistance in the event of an emergency evacuation?</label>
@@ -429,6 +429,7 @@
     }
     
     function flowCheckpoint(response){
+        console.log(response);
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         switch(response.type_of_visitor) {
             case '1':
@@ -549,7 +550,10 @@
     function tempCheck(){
         var html = `
             <div class="form-group">
-                <label for="temp_check" class="col-form-label">Temperature Check</label>
+                <label for="temp_check" class="col-form-label">
+                Temperature Check
+                <span> <p> My temperature has been tested on entry today and the result was: </p> </span>
+                </label>
                 <input type="number" step="0.01" class="form-control" name="temp_check" placeholder="Enter your Temperature here..." required>
             </div>
         `;

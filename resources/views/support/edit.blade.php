@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="mb-2">
-    <h1>Edit User Guid</h1>
+    <h1>Edit User Guide</h1>
     <div class="top-right-button-container">
         
     </div>
