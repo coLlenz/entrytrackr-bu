@@ -31,7 +31,7 @@ class TrakrViewController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'phoneNumber' => 'required',
-            'email' => 'email|nullable',
+            // 'email' => 'email|nullable',
             'visitor_type' => 'required'
         ]);
         
@@ -70,7 +70,7 @@ class TrakrViewController extends Controller
             $trakr_new->lastName = $request->last_name;
             $trakr_new->assistance = isset($request->need_assistance) ? 1:0;
             $trakr_new->phoneNumber = $request->phoneNumber;
-            $trakr_new->email = $request->email;
+            // $trakr_new->email = $request->email;
             $trakr_new->trakr_type_id = $request->visitor_type;
             $trakr_new->user_id = ($userid) ? $userid : auth()->user()->id;
             $trakr_new->status = 0;
@@ -103,16 +103,18 @@ class TrakrViewController extends Controller
             'user_id' => $user_id,
             'template_type' => 0,
             'status' => 1
-        ])->first();
+        ])->get();
         
-        if ($questions) {
-            if (in_array( $visitor_type , json_decode($questions->questions_to_flg) )) {
-                return $questions;
+        $data = [];
+        
+        foreach ($questions as $key => $value) {
+            if (in_array( $visitor_type , json_decode($value->questions_to_flg) )) {
+                $data = $questions[$key];
             }else{
-                return false;
+                // do nothing my friend
             }
         }
-        return false;
+        return $data ? $data : false;
     }
     
     public function trakrid(Request $request){

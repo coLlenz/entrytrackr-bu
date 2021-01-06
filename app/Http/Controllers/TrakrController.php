@@ -42,7 +42,7 @@ class TrakrController extends Controller
         $this->validate($request, [
             'fname' => 'required|min:3|max:255',
             'lname' => 'required',
-            'email' => 'required|email',
+            // 'email' => 'required|email',
             'number' => 'required',
             'vtype' => 'required',
         ]);
@@ -53,7 +53,7 @@ class TrakrController extends Controller
         $trakrr->trakr_id = '';
         $trakrr->phoneNumber = $request->number;
         $trakrr->trakr_type_id = $request->vtype;
-        $trakrr->email = $request->email;
+        // $trakrr->email = $request->email;
         $trakrr->user_id = auth()->user()->id;
         $trakrr->assistance = 1;
         $trakrr->status = 0;
