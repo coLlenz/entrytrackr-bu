@@ -7,6 +7,7 @@
             <div class="float-right">
                 <button type="button" class="btn btn-primary"  name="button" id="saveQuestion" >Save Changes</button>
                 <button type="button" class="btn btn-primary"  name="button" id="addQuestion">Add Question</button>
+                <a href="{{ url('/templates') }}" class="btn btn-primary">Back to Templates</a>
             </div>
         </div>
     </div> <br>
@@ -20,7 +21,7 @@
                         <input type="text" name="question_title" value="{{ $template->title }}" class="form-control"  placeholder="Enter title here.." required />
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control" name="question_description"  rows="3" placeholder="Description here..."> {{$template->description}} </textarea>
+                        <textarea class="form-control" name="question_description"  rows="3" placeholder="Description here...">{{$template->description}} </textarea>
                     </div>
                     @if( !auth()->user()->is_admin )
                     <div class="form-check form-check-inline">

@@ -13,27 +13,13 @@ class ReportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        if(auth()->user()->id === 1) {
-            $date_now = strtotime( date('Y-m-d H:i:s') );
-            $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
-            ->paginate(5);
-            
-            $formdata = [
-                'fdate' => date('Y-m-d' , strtotime("-7 days" , $date_now)),
-                'edate' => date('Y-m-d' , $date_now),
-                'ass' => 'all',
-                'tvis' => 'all',
-                'acc' => 'all'
-            ];
-            
-            return view('report.index')->with('formdata', $formdata)->with('table_data', $default_data);
-        }
-
         $date_now = strtotime( date('Y-m-d H:i:s') );
         $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
-        ->where('user_id' , ( auth()->user()->sub_account ) ? auth()->user()->sub_account_id : auth()->user()->id   )
+        ->where('user_id' , ( auth()->user()->sub_account ) ? auth()->user()->sub_account_id : auth()->user()->id  )
         ->where('check_in_date' ,'>=', date('Y-m-d',strtotime("-7 days" , $date_now))." 00:00:00")
-        ->where('check_in_date' , '<=' , date('Y-m-d')." 23:59:59")->paginate(10);
+        ->where('check_in_date' , '<=' , date('Y-m-d')." 23:59:59")
+        ->orderBy('check_in_date' , 'desc')
+        ->paginate(10);
         $formdata = [
             'fdate' => date('Y-m-d' , strtotime("-7 days" , $date_now)),
             'edate' => date('Y-m-d' , $date_now),
@@ -59,7 +45,7 @@ class ReportController extends Controller
         $form_data = $request->all();
         $filter_query = Trakr::query();
         $filter_query->select('firstName','lastName' ,'trakr_type_id' , 'phoneNumber' ,'who' ,'name_of_company','check_in_date' , 'check_out_date' , 'assistance' , 'status');
-        
+        $filter_query->orderBy('check_in_date' , 'desc');
         $filter_query->where('user_id' , ( auth()->user()->sub_account ) ? auth()->user()->sub_account_id : auth()->user()->id );
         
         $filter_query->when($start_date,function($q , $start_date) {
@@ -117,16 +103,16 @@ class ReportController extends Controller
     }
     
     public function generate_pdf(Request $request){
-        $start_date = $request->input('fdate');
-        $end_date = $request->input('edate');
+        $start_date = Carbon::parse($request->input('fdate'))->format('Y-m-d 00:00:00');
+        $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
         $assistance = $request->input('ass');
         $type_of_visitor = $request->input('tvis');
         $status = $request->input('acc');
-        $filename = strtotime(date('Y-m-d H:i:s'));
+        $form_data = $request->all();
         $filter_query = Trakr::query();
-        $filter_query->select('firstName','lastName' ,'trakr_type_id' , 'phoneNumber' ,'who' ,'trakr_types.name as visitor_type','name_of_company','check_in_date' , 'check_out_date' , 'assistance' , 'status');
-        $filter_query->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id');
-        $filter_query->where('user_id' , ( auth()->user()->sub_account ) ? auth()->user()->sub_account_id : auth()->user()->id);
+        $filter_query->select('firstName','lastName' ,'trakr_type_id' , 'phoneNumber' ,'who' ,'name_of_company','check_in_date' , 'check_out_date' , 'assistance' , 'status');
+        $filter_query->orderBy('check_in_date' , 'desc');
+        $filter_query->where('user_id' , ( auth()->user()->sub_account ) ? auth()->user()->sub_account_id : auth()->user()->id );
         
         $filter_query->when($start_date,function($q , $start_date) {
             return $q->where('check_in_date' , '>=' , $start_date);
@@ -176,6 +162,7 @@ class ReportController extends Controller
             return $q->where('status' , '=' , 1);
         });
         
+        $filename = strtotime(date('Y-m-d H:i:s'));
         $data = $filter_query->get();
         view()->share('data',$data);
         $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
@@ -242,4 +229,4 @@ class ReportController extends Controller
     {
         //
     }
-}
+}                                                                                                                                                                                                                                                                                    

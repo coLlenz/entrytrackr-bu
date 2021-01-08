@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="mb-2">
-    <h1>Add TrakrID</h1>
+    <h1>Add trakrID</h1>
     <div class="top-right-button-container">
 
     </div>
@@ -27,12 +27,12 @@
             </div>
             <div class="form-group">
                 <label>Phone Number</label>
-                <input type="text" class="form-control" name="number"">
+                <input type="text" class="form-control" name="number">
             </div>
-            <div class="form-group">
+            {{--<div class="form-group">
                 <label>Email</label>
                 <input type="email" class="form-control" name="email">
-            </div>
+            </div> --}} 
             <div class="form-group">
                 <label>Visitor Type</label>
                 <select class="form-control select2-single" data-width="100%" name="vtype">

@@ -31,7 +31,7 @@ class TrakrViewController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'phoneNumber' => 'required',
-            'email' => 'email:rfc,dns',
+            // 'email' => 'email|nullable',
             'visitor_type' => 'required'
         ]);
         
@@ -40,6 +40,7 @@ class TrakrViewController extends Controller
             $checking = $this->checkIfLoggedIn($request->all());
             if (isset($checking['has_record']) && $checking['has_record']) {
                 $visitor = Trakr::findOrFail($checking['visitor_id']);
+                $visitor->assistance = isset($request->need_assistance) ? 1:0; 
                 $visitor->checked_in_status = 0;
                 $visitor->check_in_date = date('Y-m-d H:i:s');
                 $visitor->check_out_date = null;
@@ -67,8 +68,9 @@ class TrakrViewController extends Controller
             
             $trakr_new->firstName = $request->first_name;
             $trakr_new->lastName = $request->last_name;
+            $trakr_new->assistance = isset($request->need_assistance) ? 1:0;
             $trakr_new->phoneNumber = $request->phoneNumber;
-            $trakr_new->email = $request->email;
+            // $trakr_new->email = $request->email;
             $trakr_new->trakr_type_id = $request->visitor_type;
             $trakr_new->user_id = ($userid) ? $userid : auth()->user()->id;
             $trakr_new->status = 0;
@@ -97,20 +99,22 @@ class TrakrViewController extends Controller
     }
     
     public function getVisitorQuestions( $user_id = false , $visitor_type = false){
-        $questions = DB::table('template_copy')->select('questions' , 'content_html' ,'id' , 'description' , 'questions_to_flg')->where([
+        $questions = DB::table('template_copy')->select('title','questions' , 'content_html' ,'id' , 'description' , 'questions_to_flg')->where([
             'user_id' => $user_id,
             'template_type' => 0,
             'status' => 1
-        ])->first();
+        ])->get();
         
-        if ($questions) {
-            if (in_array( $visitor_type , json_decode($questions->questions_to_flg) )) {
-                return $questions;
+        $data = [];
+        
+        foreach ($questions as $key => $value) {
+            if (in_array( $visitor_type , json_decode($value->questions_to_flg) )) {
+                $data = $questions[$key];
             }else{
-                return false;
+                // do nothing my friend
             }
         }
-        return false;
+        return $data ? $data : false;
     }
     
     public function trakrid(Request $request){
@@ -266,18 +270,27 @@ class TrakrViewController extends Controller
         
     }
     
-    public function employeeAnswer(Request $request){
+    public function visitorAnswer(Request $request){
         $question = DB::table('template_copy')->select('questions')->where('id' , $request->questionId)->first();
         $decoded = json_decode( $question->questions );
         $wrong = 0;
         $index = 0;
         
+        // Answer with Choices Only
         foreach ($request->all() as $key => $input) {
-            if ($key != 'questionId' && $key != 'trakrid') {
+            if ($key != 'questionId' && $key != 'trakrid' && $key !='temp_check') {
                 if (strtoupper($decoded[$index]->correctAnswer) != strtoupper($input) ) {
                     $wrong++;
                 }
                 $index++;
+            }
+        }
+        
+        // Temperature Check
+        if ($request->temp_check) {
+            $tempCheck = DB::table('entry_allowed_temp')->first();
+            if ($request->temp_check > $tempCheck->temp) {
+                $wrong++;
             }
         }
         
@@ -305,8 +318,9 @@ class TrakrViewController extends Controller
     }
     
     function trakrIdCheck(Request $request){
-        $trakr = Trakr::where('trakr_id' , $request->input)->first();
-        if ($trakr) {
+        $trakr = Trakr::where('trakr_id' , $request->input)->get();
+        
+        if (!$trakr->isEmpty()) {
             return response()->json(['status' => 'success' , 'is_existing' => true] , 200);
         }
         return response()->json(['status' => 'success' , 'is_existing' => false] , 200);
@@ -323,10 +337,12 @@ class TrakrViewController extends Controller
     }
     
     public function QRLoginView( $uuid , $userid ){
+        $qr_path = DB::table('users')->where('id' ,$userid)->first();
         $view_data = [];
         $view_data['is_mobile'] = true;
         $view_data['uuid'] = $uuid;
         $view_data['userid'] = $userid;
+        $view_data['qr_path'] = $qr_path->qr_path;
         return view('trakr.mobile')->with('view_data' , $view_data);
     }
 }

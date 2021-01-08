@@ -15,7 +15,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th class="">TrakrID</th>
+                    <th class="">trakrID</th>
                     <th class="">Name</th>
                     <th class="">Date Created</th>
                     <th class="">Visitor Type</th>
@@ -28,7 +28,7 @@
 
                     <td>{{$trakr->trakr_id}}</td>
                         <td>{{$trakr->firstName}} {{$trakr->lastName}}</td>
-                        <td>{{$trakr->check_in_date}}</td>
+                        <td>{{ \Carbon\Carbon::parse($trakr->check_in_date)->format('d-m-y H:i') }}</td>
                         <td>{{$trakr->name}}</td>
                         <td class="text-center">
                             <button class="btn btn-primary dropdown-toggle mb-1" type="button"

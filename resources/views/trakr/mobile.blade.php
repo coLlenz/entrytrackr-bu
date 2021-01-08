@@ -44,6 +44,23 @@
         </div>
     </div>
     
+    <div class="row justify-content-center">
+        <div class="col-sm-8 col-md-6 col-lg-6 col-xl-4">
+            <a href="#" class="card" data-toggle="modal">
+                <div class="card-body text-center">
+                    <h1>Contactless Entry</h1>
+                    <img class=""  src="{{ $view_data['qr_path'] }}" alt="" height="250" width="250">
+                </div>
+                <div class="card-footer">
+                    <p class="text-center font-medium card-text mb-0" style="font-size: 17px;">
+                        Scan the QR code with your smartphone camera to <br>
+                        <strong>Sign In</strong> or <strong>Sign Out</strong>
+                    </p>
+                </div>
+            </a>
+        </div>
+    </div>
+    
 </div>
 <script src="{{ asset('js/vendor/sweetalert2@10.js')}}"></script>
 <script type="text/javascript" src="{{ asset('js/vendor/quill.min.js') }}"></script>

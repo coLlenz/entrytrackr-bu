@@ -5,6 +5,13 @@
 <div class="container">
     <div class="row justify-content-md-center">
         <div class="col-md-8">
+            <div class="float-right">
+                <a href="{{ url('/templates') }}" class="btn btn-primary">Back to Templates</a>
+            </div>
+        </div>
+    </div> <br>
+    <div class="row justify-content-md-center">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
                 <form action="{{route('notification-update' , $template->id)}}" method="POST" id="formEditor">

@@ -42,7 +42,7 @@ class TrakrController extends Controller
         $this->validate($request, [
             'fname' => 'required|min:3|max:255',
             'lname' => 'required',
-            'email' => 'required|email',
+            // 'email' => 'required|email',
             'number' => 'required',
             'vtype' => 'required',
         ]);
@@ -50,22 +50,21 @@ class TrakrController extends Controller
         $trakrr = new Trakr;
         $trakrr->firstName = $request->fname;
         $trakrr->lastName = $request->lname;
-        $trakrr->trakr_id = $this->setUsernameAttribute(["firstName" => $request->fname,"lastName"=> $request->lname]);
+        $trakrr->trakr_id = '';
         $trakrr->phoneNumber = $request->number;
         $trakrr->trakr_type_id = $request->vtype;
-        $trakrr->email = $request->email;
+        // $trakrr->email = $request->email;
         $trakrr->user_id = auth()->user()->id;
-        $trakrr->assistance = 0;
+        $trakrr->assistance = 1;
         $trakrr->status = 0;
         $trakrr->checked_in_status = 0;
         $trakrr->check_in_date = date('Y-m-d H:i:s');
         
         if ($trakrr->save()) {
-            return redirect()
-            ->back()
+            return redirect('/trakrid')
             ->with('success', 'Successfully Added New TrakrID');
         }
-        return redirect()->back();
+        return redirect('/trakrid');
     }
     
     public function setUsernameAttribute($value)

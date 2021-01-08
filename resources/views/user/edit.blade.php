@@ -20,7 +20,7 @@
                     </div>
                     @endif
                         <div class="form-group">
-                            <label class="form-control-label" for="example3cols1Input">Business Name</label>
+                            <label class="form-control-label" for="example3cols1Input">Account Name</label>
                         <input name="name" type="text" class="form-control" id="example3cols1Input" placeholder="Enter Business Name" required value="{{$id->name}}">
                         </div>
                         <div class="form-group">

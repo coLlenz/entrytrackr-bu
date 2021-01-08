@@ -33,16 +33,20 @@
                         <h3>Phone number is required</h3>
                     </div>
                 </div>
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="email" class="col-form-label">Email</label>
                     <input type="text" class="form-control" name="email">
                     <div class="invalid-email" style="display:none">
                         <h3 style="color: #dc3545; " >Please provide a valid email</h3>
                     </div>
+                </div> --}}
+                <div class="form-check" id="sign_assitance" style="color:#000!important">
+                    <input type="checkbox" class="form-check-input" id="need_assistance" name="need_assistance">
+                    <label class="form-check-label" for="need_assistance" >Do you require assistance in the event of an emergency evacuation?</label>
                 </div>
                 <div class="form-group">
                     <label for="visitor_type" class="col-form-label">Visitor type</label>
-                    <select class="form-control" name="visitor_type" required>
+                    <select class="form-control" name="visitor_type" required id="visitor_type">
                         <option value=1>Visitor</option>
                         <option value=2>Contractor</option>
                         <option value=3>Employee</option>
@@ -95,8 +99,8 @@
                         <h3 >Phone Number is required.</h3>
                     </div>
                 </div>
-                <div class="modal-footer">w
-                    <button type="button" class="btn btn-outline-secondary btn_entry" data-dismiss="modal">Cancel</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn_entry btnCheckoutCancel">Cancel</button>
                     <button type="submit" class="btn btn-primary save_check_out btn_entry">Sign Out</button>
                 </div>
             </form>
@@ -181,11 +185,11 @@
                 if (result.isConfirmed) {
                     if (result.value.status == 'loggedin') {
                         Swal.fire({
-                            title:'<strong> You already been signed in at </strong> <br/>',
+                            title:'<strong> You have already signed in at </strong> <br/>',
                             html : '<b>'+result.value.check_date+'</b>',
                             allowOutsideClick : false,
                             showCloseButton: true,
-                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> Great!',
+                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> OK',
                             confirmButtonAriaLabel: 'Thumbs up, great!',
                         })
                     }else{
@@ -201,7 +205,25 @@
     $('.btnSign_cancel').on('click' , function() {
         $('#checkinModal').modal('hide');
         form[0].reset();
-    })
+        $(form).removeClass('was-validated');
+        $('.invalid-email').hide();
+    });
+    
+    $('.btnCheckoutCancel').on('click' , function() {
+        $('#checkoutModal').modal('hide');
+        form2[0].reset();
+        $('#form_checkout').removeClass('was-validated');
+    });
+    
+    $('#visitor_type').on('change' , function() {
+        if ( $(this).val() != 1 ) {
+            $('#sign_assitance').hide();
+            $('#sign_assitance').prop('checked' , false);
+        }else {
+            $('#sign_assitance').show();
+            $('#sign_assitance').prop('checked' , true);
+        }
+    });
     
     $(form).on('submit' , function(e) {
         e.preventDefault();
@@ -214,6 +236,8 @@
                     if (response.status == 'success') {
                         $('#checkinModal').modal('hide');
                         flowCheckpoint(response);
+                        $(form).removeClass('was-validated');
+                        $('.invalid-email').hide();
                     }
                     
                     if (response.status == 'fail') {
@@ -311,8 +335,8 @@
             '<b>'+details.check_date+'</b>',
             showCloseButton: false,
             showConfirmButton:false,
-            timer: 10000,
-            footer: '<p> This message will automatically close in 10 seconds. </p>'
+            timer: 5000,
+            footer: '<p> This message will automatically close in 5 seconds. </p>'
         })
     }
     
@@ -326,8 +350,8 @@
             '<b>'+details.check_date+'</b>',
             showCloseButton: false,
             showConfirmButton:false,
-            timer: 10000,
-            footer: '<p> This message will automatically close in 10 seconds. </p>'
+            timer: 5000,
+            footer: '<p> This message will automatically close in 5 seconds. </p>'
         })
     }
     
@@ -340,11 +364,11 @@
         Swal.fire({
             icon:'info',
             html:`
-            <p class="mb-4">For Faster Sign In on future visits, save your contact information as an trakrID.</p>
-            <p>Create your trakrID using letters, numbers and symbols.</p>
+            <p class="mb-4">For a Faster Sign In on future visits, save your contact information as a trakrID.</p>
+            <p style="font-size: 17px;">Create your trakrID using letters, numbers and symbols.</p>
             `,
             input:'text',
-            inputPlaceholder: 'Type here...',
+            inputPlaceholder: 'Type trakrID here...',
             showCancelButton:true,
             cancelButtonText:'Skip',
             showConfirmButton:true,
@@ -352,10 +376,38 @@
             allowOutsideClick : false,
             reverseButtons:true,
             inputValidator : (value) => {
-                if (!value) {
-                    return 'Input value is required'
-                }
+                return new Promise((resolve) => {
+                    if (value) {
+                        $.ajax({
+                            url : "{{route('check-trakr-id')}}",
+                            method: 'POST',
+                            data: {input : value},
+                            success: function(response){
+                                if (response.is_existing) {
+                                    resolve('trakrID not available, try again.');
+                                }else {
+                                    resolve();
+                                }
+                            }
+                        });
+                    } else {
+                        resolve('Input data is required');
+                    }
+                })
             },
+            preConfirm:(data) => {
+                $.ajax({
+                    url : "{{route('check-trakr-id')}}",
+                    method: 'POST',
+                    data: {input : data},
+                    success: function(response){
+                        if (response.is_existing) {
+                            console.log('herrrrrrrrrrrrrrrrrrrrrrrreeeeeee');
+                            return Swal.showValidationMessage('trakrID is not Available');
+                        }
+                    }
+                });
+            }
         }).then( btnPress => {
             if (btnPress.isConfirmed) {
                 var trakrID = btnPress.value;
@@ -377,6 +429,7 @@
     }
     
     function flowCheckpoint(response){
+        console.log(response);
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         switch(response.type_of_visitor) {
             case '1':
@@ -460,7 +513,7 @@
     
     function showQuestions( data ){
         Swal.fire({
-            title: 'Visitor Questions',
+            title: data.questions.title,
             icon: 'info',
             html: makeHtml(data.questions , data.trakrid),
             allowOutsideClick:false,
@@ -489,8 +542,23 @@
                 $(item2).attr('required' , 'true');
             });
         })
+        $(form).append( tempCheck() );
         $(form).append(button);
         return form;
+    }
+    
+    function tempCheck(){
+        var html = `
+            <div class="form-group">
+                <label for="temp_check" class="col-form-label">
+                Temperature Check
+                <span> <p> My temperature has been tested on entry today and the result was: </p> </span>
+                </label>
+                <input type="number" step="0.01" class="form-control" name="temp_check" placeholder="Enter your Temperature here..." required>
+            </div>
+        `;
+        
+        return html;
     }
     
     $(document).on('submit' ,'#submitAnswer' , function(e) {
