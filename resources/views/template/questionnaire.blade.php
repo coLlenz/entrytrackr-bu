@@ -66,24 +66,24 @@
     generateHtml()
     
     $('#addQuestion').on('click' , function() {
+        questiontype();
+        // setConfig().queue( setSteps() ).then( results => {
+        //     generateQuestion( results.value );
+        // });
+    });
+    
+    $(document).on('click' , '#Multiple' , function(){
         setConfig().queue( setSteps() ).then( results => {
             generateQuestion( results.value );
         });
-    });
+    })
+    $(document).on('click' , '#txtbase' , function(){
+        txtBase();
+    })
     
     $('.template_option').on('click' , function() {
         selectedTemplate( $(this).attr('template_data') , $(this).attr('template_question') )
     });
-    
-    // $('#visitor_type').on('click' , function() {
-    //     if ( $(this).prop('checked') ) {
-    //         $('.form-check-input').prop("checked", true);
-    //     }else{
-    //         $('.form-check-input').prop("checked", false);
-    //     }
-    // });
-    
-    
     
     $('#saveQuestion').on('click' , function() {
         var form = $('#formQuestion');

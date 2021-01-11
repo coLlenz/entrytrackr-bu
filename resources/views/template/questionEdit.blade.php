@@ -57,10 +57,20 @@
     generateHtml()
     
     $('#addQuestion').on('click' , function() {
+        questiontype();
+        // setConfig().queue( setSteps() ).then( results => {
+        //     generateQuestion( results.value );
+        // });
+    });
+    
+    $(document).on('click' , '#Multiple' , function(){
         setConfig().queue( setSteps() ).then( results => {
             generateQuestion( results.value );
         });
-    });
+    })
+    $(document).on('click' , '#txtbase' , function(){
+        txtBase();
+    })
     
     $('#saveQuestion').on('click' , function() {
         var form = $('#formQuestion');
