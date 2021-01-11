@@ -39,7 +39,7 @@ class SignOutAll extends Command
     public function handle(Trakr $trakr)
     {
         $signIn = Trakr::where('checked_in_status', '0')
-        ->update(['checked_in_status' => 1]);
+        ->update(['checked_in_status' => 1, 'check_out_date' => date('Y-m-d H:i:s')]);
         return $signIn;
     }
 }
