@@ -17,34 +17,45 @@ body.show-spinner > *{
 
 /* Spinner */
 body.show-spinner::after{
-  content: " ";
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  border: 2px solid rgba(0, 0, 0, 0.2);
-  border-radius: 50%;
-  border-top-color: rgba(0, 0, 0, 0.3);
-  animation: spin 1s ease-in-out infinite;
-  -webkit-animation: spin 1s ease-in-out infinite;
-  left: calc(50% - 15px);
-  top: calc(50% - 15px);
-  position: fixed;
-  z-index: 1;
+    content: " ";
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    border-top-color: rgba(0, 0, 0, 0.3);
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+    left: calc(50% - 15px);
+    top: calc(50% - 15px);
+    position: fixed;
+    z-index: 1;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @-webkit-keyframes spin {
-  to {
-    -webkit-transform: rotate(360deg);
-  }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
 }
 .btn_entry{
     width: 100px;
 }
+.que-width{
+    width: 45rem!important;
+}
+.questionOption{
+    display: block;
+    margin: 0 auto;
+    width: 270px;
+    padding: 15px;
+}
+
+
 
 
