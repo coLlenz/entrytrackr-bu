@@ -124,7 +124,7 @@
                 innerContainer.append( `<h2>${data.question}</h2>` );
                     txtfield = `
                         <div class="">
-                            <textarea name="freetext" class="form-control" row="100" ></textarea>
+                            <textarea name="freetext[]" class="form-control" row="100" ></textarea>
                         </div> <hr />
                     `;
                 innerContainer.append( txtfield );
