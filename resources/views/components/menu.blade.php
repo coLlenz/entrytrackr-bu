@@ -54,12 +54,12 @@
             <ul class="list-unstyled" data-link="reports">
                 <li>
                     <a href="/reports">
-                        <i class="simple-icon-rocket"></i> <span class="d-inline-block">Visitor Log</span>
+                        <i class="simple-icon-rocket"></i> <span class="d-inline-block">Summary</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('summaryReport') }}">
-                        <i class="simple-icon-pie-chart"></i> <span class="d-inline-block">Summary and Screening</span>
+                        <i class="simple-icon-pie-chart"></i> <span class="d-inline-block">Screening</span>
                     </a>
                 </li>
             </ul>

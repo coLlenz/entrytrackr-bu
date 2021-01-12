@@ -193,9 +193,30 @@ class ReportController extends Controller
     public function byVisitor(Request $request){
         $type = $request->type_of_visitor ? $request->type_of_visitor : 1;
         $formdata = $type;
-        $lists = DB::table('question_logs')->where('visitor_type' , $type)->get();
+        $lists = [];
+        if ($type == 'all') {
+            $lists = DB::table('question_logs')->where('visitor_type' ,'>',0)->get();
+        }else {
+            $lists = DB::table('question_logs')->where('visitor_type' , $type)->get();
+        }
+        
         return view('report.summary')
         ->with('lists' , $lists)
         ->with('formdata' ,$formdata);
+    }
+    
+    public function viewResults($question_id , $log_id) {
+        $questions = DB::table('template_copy')->where([
+            'id' => $question_id,
+            'template_type' => 0,
+        ])->first();
+        
+        $results = DB::table('question_logs')->where([
+            'id' =>$log_id
+        ])->first();
+    
+        return view('report.results')
+        ->with('questions' , $questions)
+        ->with('results' , $results);
     }
 }

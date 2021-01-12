@@ -15,7 +15,10 @@ class TemplateController extends Controller
             return view('template.index')->with('templates' , $templates);
         }
         
-        $templates = DB::table('template_copy')->where('user_id' ,  ( auth()->user()->sub_account ) ? auth()->user()->sub_account_id : auth()->user()->id )->paginate(10);
+        $templates = DB::table('template_copy')->where([
+            'user_id' => ( auth()->user()->sub_account ) ? auth()->user()->sub_account_id : auth()->user()->id,
+            'template_status' => 0
+        ])->paginate(10);
         return view('template.index')->with('templates' , $templates);
     }
     
@@ -112,7 +115,6 @@ class TemplateController extends Controller
     }
 
     public function destroy($template_id){
-        
         if (auth()->user()->is_admin) {
             $template = Template::findOrFail($template_id);
             $template->delete();
@@ -122,7 +124,7 @@ class TemplateController extends Controller
         $template = DB::table('template_copy')->where([
             'user_id' => auth()->user()->id,
             'id' => $template_id
-        ])->delete();
+        ])->update(['template_status' => 1]);
         return redirect()->route("template-index")->with('success', 'Template Deleted Successfully');
     }
 
