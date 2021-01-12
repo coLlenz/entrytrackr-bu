@@ -303,7 +303,7 @@ class TrakrViewController extends Controller
             'visitor_id' => $request->trakrid,
             'question_title' => $question->title,
             'temperature' => $request->temp_check,
-            'freetext' =>  $request->freetext ? $request->freetext : '',
+            'freetext' =>  $request->freetext ? json_encode($request->freetext) : '',
             'answers' => json_encode($answers),
             'status' => $wrong > 0 ? 1 : 0,
             'created_at' => date('Y-m-d H:i:s')
