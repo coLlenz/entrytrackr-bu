@@ -55,6 +55,12 @@ body.show-spinner::after{
     width: 270px;
     padding: 15px;
 }
+.questionBox{
+    width: 50rem!important;
+}
+.sign_in_box{
+    text-align: left;
+}
 
 
 
