@@ -10,56 +10,6 @@
             </button>
           </div>
           <div class="modal-body">
-            <form id="form_checkin" action="{{ !$view_data['is_mobile'] ?  route( 'trakr-post' , auth()->user()->uuid ) : route( 'qr-login' ,$view_data['userid']) }}" method="post" class="needs-validation" novalidate>
-                @csrf
-                <div class="form-group">
-                    <label for="first_name" class="col-form-label">First Name</label>
-                    <input type="text" class="form-control" name="first_name" required>
-                    <div class="invalid-feedback">
-                        <h3>First Name is require</h3>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="last_name" class="col-form-label">Last Name</label>
-                    <input type="text" class="form-control" name="last_name" required>
-                    <div class="invalid-feedback">
-                        <h3>Last Name is require</h3>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="phone" class="col-form-label">Phone Number</label>
-                    <input type="text" class="form-control" name="phoneNumber" required>
-                    <div class="invalid-feedback">
-                        <h3>Phone number is required</h3>
-                    </div>
-                </div>
-                {{-- <div class="form-group">
-                    <label for="email" class="col-form-label">Email</label>
-                    <input type="text" class="form-control" name="email">
-                    <div class="invalid-email" style="display:none">
-                        <h3 style="color: #dc3545; " >Please provide a valid email</h3>
-                    </div>
-                </div> --}}
-                <div class="form-check" id="sign_assitance" style="color:#000!important">
-                    <input type="checkbox" class="form-check-input" id="need_assistance" name="need_assistance">
-                    <label class="form-check-label" for="need_assistance" >Do you require assistance in the event of an emergency evacuation?</label>
-                </div>
-                <div class="form-group">
-                    <label for="visitor_type" class="col-form-label">Visitor type</label>
-                    <select class="form-control" name="visitor_type" required id="visitor_type">
-                        <option value=1>Visitor</option>
-                        <option value=2>Contractor</option>
-                        <option value=3>Employee</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        <h3>Please select type of visitor.</h3>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary btn_entry btnSign_cancel">Cancel</button>
-                    <button type="submit" class="btn btn-primary save_check_in btn_entry">Next</button>
-                </div>
-            </form>
           </div>
         </div>
       </div>
@@ -199,12 +149,12 @@
             })
     })
     // forms;
-    let form = $('#form_checkin');
+    let form = document.getElementById("form_checkin");
     let form2 = $('#form_checkout');
     
     $('.btnSign_cancel').on('click' , function() {
         $('#checkinModal').modal('hide');
-        form[0].reset();
+        // form[0].reset();
         $(form).removeClass('was-validated');
         $('.invalid-email').hide();
     });
@@ -225,16 +175,15 @@
         }
     });
     
-    $(form).on('submit' , function(e) {
+    $(document).on('submit' , '#form_checkin',function(e) {
         e.preventDefault();
-        if (this.checkValidity()) {
             $.ajax({
-                url : form.attr('action'),
-                type: form.attr('method'),
-                data : form.serialize(),
+                url : $(this).attr('action'),
+                type: $(this).attr('method'),
+                data : $(this).serialize(),
                 success:function(response){
                     if (response.status == 'success') {
-                        $('#checkinModal').modal('hide');
+                        // $('#checkinModal').modal('hide');
                         flowCheckpoint(response);
                         $(form).removeClass('was-validated');
                         $('.invalid-email').hide();
@@ -242,10 +191,10 @@
                     
                     if (response.status == 'fail') {
                         $('.invalid-email').show();
+                        alert('Please fill out the form properly');
                     }
                 }
             })
-        }
     })
     
     $(form2).on('submit' , function(e){
@@ -309,7 +258,8 @@
                         editor.setContents(json_content);
                         $('#notificationModal').modal({backdrop: 'static', keyboard: false})  
                     }else{
-                        $('#checkinModal').modal('show');
+                        // $('#checkinModal').modal('show');
+                        signIn();
                     }
                 }
             }
@@ -318,15 +268,78 @@
     
     $('#continue').on('click' , function() {
         $('#notificationModal').modal('toggle');
-        $('#checkinModal').modal('show');
+        signIn();
     });
+    
+    function signIn(){
+        Swal.fire({
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            html: signInHtml(),
+            showConfirmButton:false,
+            allowOutsideClick:true,
+            showCloseButton:true
+        })
+    }
+    
+    function signInHtml(){
+        var html = '';
+        html = `
+        <form id="form_checkin" action="{{ !$view_data['is_mobile'] ?  route( 'trakr-post' , auth()->user()->uuid ) : route( 'qr-login' ,$view_data['userid']) }}" method="post" class="needs-validation" novalidate>
+            @csrf
+            <div class="form-group sign_in_box">
+                <label for="first_name" class="col-form-label">First Name</label>
+                <input type="text" class="form-control" name="first_name" required>
+                <div class="invalid-feedback">
+                    <h3>First Name is require</h3>
+                </div>
+            </div>
+            <div class="form-group sign_in_box">
+                <label for="last_name" class="col-form-label">Last Name</label>
+                <input type="text" class="form-control" name="last_name" required>
+                <div class="invalid-feedback">
+                    <h3>Last Name is require</h3>
+                </div>
+            </div>
+            <div class="form-group sign_in_box">
+                <label for="phone" class="col-form-label">Phone Number</label>
+                <input type="text" class="form-control" name="phoneNumber" required>
+                <div class="invalid-feedback">
+                    <h3>Phone number is required</h3>
+                </div>
+            </div>
+            <div class="form-check sign_in_box" id="sign_assitance" style="color:#000!important">
+                <input type="checkbox" class="form-check-input" id="need_assistance" name="need_assistance">
+                <label class="form-check-label" for="need_assistance" >Do you require assistance in the event of an emergency evacuation?</label>
+            </div>
+            <div class="form-group sign_in_box">
+                <label for="visitor_type" class="col-form-label">Visitor type</label>
+                <select class="form-control" name="visitor_type" required id="visitor_type">
+                    <option value=1>Visitor</option>
+                    <option value=2>Contractor</option>
+                    <option value=3>Employee</option>
+                </select>
+                <div class="invalid-feedback">
+                    <h3>Please select type of visitor.</h3>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary save_check_in btn_entry">Next</button>
+            </div>
+        </form>
+        `;
+        return html;
+    }
     
     
     function showCheckInMessage(details){
-        $('#checkinModal').modal('hide');
-        form[0].reset();
-        form.removeClass('was-validated');
         Swal.fire({
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
             title: '<strong>Welcome, '+details.name+'</strong>',
             icon: 'success',
             allowOutsideClick : false,
@@ -362,6 +375,10 @@
         }
         
         Swal.fire({
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
             icon:'info',
             html:`
             <p class="mb-4">For a Faster Sign In on future visits, save your contact information as a trakrID.</p>
@@ -429,11 +446,14 @@
     }
     
     function flowCheckpoint(response){
-        console.log(response);
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         switch(response.type_of_visitor) {
             case '1':
                     Swal.fire({
+                        showClass: {
+                            popup: 'swal2-noanimation',
+                            backdrop: 'swal2-noanimation'
+                        },
                         input: 'textarea',
                         inputLabel: 'Who are you visiting?',
                         inputPlaceholder: 'Type here...',
@@ -513,8 +533,13 @@
     
     function showQuestions( data ){
         Swal.fire({
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
             title: data.questions.title,
             icon: 'info',
+            customClass:'questionBox',
             html: makeHtml(data.questions , data.trakrid),
             allowOutsideClick:false,
             focusConfirm: false,
@@ -583,7 +608,7 @@
                         timer: 10000,
                         footer: '<p> This message will automatically close in 10 seconds. </p>'
                     })
-                    form[0].reset();
+                    // form[0].reset();
                 }
             }
         })
