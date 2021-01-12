@@ -42,7 +42,9 @@
                                             <span class="badge badge-danger">Denied</span>
                                         @endif
                                     </td>
-                                    <td class="text-center">{{'View'}}</td>
+                                    <td class="text-center">
+                                        <a href="{{route('viewResults' ,[ $list->question_id , $list->id] )}}" target="_blank"> View </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

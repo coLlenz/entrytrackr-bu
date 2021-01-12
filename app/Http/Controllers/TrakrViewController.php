@@ -225,7 +225,6 @@ class TrakrViewController extends Controller
         $checker_query = Trakr::query();
         $checker_query->select('checked_in_status' , 'check_in_date','check_out_date' , 'id as visitor_id');
         
-        
         // 
         if (!empty($condition['first_name']) && isset($condition['first_name'])) {
             $checker_query->where('firstName' , $condition['first_name']);
@@ -308,6 +307,7 @@ class TrakrViewController extends Controller
             'visitor_id' => $request->trakrid,
             'visitor_type' => $trakr->trakr_type_id,
             'visitor_name' => $visitor_name ? $visitor_name : '',
+            'question_id' => $request->questionId ? $request->questionId : '',
             'question_title' => $question->title ? $question->title : '',
             'temperature' => $request->temp_check ? $request->temp_check : '',
             'freetext' =>  $request->freetext ? json_encode($request->freetext) : '',
