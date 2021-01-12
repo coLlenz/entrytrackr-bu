@@ -9,7 +9,7 @@
                     </a>
                 </li>
                 <li class="{{(request()->is('reports') || request()->segment(1) == 'reports') ? 'active' : ''}}">
-                    <a href="/reports">
+                    <a href="#reports">
                         <i class="fa fa-line-chart" aria-hidden="true"></i> Reports
                     </a>
                 </li>
@@ -51,28 +51,18 @@
 
     <div class="sub-menu">
         <div class="scroll">
-            {{-- <ul class="list-unstyled" data-link="dashboard">
+            <ul class="list-unstyled" data-link="reports">
                 <li>
-                    <a href="Dashboard.Default.html">
-                        <i class="simple-icon-rocket"></i> <span class="d-inline-block">Default</span>
+                    <a href="/reports">
+                        <i class="simple-icon-rocket"></i> <span class="d-inline-block">Visitor Log</span>
                     </a>
                 </li>
                 <li>
-                    <a href="Dashboard.Analytics.html">
-                        <i class="simple-icon-pie-chart"></i> <span class="d-inline-block">Analytics</span>
+                    <a href="{{ route('summaryReport') }}">
+                        <i class="simple-icon-pie-chart"></i> <span class="d-inline-block">Summary and Screening</span>
                     </a>
                 </li>
-                <li>
-                    <a href="Dashboard.Ecommerce.html">
-                        <i class="simple-icon-basket-loaded"></i> <span class="d-inline-block">Ecommerce</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="Dashboard.Content.html">
-                        <i class="simple-icon-doc"></i> <span class="d-inline-block">Content</span>
-                    </a>
-                </li>
-            </ul> --}}
+            </ul>
             {{-- <ul class="list-unstyled" data-link="layouts" id="layouts">
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#collapseAuthorization" aria-expanded="true"
