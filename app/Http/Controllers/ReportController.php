@@ -182,64 +182,20 @@ class ReportController extends Controller
         return $pdf->download($filename.'.pdf');
     }
     
-    public function create()
-    {
-        //
+    public function summaryReport(){
+        $lists = DB::table('question_logs')->where('user_id' , auth()->user()->id)->get();
+        $formdata = 'all';
+        return view('report.summary')
+        ->with('lists' , $lists)
+        ->with('formdata' ,$formdata);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    
+    public function byVisitor(Request $request){
+        $type = $request->type_of_visitor ? $request->type_of_visitor : 1;
+        $formdata = $type;
+        $lists = DB::table('question_logs')->where('visitor_type' , $type)->get();
+        return view('report.summary')
+        ->with('lists' , $lists)
+        ->with('formdata' ,$formdata);
     }
 }

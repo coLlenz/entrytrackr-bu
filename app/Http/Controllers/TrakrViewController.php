@@ -271,7 +271,7 @@ class TrakrViewController extends Controller
     }
     
     public function visitorAnswer(Request $request){
-        $question = DB::table('template_copy')->select('questions' , 'title')->where('id' , $request->questionId)->first();
+        $question = DB::table('template_copy')->select('questions' , 'title' , 'user_id')->where('id' , $request->questionId)->first();
         $decoded = json_decode( $question->questions );
         $wrong = 0;
         $index = 0;
@@ -298,11 +298,18 @@ class TrakrViewController extends Controller
             }
         }
         
+        // get current signin data
+        $trakr = Trakr::findOrFail($request->trakrid);
+        $visitor_name = $trakr->firstName." ".$trakr->lastName;
+        
         // save logs
         $logs = DB::table('question_logs')->insert([
+            'user_id' => $question->user_id,
             'visitor_id' => $request->trakrid,
-            'question_title' => $question->title,
-            'temperature' => $request->temp_check,
+            'visitor_type' => $trakr->trakr_type_id,
+            'visitor_name' => $visitor_name ? $visitor_name : '',
+            'question_title' => $question->title ? $question->title : '',
+            'temperature' => $request->temp_check ? $request->temp_check : '',
             'freetext' =>  $request->freetext ? json_encode($request->freetext) : '',
             'answers' => json_encode($answers),
             'status' => $wrong > 0 ? 1 : 0,
@@ -310,7 +317,6 @@ class TrakrViewController extends Controller
         ]);
         // end logs
         
-        $trakr = Trakr::findOrFail($request->trakrid);
         if ($wrong > 0) {
             $trakr->status = 1;
             $trakr->checked_in_status = 1;

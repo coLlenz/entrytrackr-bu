@@ -61,7 +61,13 @@ body.show-spinner::after{
 .sign_in_box{
     text-align: left;
 }
-
+.custom_entr_select {
+    padding: 5px;
+    border: none;
+    border: 1px solid #a3238e;
+    width: 110px;
+    border-radius: 3px;
+}
 
 
 
