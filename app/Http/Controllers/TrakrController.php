@@ -36,9 +36,8 @@ class TrakrController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        // 
+    public function store(Request $request){
+        
         $this->validate($request, [
             'fname' => 'required|min:3|max:255',
             'lname' => 'required',
@@ -53,9 +52,9 @@ class TrakrController extends Controller
         $trakrr->trakr_id = '';
         $trakrr->phoneNumber = $request->number;
         $trakrr->trakr_type_id = $request->vtype;
-        // $trakrr->email = $request->email;
+        $trakrr->trakr_id = $request->trakrid;
         $trakrr->user_id = auth()->user()->id;
-        $trakrr->assistance = 1;
+        $trakrr->assistance = 0;
         $trakrr->status = 0;
         $trakrr->checked_in_status = 0;
         $trakrr->check_in_date = date('Y-m-d H:i:s');
@@ -112,12 +111,10 @@ class TrakrController extends Controller
      * @param  \App\Models\Trakr  $trakr
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Trakr $trakr)
-    {
+    public function update(Request $request, Trakr $trakr){
         $this->validate($request, [
             'fname' => 'required|min:3|max:255',
             'lname' => 'required',
-            'email' => 'required|email',
             'number' => 'required',
             'vtype' => 'required',
         ]);
@@ -125,7 +122,7 @@ class TrakrController extends Controller
             "firstName" => $request->fname,
             "lastName"=> $request->lname,
             "phoneNumber"=> $request->number,
-            "email"=> $request->email,
+            "trakr_id"=> $request->trakrid,
             "trakr_type_id"=>$request->vtype
         ]);
         return redirect()->back();
