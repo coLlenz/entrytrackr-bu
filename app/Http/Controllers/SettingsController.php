@@ -8,6 +8,8 @@ use App\Models\User;
 use Hash;
 use Str;
 use PDF;
+use QrCode;
+use Illuminate\Support\Facades\Storage;
 class SettingsController extends Controller{
     
     public function customerAdmins(){
@@ -15,9 +17,10 @@ class SettingsController extends Controller{
             [
                 'sub_account_id' => auth()->user()->id,
                 'sub_account' => 1,
-                'uuid' => auth()->user()->uuid
             ]
-        )->get();
+        )
+        ->orderBy('created_at' , 'DESC')
+        ->get();
         return view('settings.index')->with('lists' , $userlist);
     }
     
@@ -30,7 +33,7 @@ class SettingsController extends Controller{
         ]);
         if ($validator->passes()) {
             $new_admin = new User;
-            $new_admin->uuid = auth()->user()->uuid;
+            $new_admin->uuid = Str::uuid()->toString();
             $new_admin->sub_account = 1;
             $new_admin->sub_account_id = auth()->user()->id;
             $new_admin->name = $request->admin_name;
@@ -40,11 +43,25 @@ class SettingsController extends Controller{
             $new_admin->is_admin = 0;
             
             if ($new_admin->save()) {
+                $new_admin->qr_path = $this->generateCode($new_admin->uuid , $new_admin->id);
+                $new_admin->save();
                 return response()->json(['msg' => 'New admin added']);
             }
         }
         
         return response()->json(['error'=>$validator->errors()->all()]);
+    }
+    
+    public function generateCode($uuid , $userid){
+        $s3_url = '';
+        $url = url('/trakr/qr/login/'.$uuid.'/'.$userid);
+        $filename = $uuid.'_'.strtotime( date('Y-m-d H:i') ).'.png';
+        $image = QrCode::format('png')->size(250)->generate($url);
+		$path = Storage::disk('s3')->put($filename, $image);
+		if ($path) {
+			$s3_url = Storage::disk('s3')->url($filename);
+		}
+        return $s3_url;
     }
     
     public function generatePDF(){

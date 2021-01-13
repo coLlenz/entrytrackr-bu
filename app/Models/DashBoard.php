@@ -104,28 +104,12 @@ class DashBoard extends Model
     }
     
     public function getdast_pie(){
-        $counts = DB::table('trakrs')
-                 ->select('trakr_type_id', DB::raw('count(*) as total'))
-                 ->where(['checked_in_status' => 0])
-                 ->groupBy('trakr_type_id')
-                 ->get();
+        $counts = [];
+        
+        $counts['visitors'] = Trakr::where(['trakr_type_id' => 1 , 'user_id' => auth()->user()->id])->count();
+        $counts['contractors'] = Trakr::where(['trakr_type_id' => 2 , 'user_id' => auth()->user()->id])->count();
+        $counts['employees'] = Trakr::where(['trakr_type_id' => 3 , 'user_id' => auth()->user()->id])->count();
         return $counts;
-
-        // $counts = DB::table('trakrs')
-        // ->select('trakr_type_id', DB::raw('count(*) as total'))
-        // ->where([
-        //     'checked_in_status' => 0,
-        //     'user_id' => auth()->user()->id
-        // ])
-        // ->groupBy('trakr_type_id')
-        // ->get();
-        // return $counts;
-                    
-        // return TrakrType::addSelect(['signin-visitors' => Trakr::select('checked_in_status')
-        //     ->whereColumn('id', 'trakr_type_id')
-        //     ->groupBy('trakr_type_id', 'checked_in_status')
-        //     ])->get();
-
     }
     
     public function total_sign_in(){

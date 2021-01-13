@@ -13,10 +13,12 @@ class ReportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        if(auth()->user()->id === 1) {
+        if( auth()->user()->is_admin ) {
             $date_now = strtotime( date('Y-m-d H:i:s') );
             $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
-            ->paginate(5);
+            ->where(['user_id' => auth()->user()->id])
+            ->orderBy('check_in_date' , 'DESC')
+            ->paginate(10);
             
             $formdata = [
                 'fdate' => date('Y-m-d' , strtotime("-7 days" , $date_now)),
@@ -31,8 +33,9 @@ class ReportController extends Controller
 
         $date_now = strtotime( date('Y-m-d H:i:s') );
         $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
-        ->where('user_id' , ( auth()->user()->sub_account ) ? auth()->user()->sub_account_id : auth()->user()->id   )
+        ->where('user_id' , auth()->user()->id)
         ->where('check_in_date' ,'>=', date('Y-m-d',strtotime("-7 days" , $date_now))." 00:00:00")
+        ->orderBy('check_in_date' , 'DESC')
         ->where('check_in_date' , '<=' , date('Y-m-d')." 23:59:59")->paginate(10);
         $formdata = [
             'fdate' => date('Y-m-d' , strtotime("-7 days" , $date_now)),

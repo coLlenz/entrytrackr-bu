@@ -271,7 +271,7 @@
         var myChart = new Chart(pieChart, {
           type: "PieWithShadow",
           data: {
-            labels: ["Visitors",  "Employees" , "Contractors"],
+            labels: ["Visitors","Contractors", "Employees"],
             datasets: [
               {
                 label: "",
@@ -283,9 +283,9 @@
                 ],
                 borderWidth: 2,
                 data: [
-                  {{!empty($piedata[0]->total) ? $piedata[0]->total : 0}} ,
-                  {{!empty($piedata[1]->total) ? $piedata[1]->total : 0}} , 
-                  {{!empty($piedata[2]->total) ? $piedata[2]->total : 0}}
+                  {{!empty($piedata['visitors']) ? $piedata['visitors'] : 0}} ,
+                  {{!empty($piedata['contractors']) ? $piedata['contractors'] : 0}} , 
+                  {{!empty($piedata['employees']) ? $piedata['employees'] : 0}}
                   ]
               }
             ]
