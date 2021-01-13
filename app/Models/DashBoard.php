@@ -106,9 +106,9 @@ class DashBoard extends Model
     public function getdast_pie(){
         $counts = [];
         
-        $counts['visitors'] = Trakr::where(['trakr_type_id' => 1 , 'user_id' => auth()->user()->id])->count();
-        $counts['contractors'] = Trakr::where(['trakr_type_id' => 2 , 'user_id' => auth()->user()->id])->count();
-        $counts['employees'] = Trakr::where(['trakr_type_id' => 3 , 'user_id' => auth()->user()->id])->count();
+        $counts['visitors'] = Trakr::where(['trakr_type_id' => 1 , 'user_id' => auth()->user()->id , 'checked_in_status' => 0])->count();
+        $counts['contractors'] = Trakr::where(['trakr_type_id' => 2 , 'user_id' => auth()->user()->id , 'checked_in_status' => 0])->count();
+        $counts['employees'] = Trakr::where(['trakr_type_id' => 3 , 'user_id' => auth()->user()->id , 'checked_in_status' => 0])->count();
         return $counts;
     }
     
