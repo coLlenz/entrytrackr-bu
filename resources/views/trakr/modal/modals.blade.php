@@ -550,7 +550,12 @@
     function makeHtml(questions , trakrid){
         var html = questions.content_html;
         var form = document.createElement('form');
-        var button = '<br/><button type="submit"  class="btn btn-primary float-right" >Submit</>';
+        var button = `
+            <div class="float-right">
+            <button type="button"  class="btn btn-outline-secondary mr-2 btnCancelQuestion" cancel-btn-data="${trakrid}">Cancel</>
+            <br/><button type="submit"  class="btn btn-primary " >Submit</>
+            </div>
+        `;
         var hiddenId = `<input type="hidden" name="questionId" value="${questions.id}" >`;
         var trakrid = `<input type="hidden" name="trakrid" value="${trakrid}" >`;
         $(form).attr('action' , "{{route('employee-answer')}}");
@@ -574,17 +579,32 @@
     
     function tempCheck(){
         var html = `
-            <div class="form-group">
+            <div class="form-group text-center">
                 <label for="temp_check" class="col-form-label">
-                Temperature Check
-                <span> <p> My temperature has been tested on entry today and the result was: </p> </span>
+                <h2> Temperature Check </h2>
+                <span> <p> <h2>My temperature has been tested on entry today and the result was:</h2> </p> </span>
                 </label>
-                <input type="number" step="0.01" class="form-control" name="temp_check" placeholder="Enter your Temperature here..." required>
+                <input style="margin:0 auto;" type="number" step="0.01" class="form-control col-md-4" name="temp_check" placeholder="Enter your Temperature here..." required>
             </div>
         `;
         
         return html;
     }
+    
+    $(document).on('click' , '.btnCancelQuestion' , function(){
+        var trakr_id = $(this).attr('cancel-btn-data');
+        Swal.showLoading();
+        $.ajax({
+            url : '/trakr/visitor/cancel/'+trakr_id,
+            method: 'GET',
+            success:function(response){
+                if (response.status === 'success') {
+                    return Swal.close();
+                }
+                alert('Network error. Please try refreshing the page');
+            }
+        })
+    })
     
     $(document).on('submit' ,'#submitAnswer' , function(e) {
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});

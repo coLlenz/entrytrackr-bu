@@ -340,6 +340,14 @@ class TrakrViewController extends Controller
         }
     }
     
+    function cancelSignin($trakrID){
+        $trakr = Trakr::findOrFail($trakrID);
+        if ( $trakr->delete() ) {
+            return response()->json(['status' => 'success']);
+        }
+        return response()->json(['status' => 'fail']);
+    }
+    
     function trakrIdCheck(Request $request){
         $trakr = Trakr::where('trakr_id' , $request->input)->get();
         
