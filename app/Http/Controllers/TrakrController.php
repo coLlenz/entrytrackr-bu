@@ -17,6 +17,7 @@ class TrakrController extends Controller
         ->where('trakr_id', '!=' , '')
         ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
         ->orderBy('trakrs.created_at' , 'DESC')
+        ->where('user_id' , auth()->user()->id)
         ->paginate(10);
         return view('trakrId.index',compact("list_data"));
     }
