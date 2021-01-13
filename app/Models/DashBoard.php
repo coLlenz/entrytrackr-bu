@@ -125,23 +125,10 @@ class DashBoard extends Model
             return $total_count;
         }
         
-        // for sub accounts
-        if ( auth()->user()->sub_account ) {
-            $total_signin = DB::table('trakrs')
-            ->where([
-                'checked_in_status' =>0,
-                'user_id' => auth()->user()->sub_account_id
-            ])
-            ->orderBy('trakrs.check_in_date','desc')
-            ->get();
-            $total_count = $total_signin->count();
-            return $total_count;
-        }
-        
         // customers
         $total_signin = DB::table('trakrs')
         ->where([
-            'checked_in_status' =>0,
+            'checked_in_status' => 0,
             'user_id' => auth()->user()->id
         ])
         ->orderBy('trakrs.check_in_date','desc')
