@@ -16,6 +16,7 @@ class TrakrController extends Controller
         $list_data = Trakr::select('trakr_id','firstName' , 'lastName' , 'trakr_types.name' , 'trakrs.id' , 'check_in_date')
         ->where('trakr_id', '!=' , '')
         ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
+        ->orderBy('trakrs.created_at' , 'DESC')
         ->paginate(10);
         return view('trakrId.index',compact("list_data"));
     }
