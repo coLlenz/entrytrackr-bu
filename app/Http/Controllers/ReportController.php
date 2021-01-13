@@ -30,7 +30,8 @@ class ReportController extends Controller
             
             return view('report.index')->with('formdata', $formdata)->with('table_data', $default_data);
         }
-
+        
+        //for customers
         $date_now = strtotime( date('Y-m-d H:i:s') );
         $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
         ->where('user_id' , auth()->user()->id)
@@ -63,7 +64,7 @@ class ReportController extends Controller
         $filter_query = Trakr::query();
         $filter_query->select('firstName','lastName' ,'trakr_type_id' , 'phoneNumber' ,'who' ,'name_of_company','check_in_date' , 'check_out_date' , 'assistance' , 'status');
         
-        $filter_query->where('user_id' , ( auth()->user()->sub_account ) ? auth()->user()->sub_account_id : auth()->user()->id );
+        $filter_query->where('user_id' , auth()->user()->id );
         
         $filter_query->when($start_date,function($q , $start_date) {
             return $q->where('check_in_date' , '>=' , $start_date);
@@ -129,7 +130,7 @@ class ReportController extends Controller
         $filter_query = Trakr::query();
         $filter_query->select('firstName','lastName' ,'trakr_type_id' , 'phoneNumber' ,'who' ,'trakr_types.name as visitor_type','name_of_company','check_in_date' , 'check_out_date' , 'assistance' , 'status');
         $filter_query->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id');
-        $filter_query->where('user_id' , ( auth()->user()->sub_account ) ? auth()->user()->sub_account_id : auth()->user()->id);
+        $filter_query->where('user_id' , auth()->user()->id);
         
         $filter_query->when($start_date,function($q , $start_date) {
             return $q->where('check_in_date' , '>=' , $start_date);
@@ -198,9 +199,17 @@ class ReportController extends Controller
         $formdata = $type;
         $lists = [];
         if ($type == 'all') {
-            $lists = DB::table('question_logs')->where('visitor_type' ,'>',0)->get();
+            $lists = DB::table('question_logs')
+            ->where('visitor_type' ,'>',0)
+            ->where('user_id' , auth()->user()->id)
+            ->orderBy('created_at' , 'DESC')
+            ->get();
         }else {
-            $lists = DB::table('question_logs')->where('visitor_type' , $type)->get();
+            $lists = DB::table('question_logs')
+            ->where('visitor_type' , $type)
+            ->where('user_id' , auth()->user()->id)
+            ->orderBy('created_at' , 'DESC')
+            ->get();
         }
         
         return view('report.summary')
