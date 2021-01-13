@@ -16,7 +16,7 @@ class TemplateController extends Controller
         }
         
         $templates = DB::table('template_copy')->where([
-            'user_id' => ( auth()->user()->sub_account ) ? auth()->user()->sub_account_id : auth()->user()->id,
+            'user_id' => auth()->user()->id,
             'template_status' => 0
         ])->paginate(10);
         return view('template.index')->with('templates' , $templates);
