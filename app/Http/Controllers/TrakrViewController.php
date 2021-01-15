@@ -102,7 +102,8 @@ class TrakrViewController extends Controller
         $questions = DB::table('template_copy')->select('title','questions' , 'content_html' ,'id' , 'description' , 'questions_to_flg')->where([
             'user_id' => $user_id,
             'template_type' => 0,
-            'status' => 1
+            'status' => 1,
+            'template_status' => '!=0'
         ])->get();
         
         $data = [];
