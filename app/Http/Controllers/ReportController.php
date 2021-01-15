@@ -187,7 +187,10 @@ class ReportController extends Controller
     }
     
     public function summaryReport(){
-        $lists = DB::table('question_logs')->where('user_id' , auth()->user()->id)->get();
+        $lists = DB::table('question_logs')
+        ->where('user_id' , auth()->user()->id)
+        ->orderBy('created_at' , 'DESC')
+        ->get();
         $formdata = 'all';
         return view('report.summary')
         ->with('lists' , $lists)
