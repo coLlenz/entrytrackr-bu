@@ -176,6 +176,7 @@
     });
     
     $(document).on('submit' , '#form_checkin',function(e) {
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         e.preventDefault();
             $.ajax({
                 url : $(this).attr('action'),

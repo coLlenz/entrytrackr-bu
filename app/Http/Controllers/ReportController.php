@@ -226,9 +226,19 @@ class ReportController extends Controller
         $results = DB::table('question_logs')->where([
             'id' =>$log_id
         ])->first();
-    
+        
+        $results->freetext = $results->freetext ? json_decode($results->freetext) : [];
+        
         return view('report.results')
         ->with('questions' , $questions)
         ->with('results' , $results);
+    }
+    
+    public function downloadResult(Request $request){
+        $filename = strtotime( date('Y-m-d H:i') );
+        $data = $request->html;
+        view()->share('data',$data);
+        $pdf = PDF::loadView('pdf.visitorResults')->setPaper('a4');
+        return $pdf->download($filename.'.pdf');
     }
 }

@@ -24,18 +24,6 @@ class DashBoard extends Model
             return $dash;
         }
         
-        //is sub accounts
-        if ( auth()->user()->sub_account ) {
-            $dash = DB::table('trakrs')
-            ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.check_in_date' ,'trakrs.created_at','trakrs.id','trakr_types.name as type' , 'checked_in_status')
-            ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
-            ->where('user_id' , auth()->user()->sub_account_id)
-            ->where('checked_in_status' , 0)
-            ->orderBy('trakrs.check_in_date','desc')
-            ->paginate(5);
-            return $dash;
-        }
-        
         //for customers
         $dash = DB::table('trakrs')
         ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.check_in_date' ,'trakrs.created_at','trakrs.id','trakr_types.name as type' , 'checked_in_status')
@@ -70,20 +58,6 @@ class DashBoard extends Model
             ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
             ->where([
                 ['user_id' , '=' , auth()->user()->id],
-            ])
-            ->where('checked_in_status' , 0)
-            ->orderBy('trakrs.check_in_date','desc')
-            ->get();
-            return $assist;
-        }
-        
-        // sub accounts
-        if ( auth()->user()->sub_account ) {
-            $assist = DB::table('trakrs')
-            ->select('firstName' , 'lastName' , 'trakrs.check_in_date','trakrs.id','name as type' , 'assistance' , 'safe' , 'date_marked_safe')
-            ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
-            ->where([
-                ['user_id' , '=' , auth()->user()->sub_account_id],
             ])
             ->where('checked_in_status' , 0)
             ->orderBy('trakrs.check_in_date','desc')

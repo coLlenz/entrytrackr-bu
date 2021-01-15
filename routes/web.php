@@ -114,6 +114,7 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/summary' , [ReportController::class , 'summaryReport'])->name('summaryReport');
 	Route::get('/summary/by/visitor' , [ReportController::class , 'byVisitor'])->name('byVisitor');
 	Route::get('/summary/get/results/{question_id}/{log_id}' , [ReportController::class , 'viewResults'])->name('viewResults');
+	Route::post('/summary/get/results/download/' , [ReportController::class , 'downloadResult'])->name('downloadResult');
 });
 Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(function () {
 	Route::get('/', [UserController::class, 'index'])->name('user-index');

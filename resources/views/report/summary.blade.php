@@ -43,7 +43,7 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{route('viewResults' ,[ $list->question_id , $list->id] )}}" target="_blank"> View </a>
+                                        <a href="{{route('viewResults' ,[ $list->question_id , $list->id] )}}" > View </a>
                                     </td>
                                 </tr>
                             @endforeach
