@@ -131,7 +131,7 @@ class TrakrViewController extends Controller
             }
             
             //update status if not logged in
-            $trakr = Trakr::where('trakr_id' ,$request->trakrid)->update(['checked_in_status' => 0,'check_in_date' => date('Y-m-d H:i:s')]);
+            $trakr = Trakr::where('trakr_id' ,$request->trakrid)->update(['checked_in_status' => 0,'check_in_date' => date('Y-m-d H:i:s') , 'check_out_date' => null]);
             
             //get updated data
             $check_in_data = Trakr::where('trakr_id' ,$request->trakrid)->first();
