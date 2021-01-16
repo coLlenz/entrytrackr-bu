@@ -19,6 +19,12 @@
                     </a>
                 </li>
                 
+                <li class="{{(request()->is('templates') || request()->segment(1) == 'templates') ? 'active' : ''}}">
+                    <a href="/templates">
+                        <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
+                    </a>
+                </li>
+                
                 @if( !auth()->user()->is_admin && !auth()->user()->sub_account )
                 <li class="{{(request()->is('locations') || request()->segment(1) == 'locations') ? 'active' : ''}}">
                     <a href="/locations">
@@ -54,12 +60,12 @@
             <ul class="list-unstyled" data-link="reports">
                 <li>
                     <a href="/reports">
-                        <i class=""></i> <span class="d-inline-block">Summary Report</span>
+                        <i class=""></i> <span class="d-inline-block font-weight-bold">Summary Report</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('summaryReport') }}">
-                        <i class=""></i> <span class="d-inline-block">Screening Questions</span>
+                        <i class=""></i> <span class="d-inline-block font-weight-bold">Screening Questions</span>
                     </a>
                 </li>
             </ul>

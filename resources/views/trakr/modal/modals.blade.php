@@ -313,7 +313,7 @@
             </div>
             <div class="form-check sign_in_box" id="sign_assitance" style="color:#000!important">
                 <input type="checkbox" class="form-check-input" id="need_assistance" name="need_assistance">
-                <label class="form-check-label" for="need_assistance" >Do you require assistance in the event of an emergency evacuation?</label>
+                <label class="form-check-label" for="need_assistance" >I require assistance in the event of an emergency evacuation.</label>
             </div>
             <div class="form-group sign_in_box">
                 <label for="visitor_type" class="col-form-label">Visitor type</label>
@@ -382,7 +382,7 @@
             },
             icon:'info',
             html:`
-            <p class="mb-4">For a Faster Sign In on future visits, save your contact information as a trakrID.</p>
+            <p style="font-size: 17px;" class="mb-4">For a Faster Sign In on future visits, save your contact information as a trakrID.</p>
             <p style="font-size: 17px;">Create your trakrID using letters, numbers and symbols.</p>
             `,
             input:'text',
