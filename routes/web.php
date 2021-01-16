@@ -10,6 +10,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UploadImages;
 use App\Http\Controllers\UploadImagesController;
+use App\Http\Controllers\LocationController;
 use App\Models;
 use Illuminate\Support\Facades\Route;
 /*
@@ -116,6 +117,12 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/summary/get/results/{question_id}/{log_id}' , [ReportController::class , 'viewResults'])->name('viewResults');
 	Route::post('/summary/get/results/download/' , [ReportController::class , 'downloadResult'])->name('downloadResult');
 });
+
+Route::prefix('locations')->middleware(['auth'])->group(function() {
+	Route::get('/', [LocationController::class, 'index'])->name("index");
+	Route::get('/visit' , [LocationController::class , 'visit'])->name('visit');
+});
+
 Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(function () {
 	Route::get('/', [UserController::class, 'index'])->name('user-index');
 	Route::get('/add', [UserController::class, 'add'])->name("user-add");
