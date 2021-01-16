@@ -74,6 +74,20 @@ body.show-spinner::after{
 .visitorInfo{
     margin-right: 3px;
 }
+._container{
+    margin: 0 auto;
+}
+/* sign in */
+.custom_entry{
+    margin: 0 auto;
+    float: left;
+    width: 50%;
+    display:flex;
+}
+.custom_width_box{
+    width: 320px;
+    margin-right: 20px;
+}
 
 
 

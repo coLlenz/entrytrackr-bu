@@ -18,11 +18,18 @@
                         <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
                     </a>
                 </li>
-                <li class="{{(request()->is('templates') || request()->segment(1) == 'templates') ? 'active' : ''}}">
-                    <a href="/templates">
-                        <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
+                <li class="{{(request()->is('locations') || request()->segment(1) == 'locations') ? 'active' : ''}}">
+                    <a href="/trakrid">
+                        <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
                     </a>
                 </li>
+                @if( !auth()->user()->is_admin )
+                <li class="{{(request()->is('templates') || request()->segment(1) == 'templates') ? 'active' : ''}}">
+                    <a href="/locations">
+                        <i class="fa fa-globe" aria-hidden="true"></i> Locations
+                    </a>
+                </li>
+                @endif
                 <li class="{{(request()->is('settings') || request()->segment(1) == 'settings') ? 'active' : ''}}">
                     <a href="/settings">
                         <i class="fa fa-cog" aria-hidden="true"></i> Settings

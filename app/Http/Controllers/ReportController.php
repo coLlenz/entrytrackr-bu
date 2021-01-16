@@ -231,6 +231,7 @@ class ReportController extends Controller
         ])->first();
         
         $results->freetext = $results->freetext ? json_decode($results->freetext) : [];
+        $results->answers =$results->answers ? json_decode($results->answers) : [];
         
         return view('report.results')
         ->with('questions' , $questions)
