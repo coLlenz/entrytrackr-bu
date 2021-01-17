@@ -523,7 +523,7 @@
                     if (response.questions) {
                         showQuestions(response)
                     }else{
-                        showCheckInMessage(response);
+                        createTrakrID(response);
                     }
                     return;
             break;
