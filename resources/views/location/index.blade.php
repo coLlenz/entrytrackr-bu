@@ -27,7 +27,7 @@
                                             </td>
                                             <td>{{date('d-m-y H:i' , strtotime($list->created_at)) }}</td>
                                             <td class="text-center">
-                                                <a href="{{route('visit')}}" class="text-primary" >Visit</a>
+                                                <a href="{{route('visit' , [$list->uuid , $list->id] )}}" class="text-primary" >Visit</a>
                                             </td>
                                         </tr>
                                     @endforeach

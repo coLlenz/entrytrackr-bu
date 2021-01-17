@@ -120,7 +120,7 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 
 Route::prefix('locations')->middleware(['auth'])->group(function() {
 	Route::get('/', [LocationController::class, 'index'])->name("index");
-	Route::get('/visit' , [LocationController::class , 'visit'])->name('visit');
+	Route::get('/visit/{uuid}/{id}' , [LocationController::class , 'visit'])->name('visit');
 });
 
 Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(function () {

@@ -23,8 +23,18 @@ class TemplateController extends Controller
     }
     
     public function notificationcreate(){
-        //get all avaialable templates created by super admin
-        $templates = Template::where('template_type' , 1)->get();
+        $templates = [];
+        
+        if (auth()->user()->sub_account) {
+            $templates = DB::table('template_copy')
+            ->where(['user_id' => auth()->user()->sub_account_id , 'template_type' => 1])
+            ->orderBy('created_at' , 'DESC')
+            ->get();
+        }else{
+            $templates = Template::where('template_type' , 1)
+            ->orderBy('created_at' , 'DESC')
+            ->get();
+        }
         
         return view("template.notificationAdd")->with('templates' , $templates);
     }
