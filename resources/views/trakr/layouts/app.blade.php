@@ -28,7 +28,7 @@
 </head>
 
 <body id="app-container" class="menu-default show-spinner">
-    <img src="{{asset('/img/logo.png')}}" style="position: absolute;margin-top: -60px;" class="ml-3" width="200px" height="auto">
+    <img src="{{asset('/img/logo.png')}}" style="position: absolute;margin-top: -80px;" class="ml-3" width="200px" height="auto">
     <div id="app">
         <main class="py-4" style="margin-left:0px !important; margin-right:0px !important;margin-top:100px !important">
             @yield('content')

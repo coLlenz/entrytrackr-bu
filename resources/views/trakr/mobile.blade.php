@@ -61,12 +61,13 @@
         </div>
     </div> --}}
     
-    <div class="container container-login border border-light d-flex justify-content-center">
-        <div class="d-flex first-border-row  flex-column col-md-8 col-lg-8">
+    <div class="container-login">
+        <div class="first-border-row">
             <div class="row justify-content-center">
                 <div class="col-md-12 text-center">
                     <h1 class="" style="font-size: 30px; font-weight:bold;">WELCOME</h1>
                 </div>
+                <img src="{{asset("img/logo.png")}}" alt="" style="width:200px; height:auto; margin-bottom:1rem;">
             </div>
 
             <div class="row justify-content-center">
@@ -101,25 +102,20 @@
             </div>
         </div>
 
-        <div class="d-flex sec-border-row  col-lg-4 col-md-4">
+        <div class="card sec-border-row" data-toggle="modal">
             <div class="row justify-content-center">
-                <div class="col-sm-8 col-md-6 col-lg-6 col-xl-12">
-                    <a href="#" class="card" data-toggle="modal">
-                        <div class="card-body text-center">
-                            <h1>Contactless Entry</h1>
-                            <img class=""  src="{{ $view_data['qr_path'] }}" alt="" height="250" width="250">
-                        </div>
-                        <div class="card-footer">
-                            <p class="text-center font-medium card-text mb-0" style="font-size: 17px;">
-                                Scan the QR code with your smartphone camera to <br>
-                                <strong>Sign In</strong> or <strong>Sign Out</strong>
-                            </p>
-                        </div>
-                    </a>
+                <div class="card-body sec-row-content">
+                    <h1>Contactless Entry</h1>
+                    <img class=""  src="{{ $view_data['qr_path'] }}" alt="" height="250" width="250">
+                </div>
+                <div class="card-footer col-md-12 col-sm-12">
+                    <p class="text-center font-medium card-text mb-0" style="font-size: 17px;">
+                        Scan the QR code with your smartphone camera to <br>
+                        <strong>Sign In</strong> or <strong>Sign Out</strong>
+                    </p>
                 </div>
             </div> 
         </div>
-
     </div>
     
     <div class="container d-flex justify-content-center p-1">
@@ -127,8 +123,7 @@
             These policies can be found on our website www.entrytrackr.com
         </p>
     </div>
-    
-</div>
+
 <script src="{{ asset('js/vendor/sweetalert2@10.js')}}"></script>
 <script type="text/javascript" src="{{ asset('js/vendor/quill.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/quill_modules/image-drop.min.js') }}"></script>
