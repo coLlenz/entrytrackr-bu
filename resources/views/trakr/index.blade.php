@@ -8,7 +8,7 @@
      transition: 300ms
 }
 </style>
-<div class="container">
+<div class="container border border-light">
     <div class="row justify-content-center">
         <div class="col-md-12 text-center">
             <h1 class="text-light" style="font-size: 30px;">WELCOME</h1>

@@ -75,5 +75,29 @@ body.show-spinner::after{
     margin-right: 3px;
 }
 
+.container-login {
+    border-radius: 5px;
+    width: 1100px;
+    margin: 0px auto;
+    max-width: 1200px;
+    padding: .5rem;
+    margin-top: 2rem;
+}
+
+.first-border-row {
+    border: 1px solid grey;
+    margin:0;
+    padding: 1rem;
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+}
+
+.sec-border-row {
+    border: 1px solid grey;
+    margin:0;
+    padding: 1rem;
+    border-radius: 0 5px 5px 0;
+}
+
 
 
