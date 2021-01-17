@@ -24,6 +24,8 @@
                                     <td class="text-right"><span class="text-muted">{{ date('D-m-Y H:s' , strtotime($list->check_in_date)) }}</span></td>
                                 </tr>
                                 @endforeach
+                            @else
+                            <i> {{ 'No Logs' }} </i>
                             @endif
                         </tbody>
                     </table>
@@ -34,11 +36,53 @@
         <div class="col-md-8">
             <div class="card"  >
                 <div class="card-body">
-                    <canvas id="visitorChart"></canvas>
+                    <h5 class="card-title">Currently Signed In by Visitor Type</h5>
+                    <div class="chart-container chart">
+                        <canvas id="visitorChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h2> Evacuation List </h2>
+                    <table class="table">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th class="text-center">Visitor Type</th>
+                                    <th class="text-center">Date & Time Signed In</th>
+                                    <th class="text-center">Safe</th>
+                                    <th class="text-center">Date Marked Safe</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if( !$account['visitors']->isEmpty()  )
+                                    @foreach( $account['visitors'] as $list )
+                                        <tr>
+                                            <td >{{$list->firstName}} {{$list->lastName}}</td>
+                                            <td class="text-center">{{$list->visitor_type}}</td>
+                                            <td class="text-center">{{ date('D-m-y H:i' , strtotime($list->check_in_date)) }}</td>
+                                            <td  class="text-center">{{ $list->safe ? 'Yes' : 'Pending' }}</td>
+                                            <td  class="text-center">{{ $list->date_marked_safe ? $list->date_marked_safe : 'Pending' }}</td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                        <h3 class="text-center"> <i> {{ $account['visitors']->isEmpty() ? 'No Results' : ''}} </i> </h3>
+                    </table>
+                    {{ $account['visitors']->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>
 
 <script src="{{ asset('js/vendor/Chart.bundle.min.js') }}"></script>
@@ -117,7 +161,11 @@ var chartTooltip = {
               themeColor3_10
             ],
             borderWidth: 2,
-            data: [21,33,11]
+            data: [
+                {{!empty($visitor_count['visitors']) ? $visitor_count['visitors'] : 0}} ,
+                {{!empty($visitor_count['contractors']) ? $visitor_count['contractors'] : 0}} , 
+                {{!empty($visitor_count['employees']) ? $visitor_count['employees'] : 0}}
+            ]
           }
         ]
       },

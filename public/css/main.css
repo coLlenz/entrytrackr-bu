@@ -88,6 +88,9 @@ body.show-spinner::after{
     width: 320px;
     margin-right: 20px;
 }
+.chart-container{
+    height: 300px;
+}
 
 
 
