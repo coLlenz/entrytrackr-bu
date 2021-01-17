@@ -24,10 +24,11 @@ class LocationController extends Controller{
             $visitor_count= [];
             // visitor list
             $account['visitors'] =  Trakr::where(['user_id' => $id , 'checked_in_status' => 0,])
-            ->where('check_in_date' ,'>=' , date('Y-m-d 00:00:00'))
-            ->where('check_in_date' , '<=', date('Y-m-d 23:59:59'))
-            ->select('trakrs.id' , 'trakrs.firstName' ,'trakrs.lastName' , 'trakrs.trakr_id' , 'trakrs.phoneNumber' , 'trakr_types.name as visitor_type' , 'trakrs.email' , 'trakrs.who' ,'trakrs.safe' ,'trakrs.date_marked_safe', 'trakrs.name_of_company', 'trakrs.status' , 'trakrs.check_in_date')
+            // ->where('check_in_date' ,'>=' , date('Y-m-d 00:00:00'))
+            // ->where('check_in_date' , '<=', date('Y-m-d 23:59:59'))
+            ->select('trakrs.id','trakrs.user_id' , 'trakrs.firstName' ,'trakrs.lastName' , 'trakrs.trakr_id' , 'trakrs.phoneNumber' , 'trakr_types.name as visitor_type' , 'trakrs.email' , 'trakrs.who' ,'trakrs.safe' ,'trakrs.date_marked_safe', 'trakrs.name_of_company', 'trakrs.status' , 'trakrs.check_in_date' , 'trakrs.check_out_date')
             ->join('trakr_types' ,'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
+            ->orderBy('trakrs.check_in_date' , 'DESC')
             ->paginate(10);
             
             // Visitor Count
@@ -42,6 +43,18 @@ class LocationController extends Controller{
         
         return redirect()->route("index")->with('msg', 'Something went wrong. Please try again');
         
+    }
+    
+    public function visitorLogs($user_id , $visitor_id){
+        $logs = DB::table('visitor_log')
+        ->select('visitor_log.created_at' , 'visitor_log.action' , 'trakrs.user_id')
+        ->where([
+            'trakrs.user_id' =>  $user_id,
+            'visitor_id' => $visitor_id
+        ])
+        ->join('trakrs' , 'trakrs.id' , '=' , 'visitor_log.visitor_id')->get();
+        
+        return view('location.showlog')->with('logs' , $logs);
     }
 }
    
