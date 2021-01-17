@@ -51,6 +51,9 @@ class TrakrViewController extends Controller
                     return response()->json(['status' => 'fail','msg' => 'There\'s a problem creating your record.'],200);
                 }
                 
+                // save logs
+                $this->visitLog($visitor->id , $visitor->user_id ,0);
+                
                 return response()->json(
                     [
                         'status' => 'success',
@@ -79,6 +82,9 @@ class TrakrViewController extends Controller
             $formated_date = Carbon::parse($trakr_new->check_in_date)->format('d F Y g:i A');
             
             if ($trakr_new->save()) {
+                // save logs
+                $this->visitLog($trakr_new->id , $trakr_new->user_id , 0);
+                
                 return response()->json(
                     [
                         'status' => 'success',
@@ -137,6 +143,10 @@ class TrakrViewController extends Controller
             //get updated data
             $check_in_data = Trakr::where('trakr_id' ,$request->trakrid)->first();
             $date = $this->carbonFormat($check_in_data->check_in_date);
+            
+            // save log
+            $this->visitLog($check_in_data->id , $check_in_data->user_id , 0);
+            
             return response()->json(
                 [
                     'has_trakr' => $check_in_data->trakr_id ? true : false,
@@ -177,11 +187,15 @@ class TrakrViewController extends Controller
             if (!$trakr) {
                 return response()->json(['status' => 'nodata'] , 200 );
             }
+            
             //update data to logged out
             $trakr->checked_in_status = 1;
             $trakr->check_out_date = date('Y-m-d H:i:s');
             if ($trakr->save()) {
                 $updated_data = Trakr::select('check_out_date')->where('phoneNumber' , $request->phoneNumber)->first();
+                
+                $this->visitLog($trakr->id , $trakr->user_id  , 1);
+                
                 return response()->json(
                     [
                         'status' => 'success' ,
@@ -376,5 +390,17 @@ class TrakrViewController extends Controller
         $view_data['userid'] = $userid;
         $view_data['qr_path'] = $qr_path->qr_path;
         return view('trakr.mobile')->with('view_data' , $view_data);
+    }
+    
+    // 0-signin , 1-signout
+    public function visitLog($visitor_id , $user_id ,$status = 0){
+        $logs = DB::table('visitor_log')->insert([
+            'visitor_id' => $visitor_id ? $visitor_id : null,
+            'user_id' => $user_id,
+            'action' => $status,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+        
+        return $logs ? true : false; 
     }
 }

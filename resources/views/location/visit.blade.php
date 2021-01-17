@@ -45,7 +45,7 @@
         </div>
     </div>
     
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
@@ -78,6 +78,57 @@
                         <h3 class="text-center"> <i> {{ $account['visitors']->isEmpty() ? 'No Results' : ''}} </i> </h3>
                     </table>
                     {{ $account['visitors']->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-12 col-md-4 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title"> trakrID </h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>trakrID</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Phone Number</th>
+                                <th class="text-center">Visitor Type</th>
+                                <th class="text-center">Time and date of entry</th>
+                                <th class="text-center">Time and date of exit</th>
+                                <th class="text-center">Access</th>
+                                <th class="text-center">Visiting/Business</th>
+                                <th class="text-center">Visit Logs</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            @if( !$account['visitors']->isEmpty()  )
+                                @foreach( $account['visitors'] as $list )
+                                    @if( $list->status == 1 )
+                                    <tr>
+                                        <td>{{$list->trakr_id}}</td>
+                                        <td class="text-center">{{$list->firstName}} {{$list->lastName}}</td>
+                                        <td class="text-center">{{$list->phoneNumber}}</td>
+                                        <td class="text-center">{{$list->visitor_type}}</td>
+                                        <td class="text-center">{{date('D-m-y H:i' , strtotime($list->check_in_date))}}</td>
+                                        <td class="text-center">{{ $list->check_out_date ?  date('D-m-y H:i' , strtotime($list->check_out_date)) : 'Pending'}}</td>
+                                        <td class="text-center">
+                                            @if( $list->status == 0 )
+                                                <span class="badge badge-success">{{'Allowed'}}</span>
+                                            @else
+                                                <span class="badge badge-danger">{{'Denied'}}</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center"> {{ $list->trakr_type_id == 1 ? $list->who : $list->name_of_company }}</td>
+                                        <td class="text-center"> <a href="{{route('visitorLogs' , [$list->user_id , $list->id] )}}"> Show Logs  </a></td>
+                                    </tr>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -121,6 +121,7 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 Route::prefix('locations')->middleware(['auth'])->group(function() {
 	Route::get('/', [LocationController::class, 'index'])->name("index");
 	Route::get('/visit/{uuid}/{id}' , [LocationController::class , 'visit'])->name('visit');
+	Route::get('/visit/show/visitor_logs/{user_id}/{visitor_id}' ,[LocationController::class,'visitorLogs'])->name('visitorLogs');
 });
 
 Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(function () {
