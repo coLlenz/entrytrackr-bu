@@ -1,6 +1,7 @@
   @extends('layouts.app')
 
 @section('content')
+
     {{-- <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -89,7 +90,7 @@
                                             <h5 class="card-title">Visitors Currently Signed In</h5>
                                             <table class="table">
                                                 <tbody>
-                                                    @if(!empty($list_data['current_signin']))
+                                                    @if(!$list_data['current_signin']->isEmpty())
                                                     @foreach($list_data['current_signin'] as $signin)
                                                         <tr>
                                                             <td>{{$signin->firstName}} {{$signin->lastName}}</td>
@@ -112,7 +113,7 @@
                                             <h5 class="card-title">Visitors Requiring Assistance</h5>
                                             <table class="table">
                                                 <tbody>
-                                                    @if(!empty($list_data['need_assistance']))
+                                                    @if(!$list_data['need_assistance']->isEmpty())
                                                         @foreach($list_data['need_assistance'] as $assist)
                                                             <tr>
                                                                 <td>{{$assist->firstName}} {{$assist->lastName}}</td>

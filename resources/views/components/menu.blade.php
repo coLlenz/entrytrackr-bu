@@ -18,11 +18,21 @@
                         <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
                     </a>
                 </li>
+                
                 <li class="{{(request()->is('templates') || request()->segment(1) == 'templates') ? 'active' : ''}}">
                     <a href="/templates">
                         <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
                     </a>
                 </li>
+                
+                @if( !auth()->user()->is_admin && !auth()->user()->sub_account )
+                <li class="{{(request()->is('locations') || request()->segment(1) == 'locations') ? 'active' : ''}}">
+                    <a href="/locations">
+                        <i class="fa fa-globe" aria-hidden="true"></i> Locations
+                    </a>
+                </li>
+                @endif
+                
                 <li class="{{(request()->is('settings') || request()->segment(1) == 'settings') ? 'active' : ''}}">
                     <a href="/settings">
                         <i class="fa fa-cog" aria-hidden="true"></i> Settings
@@ -50,12 +60,12 @@
             <ul class="list-unstyled" data-link="reports">
                 <li>
                     <a href="/reports">
-                        <i class=""></i> <span class="d-inline-block">Summary Report</span>
+                        <i class=""></i> <span class="d-inline-block font-weight-bold">Summary Report</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('summaryReport') }}">
-                        <i class=""></i> <span class="d-inline-block">Screening Questions</span>
+                        <i class=""></i> <span class="d-inline-block font-weight-bold">Screening Questions</span>
                     </a>
                 </li>
             </ul>

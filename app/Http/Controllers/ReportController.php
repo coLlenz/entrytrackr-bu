@@ -115,14 +115,15 @@ class ReportController extends Controller
         });
         
         $data = $filter_query->paginate(10);
-        $query = DB::getQueryLog();
+        // $query = DB::getQueryLog();
         
         return view('report.index')->with('table_data' ,$data)->with('formdata' , $form_data);
     }
     
     public function generate_pdf(Request $request){
-        $start_date = $request->input('fdate');
-        $end_date = $request->input('edate');
+        DB::enableQueryLog();
+        $start_date = Carbon::parse($request->input('fdate'))->format('Y-m-d 00:00:00');
+        $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
         $assistance = $request->input('ass');
         $type_of_visitor = $request->input('tvis');
         $status = $request->input('acc');
@@ -181,6 +182,8 @@ class ReportController extends Controller
         });
         
         $data = $filter_query->get();
+        $query = DB::getQueryLog();
+        
         view()->share('data',$data);
         $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
         return $pdf->download($filename.'.pdf');
@@ -231,6 +234,7 @@ class ReportController extends Controller
         ])->first();
         
         $results->freetext = $results->freetext ? json_decode($results->freetext) : [];
+        $results->answers =$results->answers ? json_decode($results->answers) : [];
         
         return view('report.results')
         ->with('questions' , $questions)
