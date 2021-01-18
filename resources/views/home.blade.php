@@ -60,9 +60,13 @@
                                     <div class="card mt-2">
                                         <div class="card-body text-left">
                                             <h5 class="card-title">Currently Signed In by Visitor Type</h5>
-                                            <div class="">
-                                                <canvas id="doughnutChart" style="height:400px; width:400px"></canvas>
-                                            </div>
+                                            @if( $piedata['visitors'] != 0 && $piedata['contractors'] != 0 && $piedata['employees'] != 0 )
+                                                <div class="">
+                                                    <canvas id="doughnutChart" style="height:400px; width:400px"></canvas>
+                                                </div>
+                                            @else
+                                                <h3 class="text-center" >{{ 'No data to show' }}</h3>
+                                            @endif
                                             {{-- <p class="lead text-bold color-theme-1" style="font-size: 56px;">1</p> --}}
                                         </div>
                                     </div>
