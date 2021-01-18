@@ -44,7 +44,7 @@ class UserController extends Controller
         $user->uuid = Str::uuid()->toString();
         $user->contactName = $request->input('cname');
         $user->sub_account = 0;
-        $user->profile_path = public_path('img/placeholder.png');
+        $user->profile_path = '';
         $user->sub_account_id=0;
         $user->email = $request->input('email');
         $user->password = Hash::make($request->input('password'));

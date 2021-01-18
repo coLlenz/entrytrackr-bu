@@ -67,7 +67,7 @@
                 <div class="col-md-12 text-center">
                     <h1 class="" style="font-size: 30px; font-weight:bold;">WELCOME</h1>
                 </div>
-                <img src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/img/logo.png" alt="" style="width:200px; height:auto; margin-bottom:1rem;">
+                <img src="https://qrlogins.s3.ap-southeast-2.amazonaws.com/profiles/BwELlQf6ITXMV949cFYRa0VWkRGa3syGUBnNtyOq.png" alt="" style="width:200px; height:auto; margin-bottom:1rem;">
             </div>
 
             <div class="row justify-content-center">
