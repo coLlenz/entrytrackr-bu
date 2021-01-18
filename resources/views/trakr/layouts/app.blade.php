@@ -25,11 +25,27 @@
     <link rel="stylesheet" href="{{ asset('css/vendor/perfect-scrollbar.css') }}" />
     @yield('style')
     <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+    <style media="screen">
+        .bg{
+            background: #B19CD9;
+            /* background: linear-gradient(90deg, rgba(41,91,136,1) 4%, rgba(177,46,177,1) 35%, rgba(110,82,212,1) 93%); */
+            background-size: auto; 
+            opacity: 20%; 
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
 </head>
 
 <body id="app-container" class="menu-default show-spinner">
-    <div style="background: #EE82EE;background-size: auto; opacity: 20%; background-size: cover;width: 100%;height: 100%;position: fixed;top: 0;right: 0;bottom: 0;left: 0;"></div>
-    <img src="{{asset('/img/logo.png')}}" style="position: absolute;margin-top: -80px; width: 10rem; height:auto;"  class="ml-3">
+    <div class="bg" style=""></div>
+    <!-- <img src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/img/logo.png" style="position: absolute;margin-top: -80px; width: 10rem; height:auto;"  class="ml-3"> -->
     <div id="app" style="">
         <main class="py-4" style="margin-left:0px !important; margin-right:0px !important;margin-top:100px !important">
             @yield('content')
