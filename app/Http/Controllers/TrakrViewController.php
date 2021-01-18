@@ -389,6 +389,7 @@ class TrakrViewController extends Controller
         $view_data['uuid'] = $uuid;
         $view_data['userid'] = $userid;
         $view_data['qr_path'] = $qr_path->qr_path;
+        $view_data['has_profile'] = $qr_path->profile_path ? $qr_path->profile_path : false;
         return view('trakr.mobile')->with('view_data' , $view_data);
     }
     
