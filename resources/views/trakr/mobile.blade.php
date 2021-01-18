@@ -8,7 +8,7 @@
      transition: 300ms
 } */
 </style>
-{{-- <div class="container boder border-light">
+<div class="container boder border-light">
     <div class="row justify-content-center">
         <div class="col-md-12 text-center">
             <h1 class="text-light" style="font-size: 30px;">WELCOME</h1>
@@ -59,10 +59,10 @@
                 </div>
             </a>
         </div>
-    </div> --}}
+    </div> 
     
-    <div class="container-login">
-        <div class="first-border-row">
+    {{--<div class="container-login">
+        <div class="first-border-row entry_background">
             <div class="row justify-content-center">
                 <div class="col-md-12 text-center">
                     <h1 class="" style="font-size: 30px; font-weight:bold;">WELCOME</h1>
@@ -102,7 +102,7 @@
             </div>
         </div>
 
-        <div class="card sec-border-row" data-toggle="modal">
+        <div class="card sec-border-row entry_background" data-toggle="modal">
             <div class="row justify-content-center">
                 <div class="card-body sec-row-content">
                     <h1>Contactless Entry</h1>
@@ -122,7 +122,7 @@
         <p class="text-center">By continuing you agree to our Terms, Cookie Use and Data Protection & Privacy Policies<br/>
             These policies can be found on our website www.entrytrackr.com
         </p>
-    </div>
+    </div>--}}
 
 <script src="{{ asset('js/vendor/sweetalert2@10.js')}}"></script>
 <script type="text/javascript" src="{{ asset('js/vendor/quill.min.js') }}"></script>

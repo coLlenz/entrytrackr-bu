@@ -84,6 +84,7 @@ body.show-spinner::after{
     width: 50%;
     display:flex;
 }
+
 .custom_width_box{
     width: 320px;
     margin-right: 20px;
