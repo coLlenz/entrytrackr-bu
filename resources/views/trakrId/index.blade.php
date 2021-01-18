@@ -28,7 +28,7 @@
 
                     <td>{{$trakr->trakr_id}}</td>
                         <td>{{$trakr->firstName}} {{$trakr->lastName}}</td>
-                        <td>{{ \Carbon\Carbon::parse($trakr->check_in_date)->format('d-m-y H:i') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($trakr->check_in_date)->format('d-m-Y H:i') }}</td>
                         <td>{{$trakr->name}}</td>
                         <td class="text-center">
                             <button class="btn btn-primary dropdown-toggle mb-1" type="button"
