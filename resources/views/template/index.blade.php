@@ -33,8 +33,8 @@
                     <tr>
                         <td>{{$template->title}}</td>
                         <td>{{$template->template_type == 1 ? 'Notification/Alert' : 'Questionnaire' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($template->created_at)->format('d-m-y H:i') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($template->updated_at)->format('d-m-y H:i') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($template->created_at)->format('d-m-Y H:i') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($template->updated_at)->format('d-m-Y H:i') }}</td>
                         @if(!auth()->user()->is_admin)
                         <td class="text-center">
                             @if($template->status)
