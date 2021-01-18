@@ -28,7 +28,8 @@
 </head>
 
 <body id="app-container" class="menu-default show-spinner">
-    <img src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/img/logo.png" style="position: absolute;margin-top: -80px;" class="ml-3" width="200px" height="auto">
+    <div style="background: url({{asset('img/background.png')}});background-size: auto;background-size: cover;width: 100%;height: 100%;position: fixed;top: 0;right: 0;bottom: 0;left: 0;"></div>
+    <img src="{{asset('/img/logo-trans-s.png')}}" style="position: absolute;margin-top: -60px;" class="ml-3">
     <div id="app" style="">
         <main class="py-4" style="margin-left:0px !important; margin-right:0px !important;margin-top:100px !important">
             @yield('content')
