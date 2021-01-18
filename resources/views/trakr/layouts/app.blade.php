@@ -28,8 +28,8 @@
 </head>
 
 <body id="app-container" class="menu-default show-spinner">
-    <div style="background: url({{asset('img/background.png')}});background-size: auto;background-size: cover;width: 100%;height: 100%;position: fixed;top: 0;right: 0;bottom: 0;left: 0;"></div>
-    <img src="{{asset('/img/logo-trans-s.png')}}" style="position: absolute;margin-top: -60px;" class="ml-3">
+    <div style="background: #EE82EE;background-size: auto; opacity: 20%; background-size: cover;width: 100%;height: 100%;position: fixed;top: 0;right: 0;bottom: 0;left: 0;"></div>
+    <img src="{{asset('/img/logo.png')}}" style="position: absolute;margin-top: -80px; width: 10rem; height:auto;"  class="ml-3">
     <div id="app" style="">
         <main class="py-4" style="margin-left:0px !important; margin-right:0px !important;margin-top:100px !important">
             @yield('content')

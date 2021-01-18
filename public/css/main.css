@@ -105,20 +105,24 @@ body.show-spinner::after{
 }
 
 .first-border-row {
-    border: 2px solid grey;
+    border: 2px solid #D8BFD8;
     margin:0;
     padding: 1rem;
     border-right: none;
     border-radius: 5px 0 0 5px;
     width: 70%;
+    background: grey;
+    color: #FFF;
 }
 
 .sec-border-row {
-    border: 2px solid grey;
+    border: 2px solid #D8BFD8;
     margin:0;
     padding: 1rem;
     border-radius: 0 5px 5px 0;
     width: 30%;
+    background: grey;
+    color: #FFF;
 }
 
 .sec-row-content {
@@ -127,13 +131,25 @@ body.show-spinner::after{
     flex-direction: column;
 }
 
-/* #modalCheckin {
+#modalCheckin {
     padding-right: 5px!important; 
 }
 
 #simple_checkin {
     padding-left: 5px!important;
-} */
+}
+
+
+
+@media only screen and (max-width:1000px) {
+    #modalCheckin {
+        padding-right: 15px!important; 
+    }
+    
+    #simple_checkin {
+        padding-left: 15px!important;
+    }
+}
 
 @media only screen and (max-width: 1150px) {
     .first-border-row {
