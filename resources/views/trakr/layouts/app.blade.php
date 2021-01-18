@@ -28,8 +28,8 @@
 </head>
 
 <body id="app-container" class="menu-default show-spinner">
-    <img src="{{asset('/img/logo.png')}}" style="position: absolute;margin-top: -80px;" class="ml-3" width="200px" height="auto">
-    <div id="app">
+    <img src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/img/logo.png" style="position: absolute;margin-top: -80px;" class="ml-3" width="200px" height="auto">
+    <div id="app" style="">
         <main class="py-4" style="margin-left:0px !important; margin-right:0px !important;margin-top:100px !important">
             @yield('content')
         </main>
