@@ -28,7 +28,7 @@
                         @if ($user->profile_path)
                             <td><img src= "{{ $user->profile_path }}" alt="" style="height: 40px; width: 45px;"></td>
                         @else
-                            <td><img src= "https://qrlogins.s3-ap-southeast-2.amazonaws.com/profiles/default.png" alt="" style="height: 40px; width: 45px;"></td>
+                            <td><img src= "https://qrlogins.s3-ap-southeast-2.amazonaws.com/img/imgplaceholder.png" alt="" style="height: 40px; width: 45px;"></td>
                         @endif
                             <td>{{$user->name}}</td>
                             <td>{{$user->contactName}}</td>
@@ -42,7 +42,7 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" href="{{route("user-edit",$user->id)}}">Edit</a>
                                     <a class="dropdown-item" href="{{route("user-delete",$user->id)}}">Delete</a>
-                                    <a class="dropdown-item" href="{{route("uploadimage-view",$user->id)}}">Upload Image</a>
+                                    <a class="dropdown-item" href="{{route("uploadimage-view",$user->id)}}">Upload Logo</a>
                                 </div>
                             </td>
                     </tr>

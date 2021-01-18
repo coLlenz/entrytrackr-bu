@@ -110,7 +110,11 @@
                             title: 'Questionnaire has been save.',
                             showConfirmButton: false,
                             timer: 2000
-                        })
+                        });
+                        
+                        setTimeout(function () {
+                            window.location.href = '/templates/question-edit/'+response.template_id;
+                        }, 1500);
                     }
                 }
             })

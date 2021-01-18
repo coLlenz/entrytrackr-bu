@@ -153,7 +153,7 @@ class TemplateController extends Controller
             $template->template_type = 0;
             
             if ($template->save()) {
-                return response()->json(['status' => 'success'], 200);
+                return response()->json(['status' => 'success' , 'template_id' => $template->id], 200);
             }
             return response()->json(['status' => 'fail'], 200);
         }
@@ -170,7 +170,7 @@ class TemplateController extends Controller
         ]);
         
         if ($template) {
-            return response()->json(['status' => 'success'], 200);
+            return response()->json(['status' => 'success' , 'template_id' => DB::getPdo()->lastInsertId()], 200);
         }
         return response()->json(['status' => 'fail'], 200);
     }

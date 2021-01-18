@@ -60,24 +60,13 @@
                                     <div class="card mt-2">
                                         <div class="card-body text-left">
                                             <h5 class="card-title">Currently Signed In by Visitor Type</h5>
-                                            <div class="chart-container chart">
-                                                <canvas id="pieChart"></canvas>
+                                            <div class="">
+                                                <canvas id="doughnutChart" style="height:400px; width:400px"></canvas>
                                             </div>
                                             {{-- <p class="lead text-bold color-theme-1" style="font-size: 56px;">1</p> --}}
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="col-md-12">
-                                    <div class="card mt-2">
-                                        <div class="card-body text-left">
-                                            <h5 class="card-title">Line Chart</h5>
-                                            <div class="chart-container chart">
-                                                <canvas id="lineChart"></canvas>
-                                            </div>
-                                            <p class="lead text-bold color-theme-1" style="font-size: 56px;">1</p>
-                                        </div>
-                                    </div>
-                                </div> --}}
                             </div>
 
 
@@ -210,116 +199,6 @@
     // console.log($("#switch"+i).is(':checked'));
     // $("#"+i).val()
   }
-    Chart.defaults.PieWithShadow = Chart.defaults.pie;
-      Chart.controllers.PieWithShadow = Chart.controllers.pie.extend({
-        draw: function (ease) {
-          Chart.controllers.pie.prototype.draw.call(this, ease);
-          let ctx = this.chart.chart.ctx;
-          ctx.save();
-          ctx.shadowColor = "rgba(0,0,0,0.15)";
-          ctx.shadowBlur = 10;
-          ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 10;
-          ctx.responsive = true;
-          Chart.controllers.pie.prototype.draw.apply(this, arguments);
-          ctx.restore();
-        }
-      });
-    var rootStyle = getComputedStyle(document.body);
-    var themeColor1 = rootStyle.getPropertyValue("--theme-color-1").trim();
-    var themeColor2 = rootStyle.getPropertyValue("--theme-color-2").trim();
-    var themeColor3 = rootStyle.getPropertyValue("--theme-color-3").trim();
-    var themeColor4 = rootStyle.getPropertyValue("--theme-color-4").trim();
-    var themeColor5 = rootStyle.getPropertyValue("--theme-color-5").trim();
-    var themeColor6 = rootStyle.getPropertyValue("--theme-color-6").trim();
-    var themeColor1_10 = rootStyle
-      .getPropertyValue("--theme-color-1-10")
-      .trim();
-    var themeColor2_10 = rootStyle
-      .getPropertyValue("--theme-color-2-10")
-      .trim();
-    var themeColor3_10 = rootStyle
-      .getPropertyValue("--theme-color-3-10")
-      .trim();
-    var themeColor4_10 = rootStyle
-      .getPropertyValue("--theme-color-4-10")
-      .trim();
-    var themeColor5_10 = rootStyle
-      .getPropertyValue("--theme-color-5-10")
-      .trim();
-    var themeColor6_10 = rootStyle
-      .getPropertyValue("--theme-color-6-10")
-      .trim();
-    var primaryColor = rootStyle.getPropertyValue("--primary-color").trim();
-    var foregroundColor = rootStyle
-      .getPropertyValue("--foreground-color")
-      .trim();
-    var separatorColor = rootStyle.getPropertyValue("--separator-color").trim();
-    var chartTooltip = {
-        backgroundColor: foregroundColor,
-        titleFontColor: primaryColor,
-        borderColor: separatorColor,
-        borderWidth: 0.5,
-        bodyFontColor: primaryColor,
-        bodySpacing: 10,
-        xPadding: 15,
-        yPadding: 15,
-        cornerRadius: 0.15,
-        displayColors: false
-      };
-      if (document.getElementById("pieChart")) {
-        var pieChart = document.getElementById("pieChart");
-        var myChart = new Chart(pieChart, {
-          type: "PieWithShadow",
-          data: {
-            labels: ["Visitors","Contractors", "Employees"],
-            datasets: [
-              {
-                label: "",
-                borderColor: [themeColor1, themeColor2, themeColor3],
-                backgroundColor: [
-                  themeColor1_10,
-                  themeColor2_10,
-                  themeColor3_10
-                ],
-                borderWidth: 2,
-                data: [
-                  {{!empty($piedata['visitors']) ? $piedata['visitors'] : 0}} ,
-                  {{!empty($piedata['contractors']) ? $piedata['contractors'] : 0}} , 
-                  {{!empty($piedata['employees']) ? $piedata['employees'] : 0}}
-                  ]
-              }
-            ]
-          },
-          draw: function () { },
-          options: {
-            plugins: {
-              datalabels: {
-                display: false
-              }
-            },
-            responsive: true,
-            maintainAspectRatio: false,
-            title: {
-              display: false
-            },
-            layout: {
-              padding: {
-                bottom: 20
-              }
-            },
-            legend: {
-              position: "bottom",
-              labels: {
-                padding: 30,
-                usePointStyle: true,
-                fontSize: 12
-              }
-            },
-            tooltips: chartTooltip
-          }
-        });
-      }
       $table = $(".data-table-feature").DataTable({
         sDom: '<"row view-filter"<"col-sm-12"<"float-right"l><"float-left"f><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
         drawCallback: function () {
@@ -341,6 +220,67 @@
           lengthMenu: "Items Per Page _MENU_"
         },
       });
+</script>
+
+<script type="text/javascript">
+    var chartTooltip = {
+        borderColor: '#ffffff',
+        borderWidth: 2,
+        bodySpacing: 10,
+        xPadding: 20,
+        yPadding: 20,
+        cornerRadius: 20,
+        displayColors: true
+    };
+    if (document.getElementById("doughnutChart")) {
+        var pieChart = document.getElementById("doughnutChart");
+        var myChart = new Chart(pieChart, {
+        type: "doughnut",
+        data: {
+        labels: ["Visitors","Contractors", "Employees"],
+        datasets: [
+            {
+                label: "",
+                borderColor: '#ffffff',
+                backgroundColor: ['#00ff00','#e9c937' , '#3b3bbd'],
+                borderWidth: 2,
+                data: [
+                    {{!empty($piedata['visitors']) ? $piedata['visitors'] : 0}} ,
+                    {{!empty($piedata['contractors']) ? $piedata['contractors'] : 0}} , 
+                    {{!empty($piedata['employees']) ? $piedata['employees'] : 0}}
+                ]
+            }
+        ]
+        },
+        draw: function () { },
+        options: {
+            plugins: {
+                datalabels: {
+                    display: false
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            title: {
+                display: false
+            },
+            layout: {
+                padding: {
+                    bottom: 20
+                }
+            },
+            legend: {
+                position: "bottom",
+                labels: {
+                    padding: 30,
+                    usePointStyle: true,
+                    fontSize: 12
+                }
+            },
+            tooltips: chartTooltip
+        }
+        });
+    }
 </script>
 @endsection
 

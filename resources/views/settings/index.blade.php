@@ -20,7 +20,7 @@
                                 <th>Email</th>
                                 <th class="text-center">Created</th>
                                 <th class="text-center">Updated</th>
-                                <th class="text-center" >Action</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -31,18 +31,10 @@
                                         <td> {{$list->name}} </td>
                                         <td> {{$list->email}} </td>
                                         <td class="text-center"> 
-                                            {{ \Carbon\Carbon::parse($list->created_at)->format('d F Y g:i A') }} 
+                                            {{ \Carbon\Carbon::parse($list->created_at)->format('d-m-Y H:i') }} 
                                         </td>
                                         <td class="text-center"> 
-                                            {{\Carbon\Carbon::parse($list->updated_at)->format('d F Y g:i A') }}
-                                        </td>
-                                        <td class="text-center">
-                                            <button type="button" name="delete" class="btn btn-primary btn-sm" title="Remove Access">
-                                                <i class="simple-icon-trash"></i>
-                                            </button>
-                                            <button type="button" name="delete" class="btn btn-primary btn-sm" title="Remove Access" title="Edit user">
-                                                <i class="simple-icon-pencil"></i>
-                                            </button>
+                                            {{\Carbon\Carbon::parse($list->updated_at)->format('d-m-Y H:i') }}
                                         </td>
                                     </tr>
                                     @endforeach
