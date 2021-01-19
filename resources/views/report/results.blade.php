@@ -65,7 +65,7 @@
                                             {{ isset($results->freetext[$freetxt]) ? $results->freetext[$freetxt] : '' }}
                                             @php $freetxt++ @endphp
                                         @else
-                                            {{ $results->answers[$key] }}
+                                            {{ $results->answers[$basic] == 'A' ? 'Yes' : 'No' }}
                                             @php $basic++ @endphp
                                         @endif
                                     </td>

@@ -293,14 +293,8 @@ class TrakrViewController extends Controller
         
         // Answer with Choices Only
         foreach ($request->all() as $key => $input) {
-            if ($key != 'questionId' && $key != 'trakrid' && $key !='temp_check' && $key != 'freetext') {
-                if (strtoupper($decoded[$index]->correctAnswer) != strtoupper($input) ) {
-                    $wrong++;
-                    $answers[$index] = $input;
-                }else{
-                    $answers[$index] = $input;
-                }
-                $index++;
+            if ($key != 'questionId' && $key != 'trakrid' && $key !='temp_check' && $key !='freetext') {
+                array_push($answers , $input);
             }
         }
         
