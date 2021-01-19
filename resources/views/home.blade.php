@@ -60,7 +60,7 @@
                                     <div class="card mt-2">
                                         <div class="card-body text-left">
                                             <h5 class="card-title">Currently Signed In by Visitor Type</h5>
-                                            @if( $piedata['visitors'] != 0 && $piedata['contractors'] != 0 && $piedata['employees'] != 0 )
+                                            @if( $piedata['visitors'] != 0 || $piedata['contractors'] != 0 || $piedata['employees'] != 0 )
                                                 <div class="">
                                                     <canvas id="doughnutChart" style="height:400px; width:400px"></canvas>
                                                 </div>
