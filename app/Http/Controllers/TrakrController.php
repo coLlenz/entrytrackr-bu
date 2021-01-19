@@ -17,7 +17,7 @@ class TrakrController extends Controller
         ->where('trakr_id', '!=' , '')
         ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
         ->orderBy('trakrs.created_at' , 'DESC')
-        ->where('user_id' , auth()->user()->id)
+        ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
         ->paginate(10);
         return view('trakrId.index',compact("list_data"));
     }
@@ -43,7 +43,7 @@ class TrakrController extends Controller
         $this->validate($request, [
             'fname' => 'required|min:3|max:255',
             'lname' => 'required',
-            // 'email' => 'required|email',
+            'trakrid' => 'required',
             'number' => 'required',
             'vtype' => 'required',
         ]);
@@ -51,11 +51,10 @@ class TrakrController extends Controller
         $trakrr = new Trakr;
         $trakrr->firstName = $request->fname;
         $trakrr->lastName = $request->lname;
-        $trakrr->trakr_id = '';
+        $trakrr->trakr_id = $request->trakrid;
         $trakrr->phoneNumber = $request->number;
         $trakrr->trakr_type_id = $request->vtype;
-        $trakrr->trakr_id = $request->trakrid;
-        $trakrr->user_id = auth()->user()->id;
+        $trakrr->user_id = auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id;
         $trakrr->assistance = 0;
         $trakrr->status = 0;
         $trakrr->checked_in_status = 0;
@@ -65,7 +64,7 @@ class TrakrController extends Controller
             return redirect('/trakrid')
             ->with('success', 'Successfully Added New TrakrID');
         }
-        return redirect('/trakrid');
+        return redirect('/trakrid')->with('success' , 'Complete the Form');
     }
     
     public function setUsernameAttribute($value)

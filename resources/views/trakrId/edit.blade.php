@@ -20,19 +20,19 @@
                     @csrf
                     <div class="form-group">
                         <label>First Name</label>
-                        <input type="text" class="form-control" name="fname" value="{{$trakr->firstName}}">
+                        <input type="text" class="form-control" name="fname" value="{{$trakr->firstName}}" required>
                     </div>
                     <div class="form-group">
                         <label>Last Name</label>
-                        <input type="text" class="form-control" name="lname" value="{{$trakr->lastName}}">
+                        <input type="text" class="form-control" name="lname" value="{{$trakr->lastName}}" required>
                     </div>
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="text" class="form-control" name="number" value="{{$trakr->phoneNumber}}">
+                        <input type="text" class="form-control" name="number" value="{{$trakr->phoneNumber}}" required>
                     </div>
                     <div class="form-group">
                         <label>Enter a trakrID</label>
-                        <input type="text" class="form-control" name="trakrid" value="{{$trakr->trakr_id}}">
+                        <input type="text" class="form-control" name="trakrid" value="{{$trakr->trakr_id}}" required>
                     </div>
                     <div class="form-group">
                         <label>Visitor Type</label>

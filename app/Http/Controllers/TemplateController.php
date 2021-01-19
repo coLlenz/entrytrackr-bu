@@ -16,25 +16,20 @@ class TemplateController extends Controller
         }
         
         $templates = DB::table('template_copy')->where([
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id,
             'template_status' => 0
-        ])->paginate(10);
+        ])
+        ->orderBy('created_at' , 'DESC')
+        ->paginate(10);
         return view('template.index')->with('templates' , $templates);
     }
     
     public function notificationcreate(){
         $templates = [];
         
-        if (auth()->user()->sub_account) {
-            $templates = DB::table('template_copy')
-            ->where(['user_id' => auth()->user()->sub_account_id , 'template_type' => 1])
-            ->orderBy('created_at' , 'DESC')
-            ->get();
-        }else{
-            $templates = Template::where('template_type' , 1)
-            ->orderBy('created_at' , 'DESC')
-            ->get();
-        }
+        $templates = Template::where(['template_type' => 1])
+        ->orderBy('created_at' , 'DESC')
+        ->get();
         
         return view("template.notificationAdd")->with('templates' , $templates);
     }
@@ -68,7 +63,7 @@ class TemplateController extends Controller
         
         $template = DB::table('template_copy')
         ->insert([
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id,
             'title' => $request->title,
             'description' => '',
             'content_html' => '',
@@ -91,7 +86,7 @@ class TemplateController extends Controller
             return view("template.notificationEdit", compact("template"));
         }
         
-        $template = DB::table('template_copy')->where(['id' => $template_id , 'user_id' => auth()->user()->id])->first();
+        $template = DB::table('template_copy')->where(['id' => $template_id , 'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id])->first();
         return view("template.notificationEdit", compact("template"));
     }
     
@@ -110,7 +105,7 @@ class TemplateController extends Controller
         }
         
         //for customer
-        $template = DB::table('template_copy')->where(['id' => $template_id , 'user_id' => auth()->user()->id])->update(
+        $template = DB::table('template_copy')->where(['id' => $template_id , 'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id])->update(
             [
                 'title' => $request->title,
                 'content_json' => $request->jsondata,
@@ -132,7 +127,7 @@ class TemplateController extends Controller
         }
         
         $template = DB::table('template_copy')->where([
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id,
             'id' => $template_id
         ])->update(['template_status' => 1]);
         return redirect()->route("template-index")->with('success', 'Template Deleted Successfully');
@@ -159,7 +154,7 @@ class TemplateController extends Controller
         }
         
         $template = DB::table('template_copy')->insert([
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id,
             'title' => $request->question_title,
             'description' => $request->question_description,
             'content_html' =>  $request->question_html,
@@ -199,7 +194,7 @@ class TemplateController extends Controller
         }
         
         $template = DB::table('template_copy')->where([
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id,
             'id' => $template_id
         ])->update([
             'title' => $request->question_title,
@@ -226,13 +221,17 @@ class TemplateController extends Controller
         //     ])->update(['status' => 0 , 'updated_at' => date('Y-m-d H:i:s')]);
         // }
         
-        DB::table('template_copy')->where(['user_id' => auth()->user()->id , 'id' => $template_id])->update(['status' => 1]);
+        DB::table('template_copy')->where(['user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id , 'id' => $template_id])->update(['status' => 1]);
         return redirect()->route("template-index")->with('success', 'Template Activated Successfully');
     }
     
     public function activate($template_id){
         //check existing active template
-        $active_template = DB::table('template_copy')->select('status' , 'id')->where(['user_id' => auth()->user()->id,'status' => 1 , 'template_type' => 1])->first();
+        $active_template = DB::table('template_copy')->select('status' , 'id')->where([
+            'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id,
+            'status' => 1 , 
+            'template_type' => 1
+        ])->first();
         
         if (!empty($active_template) && $active_template->status) {
             DB::table('template_copy')->where([
@@ -240,9 +239,13 @@ class TemplateController extends Controller
             ])->update(['status' => 0 , 'updated_at' => date('Y-m-d H:i:s')]);
         }
         
-        DB::table('template_copy')->where(['user_id' => auth()->user()->id , 'id' => $template_id])->update(['status' => 1]);
+        DB::table('template_copy')->where([
+            'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id,
+            'id' => $template_id,
+            ])->update(['status' => 1]);
         return redirect()->route("template-index")->with('success', 'Template Activated Successfully');
     }
+    
     public function deactivate($tempalte_id){
         DB::table('template_copy')->where('id' , $tempalte_id)->update(["status"=> 0]);
         return redirect()->route("template-index")->with('success', 'Template Deactivated Successfully');

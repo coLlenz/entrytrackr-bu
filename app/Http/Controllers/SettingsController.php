@@ -33,7 +33,7 @@ class SettingsController extends Controller{
         ]);
         if ($validator->passes()) {
             $new_admin = new User;
-            $new_admin->uuid = Str::uuid()->toString();
+            $new_admin->uuid = auth()->user()->uuid;
             $new_admin->sub_account = 1;
             $new_admin->sub_account_id = auth()->user()->id;
             $new_admin->name = $request->admin_name;
@@ -41,10 +41,9 @@ class SettingsController extends Controller{
             $new_admin->email = $request->admin_email;
             $new_admin->password = Hash::make($request->admin_password);
             $new_admin->is_admin = 0;
+            $new_admin->qr_path = auth()->user()->qr_path;
             
             if ($new_admin->save()) {
-                $new_admin->qr_path = $this->generateCode($new_admin->uuid , $new_admin->id);
-                $new_admin->save();
                 return response()->json(['msg' => 'New admin added']);
             }
         }
