@@ -26,23 +26,23 @@
                     @csrf
                     <div class="form-group">
                         <label>First Name</label>
-                        <input type="text" class="form-control" name="fname">
+                        <input type="text" class="form-control" name="fname" required>
                     </div>
                     <div class="form-group">
                         <label>Last Name</label>
-                        <input type="text" class="form-control" name="lname">
+                        <input type="text" class="form-control" name="lname" required>
                     </div>
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="text" class="form-control" name="number">
+                        <input type="text" class="form-control" name="number" required>
                     </div>
                     <div class="form-group">
                         <label>Enter a trakrID</label>
-                        <input type="text" class="form-control" name="trakrid">
+                        <input type="text" class="form-control" name="trakrid" required>
                     </div>
                     <div class="form-group">
                         <label>Visitor Type</label>
-                        <select class="form-control select2-single" data-width="100%" name="vtype">
+                        <select class="form-control select2-single" data-width="100%" name="vtype" required>
                         <option label="&nbsp;">&nbsp;</option>
                         <option value="1">Visitor</option>
                         <option value="2">Contractor</option>
