@@ -288,7 +288,6 @@ class TrakrViewController extends Controller
         $question = DB::table('template_copy')->select('questions' , 'title' , 'user_id')->where('id' , $request->questionId)->first();
         $decoded = json_decode( $question->questions );
         $wrong = 0;
-        $index = 0;
         $answers = [];
         
         // Answer with Choices Only
