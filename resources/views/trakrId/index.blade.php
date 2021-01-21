@@ -73,7 +73,8 @@ $(document).ready(function(){
                     data : {data_id : data_id},
                     success: function(response){
                         if (response.status) {
-                            $(thiS).closest('tr').fadeOut();
+                            alert('Completed')
+                            // $(thiS).closest('tr').fadeOut();
                         }
                     }
                 })
