@@ -138,6 +138,12 @@ Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(functio
 	Route::post('/upload/{id}', [UploadImagesController::class, 'store'])->name('image-upload');	
 });
 
+Route::prefix('timezone')->middleware(['auth'])->group(function(){
+	Route::get('/' , function( Request $request ){
+		echo Carbon::now();
+	});
+});
+
 Route::view('profile', 'profile.edit')
 	->name('profile.edit')
 	->middleware(['auth']);

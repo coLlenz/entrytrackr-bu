@@ -32,7 +32,7 @@
                             @foreach($lists as $list)
                                 <tr>
                                     <td class="text-center">{{$list->visitor_name}}</td>
-                                    <td class="text-center">{{ \Carbon\Carbon::parse($list->created_at)->format('d-m-Y H:i')}}</td>
+                                    <td class="text-center">{{ \Carbon\Carbon::parse($list->created_at)->timezone(userTz())->format('d-m-Y H:i')}}</td>
                                     <td class="text-center">{{$list->temperature}}</td>
                                     <td class="text-center">{{$list->question_title}}</td>
                                     <td class="text-center">

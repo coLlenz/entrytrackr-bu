@@ -45,7 +45,7 @@ class TrakrViewController extends Controller
                 $visitor->check_in_date = date('Y-m-d H:i:s');
                 $visitor->check_out_date = null;
                 $visitor->trakr_type_id = $request->visitor_type;
-                $formated_date = Carbon::parse($visitor->check_in_date)->format('d F Y g:i A');
+                $formated_date = Carbon::parse($visitor->check_in_date)->timezone(userTz())->format('d F Y g:i A');
                 
                 if ( !$visitor->save() ) {
                     return response()->json(['status' => 'fail','msg' => 'There\'s a problem creating your record.'],200);
@@ -78,8 +78,8 @@ class TrakrViewController extends Controller
             $trakr_new->user_id = ($userid) ? $userid : auth()->user()->id;
             $trakr_new->status = 0;
             $trakr_new->checked_in_status = 0;
-            $trakr_new->check_in_date = date('Y-m-d H:i:s');
-            $formated_date = Carbon::parse($trakr_new->check_in_date)->format('d F Y g:i A');
+            $trakr_new->check_in_date = Carbon::now();
+            $formated_date = Carbon::parse($trakr_new->check_in_date)->timezone(userTz())->format('d F Y g:i A');
             
             if ($trakr_new->save()) {
                 // save logs
@@ -138,7 +138,7 @@ class TrakrViewController extends Controller
             }
             
             //update status if not logged in
-            $trakr = Trakr::where('trakr_id' ,$request->trakrid)->update(['checked_in_status' => 0,'check_in_date' => date('Y-m-d H:i:s') , 'check_out_date' => null]);
+            $trakr = Trakr::where('trakr_id' ,$request->trakrid)->update(['checked_in_status' => 0,'check_in_date' => Carbon::now() , 'check_out_date' => null]);
             
             //get updated data
             $check_in_data = Trakr::where('trakr_id' ,$request->trakrid)->first();
@@ -190,9 +190,13 @@ class TrakrViewController extends Controller
             
             //update data to logged out
             $trakr->checked_in_status = 1;
-            $trakr->check_out_date = date('Y-m-d H:i:s');
+            $trakr->check_out_date = Carbon::now();
             if ($trakr->save()) {
-                $updated_data = Trakr::select('check_out_date')->where('phoneNumber' , $request->phoneNumber)->first();
+                $updated_data = Trakr::select('check_out_date')->where([
+                    'firstName' => $request->first_name,
+                    'lastName' => $request->last_name,
+                    'phoneNumber' => $request->phoneNumber,
+                ])->first();
                 
                 $this->visitLog($trakr->id , $trakr->user_id  , 1);
                 
@@ -232,7 +236,7 @@ class TrakrViewController extends Controller
     }
 
     public function carbonFormat($date){
-        return Carbon::parse($date)->format('d F Y g:i A');
+        return Carbon::parse($date)->timezone(userTz())->format('d F Y g:i A');
     }
     
     public function checkIfLoggedIn($condition){
@@ -321,7 +325,7 @@ class TrakrViewController extends Controller
             'freetext' =>  $request->freetext ? json_encode($request->freetext) : '',
             'answers' => json_encode($answers),
             'status' => $wrong > 0 ? 1 : 0,
-            'created_at' => date('Y-m-d H:i:s')
+            'created_at' => Carbon::now()
         ]);
         // end logs
         
@@ -332,7 +336,7 @@ class TrakrViewController extends Controller
             $trakr->save();
             return response()->json(['status' => 'success' , 'examStatus' => false , 'logs' => $logs ? true : false] , 200);
         }else{
-            $formated_date = Carbon::parse($trakr->check_in_date)->format('d F Y g:i A');
+            $formated_date = $this->carbonFormat($trakr->check_in_date);
             return response()->json(
                 [
                     'status' => 'success',
@@ -392,7 +396,7 @@ class TrakrViewController extends Controller
             'visitor_id' => $visitor_id ? $visitor_id : null,
             'user_id' => $user_id,
             'action' => $status,
-            'created_at' => date('Y-m-d H:i:s')
+            'created_at' => Carbon::now()
         ]);
         
         return $logs ? true : false; 

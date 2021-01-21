@@ -15,8 +15,8 @@ class DashboardController extends Controller
         $list_data['evac_list'] = $dash->getdash_evac();
         $list_data['total_sign_in'] = $dash->total_sign_in();
         $piedata = $dash->getdast_pie();
-        $date = get_local_time( Carbon::now() , $request->ip() )->format('d F Y');
-        $time = get_local_time( Carbon::now() , $request->ip() )->format('g:i A');
+        $date = Carbon::now()->timezone( userTz() )->format('d F Y');
+        $time = Carbon::now()->timezone( userTz() )->format('g:i A');
         
         return view('home')
         ->with('list_data' , $list_data)
