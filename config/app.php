@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'Australia/Melbourne',
+    'timezone' => get_local_time(),
 
     /*
     |--------------------------------------------------------------------------
