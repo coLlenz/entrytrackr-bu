@@ -303,7 +303,7 @@ class TrakrViewController extends Controller
                     array_push($answers , $input);
                 }else{
                     if ( ucfirst($decoded[$idx]->correctAnswer) ==  ucfirst($input)) {
-                        // do nothing
+                        array_push($answers , $input);
                     }else{
                         array_push($answers , $input);
                         $wrong++;
