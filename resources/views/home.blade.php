@@ -88,7 +88,7 @@
                                                         <tr>
                                                             <td>{{$signin->firstName}} {{$signin->lastName}}</td>
                                                             <td>{{$signin->type}}</td>
-                                                            <td class="color-theme-1">{{\Carbon\Carbon::parse($signin->created_at)->diffForHumans()}}</td>
+                                                            <td class="color-theme-1">{{\Carbon\Carbon::parse($signin->created_at)->timezone(userTz())->diffForHumans()}}</td>
                                                         </tr>
                                                         @endforeach
                                                     @else
@@ -111,7 +111,7 @@
                                                             <tr>
                                                                 <td>{{$assist->firstName}} {{$assist->lastName}}</td>
                                                                 <td>{{$assist->type}}</td>
-                                                                <td class="color-theme-1">{{\Carbon\Carbon::parse($assist->created_at)->diffForHumans()}}</td>
+                                                                <td class="color-theme-1">{{\Carbon\Carbon::parse($assist->created_at)->timezone(userTz())->diffForHumans()}}</td>
                                                             </tr>
                                                         @endforeach
                                                     @else
@@ -144,7 +144,7 @@
                                   <tr>
                                     <td>{{$evac->firstName}} {{$evac->lastName}}</td>
                                     <td class="color-theme-1">{{$evac->type}}</td>
-                                    <td>{{\Carbon\Carbon::parse($evac->check_in_date)->format('d-m-y H:i')}}</td>
+                                    <td>{{\Carbon\Carbon::parse($evac->check_in_date)->timezone(userTz())->format('d-m-y H:i')}}</td>
                                     <td>
                                         <div class="custom-control custom-switch">
                                             @if($evac->safe == 'safe')
@@ -155,7 +155,7 @@
                                             <label class="custom-control-label" for="switch{{$evac->id}}">{{''}}</label>
                                         </div>
                                     </td>
-                                    <td class="text-center safe_date{{$evac->id}}">{{$evac->date_marked_safe ? $evac->date_marked_safe : 'No records yet'}}</td>
+                                    <td class="text-center safe_date{{$evac->id}}">{{$evac->date_marked_safe ? \Carbon\Carbon::parse($evac->date_marked_safe)->timezone(userTz())->format('d-m-y H:i') : 'No records yet'}}</td>
                                   </tr>
                               @endforeach
                             @endif

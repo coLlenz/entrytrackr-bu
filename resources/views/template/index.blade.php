@@ -7,7 +7,7 @@
         <button type="button" class="btn btn-primary btn-lg top-right-button  mr-1" data-toggle="dropdown" aria-haspopup="true"
     aria-expanded="false">ADD NEW</button> 
     <div class="dropdown-menu dropdown-menu-right mt-3">
-        <a class="dropdown-item" href="{{route('notification-add')}}">Notification/Alert</a>
+        <a class="dropdown-item" href="{{route('notification-add')}}">Notification</a>
         <a class="dropdown-item" href="{{route('questionnaire-add')}}">Questionnaire</a>
     </div>
     </div>
@@ -32,7 +32,7 @@
                     @foreach ($templates as $template )
                     <tr>
                         <td>{{$template->title}}</td>
-                        <td>{{$template->template_type == 1 ? 'Notification/Alert' : 'Questionnaire' }}</td>
+                        <td>{{$template->template_type == 1 ? 'Notification' : 'Questionnaire' }}</td>
                         <td>{{ \Carbon\Carbon::parse($template->created_at)->format('d-m-Y H:i') }}</td>
                         <td>{{ \Carbon\Carbon::parse($template->updated_at)->format('d-m-Y H:i') }}</td>
                         @if(!auth()->user()->is_admin)

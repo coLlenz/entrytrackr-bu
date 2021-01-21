@@ -6,6 +6,7 @@ use App\Models\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
+use Carbon\Carbon;
 class TemplateController extends Controller
 {
 
@@ -68,7 +69,9 @@ class TemplateController extends Controller
             'description' => '',
             'content_html' => '',
             'content_json' => $request->jsondata,
-            'template_type' => 1
+            'template_type' => 1,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ]);
         
         $template_id = DB::getPdo()->lastInsertId();
@@ -96,7 +99,7 @@ class TemplateController extends Controller
             $template = Template::findOrfail($template_id);
             $template->title = $request->title;
             $template->content_json = $request->jsondata;
-            $template->updated_at = date('Y-m-d H:i:s');
+            $template->updated_at = Carbon::now()->format('Y-m-d H:i:s');
             if ( $template->save() ) {
                 return response()->json(['status' => 'success'] , 200);
             }else{
@@ -109,7 +112,7 @@ class TemplateController extends Controller
             [
                 'title' => $request->title,
                 'content_json' => $request->jsondata,
-                'updated_at' => date('Y-m-d H:i:s')
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ]
         );
         if ($template) {
@@ -161,7 +164,9 @@ class TemplateController extends Controller
             'questions' => $request->question_data,
             'questions_to_flg' => $request->toVisitor,
             'status' => 0,
-            'template_type' => 0
+            'template_type' => 0,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ]);
         
         if ($template) {
@@ -202,7 +207,7 @@ class TemplateController extends Controller
             'content_html' => $request->question_html,
             'questions' => $request->question_data,
             'questions_to_flg' => $request->toVisitor,
-            'updated_at' => date('Y-m-d H:i:s')
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
         
         if ($template) {
@@ -236,7 +241,7 @@ class TemplateController extends Controller
         if (!empty($active_template) && $active_template->status) {
             DB::table('template_copy')->where([
                 'id' => $active_template->id
-            ])->update(['status' => 0 , 'updated_at' => date('Y-m-d H:i:s')]);
+            ])->update(['status' => 0 , 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')]);
         }
         
         DB::table('template_copy')->where([

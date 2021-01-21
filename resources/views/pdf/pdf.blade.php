@@ -18,7 +18,7 @@
         </tr>
             @foreach($trakrs as $trakr)
                 <tr>
-                    <td>{{ \Carbon\Carbon::parse($trakr->check_in_date)->format('d-m-Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($trakr->check_in_date)->timezone(userTz())->format('d-m-Y H:i') }}</td>
                     <td>{{$trakr->firstName}} {{$trakr->lastName}}</td>
                     <td class="color-theme-1">{{$trakr->type}}</td>
                     <td class="color-theme-1">{{$trakr->assistance == 0 ? 'No' : 'Yes'}}</td>
@@ -32,7 +32,7 @@
                             <label class="custom-control-label" for="switch{{$trakr->id}}">{{''}}</label>
                         </div>
                     </td>
-                    <td class="text-center safe_date{{$trakr->id}}">{{$trakr->date_marked_safe ? $trakr->date_marked_safe : 'Pending'}}</td>
+                    <td class="text-center safe_date{{$trakr->id}}">{{$trakr->date_marked_safe ? \Carbon\Carbon::parse($trakr->date_marked_safe)->timezone(userTz())->format('d-m-y H:i') : 'Pending'}}</td>
                 </tr>
             @endforeach
         </table>

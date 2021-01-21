@@ -141,8 +141,8 @@
                                             <tr>
                                                 <td>{{$list->firstName}} {{$list->lastName}}</td>
                                                 <td class="text-center">{{$list->phoneNumber}}</td>
-                                                <td class="text-center">{{ \Carbon\Carbon::parse($list->check_in_date)->format('d-m-Y H:i') }}</td>
-                                                <td class="text-center">{{$list->check_out_date ? \Carbon\Carbon::parse($list->check_out_date)->format('d-m-Y H:i') : 'Pending'}}</td>
+                                                <td class="text-center">{{ \Carbon\Carbon::parse($list->check_in_date)->timezone(userTz())->format('d-m-Y H:i') }}</td>
+                                                <td class="text-center">{{$list->check_out_date ? \Carbon\Carbon::parse($list->check_out_date)->timezone(userTz())->format('d-m-Y H:i') : 'Pending'}}</td>
                                                 <td class="text-center">
                                                     @if($list->assistance == 0)
                                                         <span class="badge badge-pill badge-primary">{{'No'}}</span>
