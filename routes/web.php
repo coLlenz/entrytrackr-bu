@@ -13,6 +13,9 @@ use App\Http\Controllers\UploadImagesController;
 use App\Http\Controllers\LocationController;
 use App\Models;
 use Illuminate\Support\Facades\Route;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -134,6 +137,7 @@ Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(functio
 	Route::get('/upload/{id}', [UploadImagesController::class, 'index'])->name('uploadimage-view');
 	Route::post('/upload/{id}', [UploadImagesController::class, 'store'])->name('image-upload');	
 });
+
 Route::view('profile', 'profile.edit')
 	->name('profile.edit')
 	->middleware(['auth']);

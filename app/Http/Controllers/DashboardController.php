@@ -7,17 +7,17 @@ use Carbon\Carbon;
 use PDF;
 class DashboardController extends Controller
 {
-    public function index(){
+    public function index(Request $request ){
         $list_data = [];
-        $date_time = date('H:i A');
         $dash = new DashBoard();
         $list_data['current_signin'] = $dash->getdash_data();
         $list_data['need_assistance'] = $dash->getdash_assistance();
         $list_data['evac_list'] = $dash->getdash_evac();
         $list_data['total_sign_in'] = $dash->total_sign_in();
         $piedata = $dash->getdast_pie();
-        $date = date('d F Y');
-        $time = Carbon::now()->format('g:i A');
+        $date = get_local_time( Carbon::now() , $request->ip() )->format('d F Y');
+        $time = get_local_time( Carbon::now() , $request->ip() )->format('g:i A');
+        
         return view('home')
         ->with('list_data' , $list_data)
         ->with('date' , $date)
