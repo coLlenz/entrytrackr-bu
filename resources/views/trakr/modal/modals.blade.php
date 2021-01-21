@@ -26,6 +26,8 @@
             </button>
           </div>
           <div class="modal-body">
+            <p class="mb-4"><h3 style="font-size:inherit;">The details that you enter here are case-sensitive.</h3></p>
+            <p> <h3 style="font-size:inherit;"> Ensure that you enter the same information that you used to sign in (e.g. if you used a space in your phone number when signing in, you must use a space when signing out. This also includes the use of capitalised letters in your name). </h3> </p>    
             <form id="form_checkout" action="{{route('trakrid-signout')}}" method="post" class="needs-validation" novalidate>
                 @csrf
                 <div class="form-group">

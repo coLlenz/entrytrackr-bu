@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\DashBoard;
 use App\Models\Trakr;
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
 class TrakrController extends Controller
 {
     /**
@@ -172,7 +172,7 @@ class TrakrController extends Controller
     public function manualSignOut(Request $request){
         $manual = Trakr::findOrFail($request->data_id);
         $manual->checked_in_status = 1;
-        $manual->check_out_date = date('Y-m-d H:i:s');
+        $manual->check_out_date = Carbon::now();
         if ($manual->save()) {
             return response()->json(['status' => true] , 200);
         }

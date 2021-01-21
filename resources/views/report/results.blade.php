@@ -15,7 +15,7 @@
                         <div class="col-md-4">
                             <div class="visitorInfo">
                                 <p class="font-weight-bold p_line" > Visitor Name:</p> <p class="p_line">  {{ $results->visitor_name }}</p> <br>
-                                <p class="font-weight-bold p_line"> Date of Entry:</p> <p class="p_line"> {{ \Carbon\Carbon::parse($results->created_at)->timezone(userTz())->format('D M y H:i') }} </p>
+                                <p class="font-weight-bold p_line"> Date of Entry:</p> <p class="p_line"> {{ \Carbon\Carbon::parse($results->created_at)->timezone(userTz())->format('d-m-Y H:i') }} </p>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -73,9 +73,8 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="card-footer text-muted">
-                        <button class="btn btn-primary btn-lg float-right btnResultDownload" >Download</button>
-                    </div>
+                    <hr/>
+                    <button class="btn btn-primary btn-lg float-right btnResultDownload" >Download</button>
                 </div>
             </div>
         </div>

@@ -96,9 +96,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $id)
-    {
-
+    public function update(Request $request, User $id){
         if ($request->input('password')) {
             $this->validate($request, [
                 'email' => 'required|unique:users',
@@ -111,11 +109,13 @@ class UserController extends Controller
                 [
                     'name' => $request->input('name'),
                     'contactName' => $request->input('cname'),
-                    // 'email' => $request->input('email'),
+                    'email' => $request->input('email'),
+                    'timezone' => $request->input('timezone'),
                     'password' => Hash::make($request->input('password')),
                 ]
             );
         } else {
+            
             $this->validate($request, [
                 // 'email' => 'required|unique:users',
                 'name' => 'required',
@@ -126,6 +126,7 @@ class UserController extends Controller
                     'name' => $request->input('name'),
                     'contactName' => $request->input('cname'),
                     'email' => $request->input('email'),
+                    'timezone' => $request->input('timezone'),
                 ]
             );
         }

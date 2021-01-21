@@ -24,6 +24,7 @@ class User extends Authenticatable
         'name',
         'contactName',
         'email',
+        'timezone',
         'password',
         'is_admin'
     ];
