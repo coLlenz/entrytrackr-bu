@@ -134,6 +134,13 @@ Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(functio
 	Route::get('/upload/{id}', [UploadImagesController::class, 'index'])->name('uploadimage-view');
 	Route::post('/upload/{id}', [UploadImagesController::class, 'store'])->name('image-upload');	
 });
+
+Route::prefix('timezone')->middleware(['auth'])->group(function(){
+	Route::get('/' , function(){
+		echo date_default_timezone_get();
+	});
+});
+
 Route::view('profile', 'profile.edit')
 	->name('profile.edit')
 	->middleware(['auth']);
