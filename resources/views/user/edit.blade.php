@@ -32,6 +32,23 @@
                             <input name="email" type="email" class="form-control" id="example3cols1Input" placeholder="Enter Email" required value="{{$id->email}}">
                         </div>
                         <div class="form-group">
+                            <label class="form-control-label" for="example3cols1Input">Timezone</label>
+                            <select class="form-control" name="timezone" id="timezone">
+                                <option value="Australia/Adelaide">Australia/Adelaide</option>
+                                <option value="Australia/Brisbane">Australia/Brisbane</option>
+                                <option value="Australia/Broken_Hill">Australia/Broken_Hill</option>
+                                <option value="Australia/Currie">Australia/Currie</option>
+                                <option value="Australia/Darwin">Australia/Darwin</option>
+                                <option value="Australia/Eucla">Australia/Eucla</option>
+                                <option value="Australia/Hobart">Australia/Hobart</option>
+                                <option value="Australia/Lindeman">Australia/Lindeman</option>
+                                <option value="Australia/Lord_Howe">Australia/Lord_Howe</option>
+                                <option value="Australia/Melbourne">Australia/Melbourne</option>
+                                <option value="Australia/Perth">Australia/Perth</option>
+                                <option value="Australia/Sydney">Australia/Sydney</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label class="form-control-label" for="example3cols1Input">Password</label>
                             <input name="password" type="password" class="form-control" id="example3cols1Input" placeholder="Set Password" >
                         </div>
@@ -47,11 +64,9 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('script')
-
-@endsection
-
-@section('style')
+<script src="{{ asset('js/vendor/jquery-3.3.1.min.js')}}"></script>
+<script type="text/javascript">
+    var timezone = "{!! $id->timezone !!}";
+    $('#timezone').val(timezone);
+</script>
 @endsection

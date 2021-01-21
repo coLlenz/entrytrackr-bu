@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Trakr;
 use Illuminate\Console\Command;
-
+use Carbon\Carbon;
 class SignOutAll extends Command
 {
     /**
@@ -39,7 +39,7 @@ class SignOutAll extends Command
     public function handle(Trakr $trakr)
     {
         $signIn = Trakr::where('checked_in_status', '0')
-        ->update(['checked_in_status' => 1, 'check_out_date' => date('Y-m-d H:i:s')]);
+        ->update(['checked_in_status' => 1, 'check_out_date' => Carbon::now()]);
         return $signIn;
     }
 }

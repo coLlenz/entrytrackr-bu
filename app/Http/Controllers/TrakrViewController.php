@@ -291,14 +291,27 @@ class TrakrViewController extends Controller
     public function visitorAnswer(Request $request){
         $question = DB::table('template_copy')->select('questions' , 'title' , 'user_id')->where('id' , $request->questionId)->first();
         $decoded = json_decode( $question->questions );
+        $idx = 0;
         $wrong = 0;
         $answers = [];
         
         // Answer with Choices Only
         foreach ($request->all() as $key => $input) {
             if ($key != 'questionId' && $key != 'trakrid' && $key !='temp_check' && $key !='freetext') {
-                array_push($answers , $input);
+                $count = count(explode(",", $decoded[$idx]->correctAnswer)) ;
+                if ($count == 2) {
+                    array_push($answers , $input);
+                }else{
+                    if ( ucfirst($decoded[$idx]->correctAnswer) ==  ucfirst($input)) {
+                        // do nothing
+                    }else{
+                        array_push($answers , $input);
+                        $wrong++;
+                    }
+                }
+                
             }
+            $idx++;
         }
         
         // Temperature Check

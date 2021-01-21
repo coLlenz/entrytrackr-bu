@@ -52,7 +52,7 @@
                                     <div class="card mt-2">
                                         <div class="card-body text-left">
                                             <p class="text-left">Currently Signed In</p>
-                                            <p class="lead color-theme-1" style="font-size: 56px;">{{$list_data['total_sign_in']}}</p>
+                                            <p class="lead color-theme-1" style="font-size: 56px;" id="visit_count">{{$list_data['total_sign_in']}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -89,6 +89,7 @@
                                                             <td>{{$signin->firstName}} {{$signin->lastName}}</td>
                                                             <td>{{$signin->type}}</td>
                                                             <td class="color-theme-1">{{\Carbon\Carbon::parse($signin->created_at)->timezone(userTz())->diffForHumans()}}</td>
+                                                            <td> <button type="button" name="dashBoardSignOut" class="btn btn-primary entry_sm_btn" visitor-id="{{$signin->id}}">Sign Out</button> </td>
                                                         </tr>
                                                         @endforeach
                                                     @else
@@ -174,6 +175,7 @@
 <script src="{{ asset('js/vendor/chartjs-plugin-datalabels.js') }}"></script>
 <script src="{{ asset('js/vendor/datatables.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{{ asset('js/vendor/sweetalert2@10.js') }}" charset="utf-8"></script>
 <script>
   
   function checkbox(i){
@@ -285,6 +287,34 @@
         }
         });
     }
+</script>
+<script type="text/javascript">
+    $('.entry_sm_btn').on('click' , function() {
+        var id = $(this).attr('visitor-id');
+        var target = $(this).closest('tr');
+        Swal.fire({
+            title: 'This will manually sign out the visitor.',
+            showCloseButton: true,
+            showCancelButton: true,
+            confirmButtonText: `Procced`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+                Swal.showLoading();
+                $.ajax({
+                    url :`{{route('manualSignOut')}}`,
+                    type : 'POST',
+                    data : {data_id : id},
+                    success: function(response){
+                        if (response.status) {
+                            target.remove();
+                            $('#visit_count').text(Number($('#visit_count').text()) - 1);
+                        }
+                    }
+                })
+            }
+        })
+    })
 </script>
 @endsection
 

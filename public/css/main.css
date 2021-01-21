@@ -32,6 +32,13 @@ body.show-spinner::after{
     z-index: 1;
 }
 
+.entry_sm_btn{
+    padding: 3px;
+    border-radius: 3px;
+    width: 70px;
+    font-size: 10px;
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);

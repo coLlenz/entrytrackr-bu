@@ -18,6 +18,7 @@
                     <th>Account Name</th>
                     <th>Contact Name</th>
                     <th>Email</th>
+                    <th>Timezone</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -33,6 +34,7 @@
                             <td>{{$user->name}}</td>
                             <td>{{$user->contactName}}</td>
                             <td>{{$user->email}}</td>
+                            <td>{{$user->timezone}}</td>
                             <td>
                                 <button class="btn btn-primary dropdown-toggle mb-1" type="button"
                                     id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
