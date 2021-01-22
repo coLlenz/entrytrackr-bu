@@ -67,12 +67,6 @@
                 <div class="col-md-12 text-center">
                     <h1 class="" style="font-size: 30px; font-weight:bold;">WELCOME</h1>
                 </div>
-                @if($view_data['has_profile'])
-                <img src="{{ $view_data['has_profile'] }}" alt="" style="width:200px; height:auto; margin-bottom:1rem;">
-                @else
-                <img src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/img/logo.png" alt="" style="width:200px; height:auto; margin-bottom:1rem;">
-                @endif
-                
             </div>
 
             <div class="row justify-content-center">

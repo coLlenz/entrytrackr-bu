@@ -18,5 +18,5 @@ function get_local_time($date_ , $user_ip){
 }
 
 function userTz(){
-    return auth()->user()->timezone ? auth()->user()->timezone : 'UTC';
+    return isset(auth()->user()->timezone) ? auth()->user()->timezone : 'UTC';
 }
