@@ -202,6 +202,7 @@
     
     $(form2).on('submit' , function(e){
         e.preventDefault();
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         if (this.checkValidity()) {
             $.ajax({
                 url : form2.attr('action'),

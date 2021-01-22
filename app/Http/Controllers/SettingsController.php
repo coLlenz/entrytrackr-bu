@@ -42,6 +42,7 @@ class SettingsController extends Controller{
             $new_admin->password = Hash::make($request->admin_password);
             $new_admin->is_admin = 0;
             $new_admin->qr_path = auth()->user()->qr_path;
+            $new_admin->timezone = auth()->user()->timezone;
             
             if ($new_admin->save()) {
                 return response()->json(['msg' => 'New admin added']);
