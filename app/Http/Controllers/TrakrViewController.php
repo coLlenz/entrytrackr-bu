@@ -291,27 +291,35 @@ class TrakrViewController extends Controller
     public function visitorAnswer(Request $request){
         $question = DB::table('template_copy')->select('questions' , 'title' , 'user_id')->where('id' , $request->questionId)->first();
         $decoded = json_decode( $question->questions );
-        $idx = 0;
+        $user_answer = array_diff_key($request->all(), array_flip(["questionId", "trakrid", "temp_check" , "freetext"]));
+        $array_keys = array_keys($user_answer);
         $wrong = 0;
         $answers = [];
+        $basic_questions = [];
         
-        // Answer with Choices Only
-        foreach ($request->all() as $key => $input) {
-            if ($key != 'questionId' && $key != 'trakrid' && $key !='temp_check' && $key !='freetext') {
-                $count = count(explode(",", $decoded[$idx]->correctAnswer)) ;
+        //remove freetext
+        foreach ($decoded as $key => $value) {
+            if ($value->type == 'basic') {
+                array_push($basic_questions , $value );
+            }
+        }
+        
+        if (!empty($basic_questions) && isset($basic_questions)) {
+            foreach ($basic_questions as $key => $value) {
+                $count = count(explode("," , $value->correctAnswer));
                 if ($count == 2) {
-                    array_push($answers , $input);
+                    array_push($answers , $user_answer[$array_keys[$key]]);
                 }else{
-                    if ( ucfirst($decoded[$idx]->correctAnswer) ==  ucfirst($input)) {
-                        array_push($answers , $input);
+                    
+                    if ($value->correctAnswer == $user_answer[$array_keys[$key]] ) {
+                        array_push($answers , $user_answer[$array_keys[$key]]);
                     }else{
-                        array_push($answers , $input);
+                        array_push($answers , $user_answer[$array_keys[$key]]);
                         $wrong++;
                     }
+                    
                 }
-                
             }
-            $idx++;
         }
         
         // Temperature Check
