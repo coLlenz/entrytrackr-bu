@@ -108,7 +108,7 @@
                     <img class=""  src="{{ $view_data['qr_path'] }}" alt="" height="250" width="250">
                 </div>
                 <div class="card-footer col-md-12 col-sm-12">
-                    <p class="text-center font-medium card-text mb-0" style="font-size: 17px;">
+                    <p class="text-center font-medium card-text mb-0" style="font-size: 13px;">
                         Scan the QR code with your smartphone camera to <br>
                         <strong>Sign In</strong> or <strong>Sign Out</strong>
                     </p>

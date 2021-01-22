@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
     <style media="screen">
         .bg{
-            background: #B19CD9;
+            background:#A68BD9;
             /* background: linear-gradient(90deg, rgba(41,91,136,1) 4%, rgba(177,46,177,1) 35%, rgba(110,82,212,1) 93%); */
             background-size: auto; 
             opacity: 20%; 
