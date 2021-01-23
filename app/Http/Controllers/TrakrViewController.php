@@ -35,6 +35,8 @@ class TrakrViewController extends Controller
             'visitor_type' => 'required'
         ]);
         
+        $timezone = isset( $request->timezone  ) ? $request->timezone : userTz();
+        
         if ($validator->passes()) {
             // check if existing data 
             $checking = $this->checkIfLoggedIn($request->all());
@@ -45,7 +47,8 @@ class TrakrViewController extends Controller
                 $visitor->check_in_date = date('Y-m-d H:i:s');
                 $visitor->check_out_date = null;
                 $visitor->trakr_type_id = $request->visitor_type;
-                $formated_date = Carbon::parse($visitor->check_in_date)->timezone(userTz())->format('d F Y g:i A');
+                
+                $formated_date = Carbon::parse($visitor->check_in_date)->timezone( $timezone )->format('d F Y g:i A');
                 
                 if ( !$visitor->save() ) {
                     return response()->json(['status' => 'fail','msg' => 'There\'s a problem creating your record.'],200);
@@ -79,7 +82,7 @@ class TrakrViewController extends Controller
             $trakr_new->status = 0;
             $trakr_new->checked_in_status = 0;
             $trakr_new->check_in_date = Carbon::now();
-            $formated_date = Carbon::parse($trakr_new->check_in_date)->timezone(userTz())->format('d F Y g:i A');
+            $formated_date = Carbon::parse($trakr_new->check_in_date)->timezone( $timezone )->format('d F Y g:i A');
             
             if ($trakr_new->save()) {
                 // save logs
@@ -125,16 +128,19 @@ class TrakrViewController extends Controller
     }
     
     public function trakrid(Request $request){
+        
         // SIMPLE CHECK IN
         $validator = Validator::make($request->all(), [
             'trakrid' => 'required',
         ]);
         
+        $timezone = isset( $request->timezone  ) ? $request->timezone : userTz();
+        
         if ($validator->passes()) {
             // check if logged in already
             $checking = $this->checkIfLoggedIn($request->all());
             if (isset( $checking['is_loggedin'] ) && $checking['is_loggedin'] == 0) {
-                return response()->json(['status' => 'loggedin' , 'check_date' => $this->carbonFormat($checking['check_date'])] , 200 );
+                return response()->json(['status' => 'loggedin' , 'check_date' => $this->carbonFormat($checking['check_date'] , $timezone)] , 200 );
             }
             
             //update status if not logged in
@@ -142,7 +148,7 @@ class TrakrViewController extends Controller
             
             //get updated data
             $check_in_data = Trakr::where('trakr_id' ,$request->trakrid)->first();
-            $date = $this->carbonFormat($check_in_data->check_in_date);
+            $date = $this->carbonFormat($check_in_data->check_in_date , $timezone);
             
             // save log
             $this->visitLog($check_in_data->id , $check_in_data->user_id , 0);
@@ -170,11 +176,13 @@ class TrakrViewController extends Controller
             'phoneNumber' => 'required',
         ]);
         
+        $timezone = isset( $request->timezone  ) ? $request->timezone : userTz();
+        
         if ($validator->passes()) {
             // checking user status
             $checking = $this->checkIfLoggedIn($request->all());
             if (isset( $checking['is_loggedin'] ) && $checking['is_loggedin'] == 1) {
-                return response()->json(['status' => 'loggedout' , 'check_date' => $this->carbonFormat($checking['check_out_date'])] , 200 );
+                return response()->json(['status' => 'loggedout' , 'check_date' => $this->carbonFormat($checking['check_out_date'] , $timezone)] , 200 );
             }
             
             //get user datas
@@ -204,7 +212,7 @@ class TrakrViewController extends Controller
                     [
                         'status' => 'success' ,
                         'name' => $trakr->firstName ,
-                        'check_date' => $this->carbonFormat($updated_data->check_out_date)
+                        'check_date' => $this->carbonFormat($updated_data->check_out_date , $timezone)
                     ] , 200 );
             }
         }else{
@@ -235,8 +243,8 @@ class TrakrViewController extends Controller
         return response()->json(['status' => 'fail'] , 200);
     }
 
-    public function carbonFormat($date){
-        return Carbon::parse($date)->timezone(userTz())->format('d F Y g:i A');
+    public function carbonFormat($date , $timezone){
+        return Carbon::parse($date)->timezone( $timezone )->format('d F Y g:i A');
     }
     
     public function checkIfLoggedIn($condition){
@@ -296,7 +304,7 @@ class TrakrViewController extends Controller
         $wrong = 0;
         $answers = [];
         $basic_questions = [];
-        
+        $timezone = isset( $request->timezone  ) ? $request->timezone : userTz();
         //remove freetext
         foreach ($decoded as $key => $value) {
             if ($value->type == 'basic') {
@@ -357,7 +365,7 @@ class TrakrViewController extends Controller
             $trakr->save();
             return response()->json(['status' => 'success' , 'examStatus' => false , 'logs' => $logs ? true : false] , 200);
         }else{
-            $formated_date = $this->carbonFormat($trakr->check_in_date);
+            $formated_date = $this->carbonFormat($trakr->check_in_date , $timezone);
             return response()->json(
                 [
                     'status' => 'success',
@@ -401,13 +409,14 @@ class TrakrViewController extends Controller
     }
     
     public function QRLoginView( $uuid , $userid ){
-        $qr_path = DB::table('users')->where('id' ,$userid)->first();
+        $user = DB::table('users')->where('id' ,$userid)->first();
         $view_data = [];
         $view_data['is_mobile'] = true;
         $view_data['uuid'] = $uuid;
         $view_data['userid'] = $userid;
-        $view_data['qr_path'] = $qr_path->qr_path;
-        $view_data['has_profile'] = $qr_path->profile_path ? $qr_path->profile_path : false;
+        $view_data['qr_path'] = $user->qr_path;
+        $view_data['timezone'] = $user->timezone;
+        $view_data['has_profile'] = $user->profile_path ? $user->profile_path : false;
         return view('trakr.mobile')->with('view_data' , $view_data);
     }
     

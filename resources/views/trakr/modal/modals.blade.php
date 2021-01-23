@@ -28,34 +28,7 @@
           <div class="modal-body">
             <p class="mb-4"><h3 style="font-size:inherit;">The details that you enter here are case-sensitive.</h3></p>
             <p> <h3 style="font-size:inherit;"> Ensure that you enter the same information that you used to sign in (e.g. if you used a space in your phone number when signing in, you must use a space when signing out. This also includes the use of capitalised letters in your name). </h3> </p>    
-            <form id="form_checkout" action="{{route('trakrid-signout')}}" method="post" class="needs-validation" novalidate>
-                @csrf
-                <div class="form-group">
-                    <label for="first_name" class="col-form-label">First Name</label>
-                    <input type="text" class="form-control" name="first_name" required>
-                    <div class="invalid-feedback">
-                        <h3>First Name is require.</h3>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="last_name" class="col-form-label">Last Name</label>
-                    <input type="text" class="form-control" name="last_name" required>
-                    <div class="invalid-feedback">
-                        <h3>Last Name is require.</h3>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="last_name" class="col-form-label">Phone Number</label>
-                    <input type="text" class="form-control" name="phoneNumber" required>
-                    <div class="invalid-feedback">
-                        <h3 >Phone Number is required.</h3>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary btn_entry btnCheckoutCancel">Cancel</button>
-                    <button type="submit" class="btn btn-primary save_check_out btn_entry">Sign Out</button>
-                </div>
-            </form>
+            
           </div>
         </div>
       </div>
@@ -116,7 +89,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         method: 'POST',
-                        body : JSON.stringify({trakrid:trakrid})
+                        body : JSON.stringify({trakrid:trakrid , timezone : "{{$view_data['timezone']}}"})
                     })
                     .then(response => {
                         
@@ -152,7 +125,7 @@
     })
     // forms;
     let form = document.getElementById("form_checkin");
-    let form2 = $('#form_checkout');
+    let form2 = document.getElementById("form_checkout");
     
     $('.btnSign_cancel').on('click' , function() {
         $('#checkinModal').modal('hide');
@@ -161,11 +134,24 @@
         $('.invalid-email').hide();
     });
     
-    $('.btnCheckoutCancel').on('click' , function() {
-        $('#checkoutModal').modal('hide');
-        form2[0].reset();
-        $('#form_checkout').removeClass('was-validated');
-    });
+    // $('.btnCheckoutCancel').on('click' , function() {
+    //     $('#checkoutModal').modal('hide');
+    //     form2[0].reset();
+    //     $('#form_checkout').removeClass('was-validated');
+    // });
+    
+    $('#checkoutModal').on('click' , function(){
+        Swal.fire({
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            html: signOutHtml(),
+            showConfirmButton:false,
+            allowOutsideClick:true,
+            showCloseButton:true
+        })
+    })
     
     $('#visitor_type').on('change' , function() {
         if ( $(this).val() != 1 ) {
@@ -198,16 +184,16 @@
                     }
                 }
             })
-    })
+    });
     
-    $(form2).on('submit' , function(e){
+    $(document).on('submit' ,'#form_checkout', function(e){
         e.preventDefault();
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         if (this.checkValidity()) {
             $.ajax({
-                url : form2.attr('action'),
-                type: form2.attr('method'),
-                data: form2.serialize(),
+                url : $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
                 success: function(response){
                     if (response.status == 'nodata') {
                         Swal.fire({
@@ -220,7 +206,7 @@
                             cancelButtonColor: '#a3238e'
                         })
                     }
-                    
+    
                     if (response.status == 'loggedout') {
                         Swal.fire({
                             title:'<strong> You already been signed out at </strong> <br/>',
@@ -231,14 +217,12 @@
                             confirmButtonAriaLabel: 'Thumbs up, great!',
                         });
                     }
-                    
+    
                     if (response.status == 'success') {
                         $('#checkoutModal').modal('hide');
-                        form2[0].reset();
-                        form2.removeClass('was-validated');
                         showCheckOutMessage(response);
                     }
-                    
+    
                     if (response.validation_error) {
                         Swal.fire({
                             icon: 'error',
@@ -252,6 +236,7 @@
     });
     
     $('#modalCheckin').on('click' , function() {
+        Swal.showLoading();
         $.ajax({
             url : "{{ $view_data['is_mobile'] ? route('notification-check' , $view_data['userid']) : route('notification-check') }}",
             method: 'GET',
@@ -292,6 +277,9 @@
         var html = '';
         html = `
         <form id="form_checkin" action="{{ !$view_data['is_mobile'] ?  route( 'trakr-post' , auth()->user()->uuid ) : route( 'qr-login' ,$view_data['userid']) }}" method="post" class="needs-validation" novalidate>
+            @if( $view_data['is_mobile']  )
+            <input type="hidden" name="timezone" value="{{ $view_data['timezone'] }}">
+            @endif
             @csrf
             <div class="form-group sign_in_box">
                 <label for="first_name" class="col-form-label">First Name</label>
@@ -333,6 +321,46 @@
                 <button type="submit" class="btn btn-primary save_check_in btn_entry">Next</button>
             </div>
         </form>
+        `;
+        return html;
+    }
+    
+    function signOutHtml(){
+        var html = '';
+        html = `
+            <p class="mb-4"><h3 style="font-size:inherit;">The details that you enter here are case-sensitive.</h3></p>
+            <p> <h3 style="font-size:inherit;"> Ensure that you enter the same information that you used to sign in (e.g. if you used a space in your phone number when signing in, you must use a space when signing out. This also includes the use of capitalised letters in your name). </h3> </p>    
+            <form id="form_checkout" action="{{route('trakrid-signout')}}" method="post" class="needs-validation" novalidate>
+                @if( $view_data['is_mobile']  )
+                <input type="hidden" name="timezone" value="{{ $view_data['timezone'] }}">
+                @endif
+                @csrf
+                <div class="form-group sign_in_box">
+                    <label for="first_name" class="col-form-label">First Name</label>
+                    <input type="text" class="form-control" name="first_name" required>
+                    <div class="invalid-feedback">
+                        <h3>First Name is require.</h3>
+                    </div>
+                </div>
+                <div class="form-group sign_in_box">
+                    <label for="last_name" class="col-form-label">Last Name</label>
+                    <input type="text" class="form-control" name="last_name" required>
+                    <div class="invalid-feedback">
+                        <h3>Last Name is require.</h3>
+                    </div>
+                </div>
+                <div class="form-group sign_in_box">
+                    <label for="last_name" class="col-form-label">Phone Number</label>
+                    <input type="text" class="form-control" name="phoneNumber" required>
+                    <div class="invalid-feedback">
+                        <h3 >Phone Number is required.</h3>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    
+                    <button type="submit" class="btn btn-primary save_check_out btn_entry">Sign Out</button>
+                </div>
+            </form>
         `;
         return html;
     }
@@ -565,6 +593,7 @@
         $(form).attr('action' , "{{route('employee-answer')}}");
         $(form).attr('method' , 'POST');
         $(form).attr('id' , 'submitAnswer');
+        $(form).append(`<input type="hidden" name="timezone" value="{{$view_data['timezone']}}">`);
         $(form).append(`<p class="text-left mb-4"> ${questions.description} </p> <hr/>`);
         $(form).append(html);
         $(form).append(hiddenId);
