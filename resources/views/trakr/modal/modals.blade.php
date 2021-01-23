@@ -245,7 +245,8 @@
                     if (response.has_notif) {
                         var json_content = JSON.parse(response.notif.content_json);
                         editor.setContents(json_content);
-                        $('#notificationModal').modal({backdrop: 'static', keyboard: false})  
+                        $('#notificationModal').modal({backdrop: 'static', keyboard: false});
+                        Swal.hideLoading();  
                     }else{
                         // $('#checkinModal').modal('show');
                         signIn();
