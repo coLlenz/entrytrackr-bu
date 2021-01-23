@@ -34,8 +34,8 @@
     </div>
     
     <div class="row justify-content-center">
-        <div class="col-lg-8 col-sm-12 mb-4 entry_box trakr_box_hover">
-            <a href="#" class="card" data-toggle="modal" data-target="#checkoutModal">
+        <div class="col-lg-8 col-sm-12 mb-4 entry_box trakr_box_hover" id="checkoutModal">
+            <a href="#" class="card" data-toggle="" id="">
                 <div class="card-body text-center">
                     <h1><i class="simple-icon-logout"></i></h1>
                     <h2 class="card-text font-weight-semibold mb-0">Sign Out</h2>
@@ -90,8 +90,8 @@
             </div>
 
             <div class="row justify-content-center">
-                <div class="col-lg-12 col-sm-12 entry_box trakr_box_hover">
-                    <a href="#" class="card" data-toggle="modal" data-target="#checkoutModal">
+                <div class="col-lg-12 col-sm-12 entry_box trakr_box_hover" id="checkoutModal">
+                    <a href="#" class="card" data-toggle="" data-target="">
                         <div class="card-body text-center">
                             <h1><i class="simple-icon-logout"></i></h1>
                             <h2 class="card-text font-weight-semibold mb-0">Sign Out</h2>
