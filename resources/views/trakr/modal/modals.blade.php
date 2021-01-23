@@ -236,7 +236,6 @@
     });
     
     $('#modalCheckin').on('click' , function() {
-        Swal.showLoading();
         $.ajax({
             url : "{{ $view_data['is_mobile'] ? route('notification-check' , $view_data['userid']) : route('notification-check') }}",
             method: 'GET',
@@ -246,7 +245,6 @@
                         var json_content = JSON.parse(response.notif.content_json);
                         editor.setContents(json_content);
                         $('#notificationModal').modal({backdrop: 'static', keyboard: false});
-                        Swal.hideLoading();  
                     }else{
                         // $('#checkinModal').modal('show');
                         signIn();
