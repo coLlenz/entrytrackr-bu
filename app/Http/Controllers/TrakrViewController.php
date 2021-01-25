@@ -299,7 +299,7 @@ class TrakrViewController extends Controller
     public function visitorAnswer(Request $request){
         $question = DB::table('template_copy')->select('questions' , 'title' , 'user_id')->where('id' , $request->questionId)->first();
         $decoded = json_decode( $question->questions );
-        $user_answer = array_diff_key($request->all(), array_flip(["questionId", "trakrid", "temp_check" , "freetext"]));
+        $user_answer = array_diff_key($request->all(), array_flip(["questionId", "trakrid", "temp_check" , "freetext","timezone"]));
         $array_keys = array_keys($user_answer);
         $wrong = 0;
         $answers = [];
