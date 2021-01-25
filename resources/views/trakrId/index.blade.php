@@ -62,7 +62,7 @@ $(document).ready(function(){
             title: 'This will manually sign out the visitor.',
             showCloseButton: true,
             showCancelButton: true,
-            confirmButtonText: `Procced`,
+            confirmButtonText: `Proceed`,
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
