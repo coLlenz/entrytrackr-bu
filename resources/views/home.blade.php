@@ -1,25 +1,6 @@
   @extends('layouts.app')
 
 @section('content')
-
-    {{-- <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Dashboard') }}</div>
-                    <div class="card-body">
-                        @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
-                        {{ __('You are logged in!') }} <a href="{{ route('profile.edit') }}"
-                            class="btn btn-link">{{ __('Edit Profile') }}</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
     <div class="card">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs " role="tablist">
@@ -129,24 +110,25 @@
                 </div>
                 <div class="tab-pane fade" id="evacuation" role="tabpanel"
                     aria-labelledby="evacuation-tab">
-                    <table class="data-table data-table-feature">
+                    <table class="table">
                       <thead>
                           <tr>
-                              <th>Name</th>
-                              <th>Visitor Type</th>
-                              <th>Date & Time Signed In</th>
-                              <th>Safe</th>
+                              <th class="text-center">Name</th>
+                              <th class="text-center">Visitor Type</th>
+                              <th class="text-center">Date & Time Signed In</th>
+                              <th class="text-center">Safe</th>
                               <th class="text-center">Date Marked Safe</th>
+                              <th class="text-center">Marked By</th>
                           </tr>
                       </thead>
                       <tbody>
                           @if(!empty($list_data['evac_list']))
                               @foreach($list_data['evac_list'] as $evac)
                                   <tr>
-                                    <td>{{$evac->firstName}} {{$evac->lastName}}</td>
-                                    <td class="color-theme-1">{{$evac->type}}</td>
-                                    <td>{{\Carbon\Carbon::parse($evac->check_in_date)->timezone(userTz())->format('d-m-y H:i')}}</td>
-                                    <td>
+                                    <td class="text-center">{{$evac->firstName}} {{$evac->lastName}}</td>
+                                    <td class="text-center">{{$evac->type}}</td>
+                                    <td class="text-center">{{\Carbon\Carbon::parse($evac->check_in_date)->timezone(userTz())->format('d-m-Y H:i')}}</td>
+                                    <td class="text-center">
                                         <div class="custom-control custom-switch">
                                             @if($evac->safe == 'safe')
                                             <input checked disabled  type="checkbox" class="custom-control-input" id="switch{{$evac->id}}" onclick="checkbox({{$evac->id}})" >
@@ -157,6 +139,7 @@
                                         </div>
                                     </td>
                                     <td class="text-center safe_date{{$evac->id}}">{{$evac->date_marked_safe ? \Carbon\Carbon::parse($evac->date_marked_safe)->timezone(userTz())->format('d-m-y H:i') : 'No records yet'}}</td>
+                                    <td class="text-center safe_date{{$evac->id}}">{{$evac->marked_by ? $evac->marked_by : 'Pending'}}</td>
                                   </tr>
                               @endforeach
                             @endif

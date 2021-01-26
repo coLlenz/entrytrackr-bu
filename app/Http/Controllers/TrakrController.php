@@ -144,23 +144,24 @@ class TrakrController extends Controller
     public function safeupdate(Request $request){
         $updating = false;
         $response = [];
+        $marked_by = auth()->user()->contactName;
         
         $this->validate($request, [
             'id' => 'required',
             'value' => 'required',
         ]);
-        if($request->value == "true"){
+        
+        if($request->value){
             $updating = Trakr::where('id',$request->id)->where('user_id',auth()->user()->id)->update([
                 "safe" => "safe",
-                "date_marked_safe" => date('Y-m-d H:i:s')
-            ]);
-        }else{
-            $updating = Trakr::where('id',$request->id)->where('user_id',auth()->user()->id)->update([
-                "safe" => "unsafe",
-                "date_marked_safe" => ""
+                "date_marked_safe" => Carbon::now(),
+                "marked_by" => $marked_by
             ]);
         }
-            
+        echo "<pre>";
+            print_r($updating);
+        echo "</pre>";
+        exit();
         if ($updating) {
             $response['status'] = 'success';
             $response['trakr_safe'] = Trakr::select('date_marked_safe')->where('id' , $request->id)->where('user_id' , auth()->user()->id)->first();
