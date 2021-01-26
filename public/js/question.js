@@ -282,7 +282,7 @@
             },
             {
                 title: 'Set Answer',
-                text: 'You must enter the letter of the option that will be the correct answer allowing visitor to enter. e.g. A or B',
+                html: 'You must enter the letter of the option that will be the correct answer allowing visitor to enter. <br/>e.g. A or B',
                 input : 'text',
                 animation: false,
                 showCancelButton: true,

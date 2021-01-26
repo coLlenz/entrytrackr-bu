@@ -107,7 +107,7 @@
                         Swal.fire({
                             position: 'top-end',
                             icon: 'success',
-                            title: 'Questionnaire has been save.',
+                            title: 'Questionnaire has been saved.',
                             showConfirmButton: false,
                             timer: 2000
                         });
