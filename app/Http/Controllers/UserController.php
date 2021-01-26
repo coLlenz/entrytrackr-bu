@@ -17,7 +17,7 @@ class UserController extends Controller
     public function index(){
         $users = User::where([
             'is_admin' =>  0
-        ])->get();
+        ])->orderBy('created_at' , 'DESC')->get();
         return view('user.index', compact( 'users'));
     }
 
