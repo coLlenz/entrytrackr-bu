@@ -45,7 +45,7 @@
 
 <body id="app-container" class="menu-default show-spinner">
     <div class="bg" style=""></div>
-    <!-- <img src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/img/logo.png" style="position: absolute;margin-top: -80px; width: 10rem; height:auto;"  class="ml-3"> -->
+    <img src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/img/entrytrakr-white.png" style="position: absolute;margin-top: -80px; width: 10rem; height:auto;"  class="ml-3">
     <div id="app" style="">
         <main class="py-4" style="margin-left:0px !important; margin-right:0px !important;margin-top:100px !important">
             @yield('content')
