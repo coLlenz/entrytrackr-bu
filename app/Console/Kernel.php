@@ -27,8 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command( 'signout:all' )
-        ->dailyAt('23:59');
+        $schedule->command( 'signout:all' )->hourly()->timezone('UTC');
     }
 
     /**
