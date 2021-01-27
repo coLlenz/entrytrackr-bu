@@ -11,9 +11,7 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UploadImages;
 use App\Http\Controllers\UploadImagesController;
 use App\Http\Controllers\LocationController;
-use App\Models;
 use Illuminate\Support\Facades\Route;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 /*
@@ -136,12 +134,6 @@ Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(functio
 	Route::get('/delete/{id}', [UserController::class, 'delete'])->name("user-delete");
 	Route::get('/upload/{id}', [UploadImagesController::class, 'index'])->name('uploadimage-view');
 	Route::post('/upload/{id}', [UploadImagesController::class, 'store'])->name('image-upload');	
-});
-
-Route::prefix('timezone')->middleware(['auth'])->group(function(){
-	Route::get('/' , function( Request $request ){
-		echo Carbon::now();
-	});
 });
 
 Route::view('profile', 'profile.edit')

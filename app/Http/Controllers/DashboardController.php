@@ -8,6 +8,10 @@ use PDF;
 class DashboardController extends Controller
 {
     public function index(Request $request ){
+        if (auth()->user()->is_admin) {
+            return redirect()->route('admin-index');
+        }
+        
         $list_data = [];
         $dash = new DashBoard();
         $list_data['current_signin'] = $dash->getdash_data();
