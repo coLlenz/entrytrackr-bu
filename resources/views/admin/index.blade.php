@@ -33,7 +33,7 @@
             <a href="#" class="card">
                 <div class="card-body text-center">
                     <i class="fa fa-user-times fa-3x" aria-hidden="true"></i>
-                    <p class="card-text mb-4">Denied</p>
+                    <p class="card-text mb-4">Deniedd</p>
                     <p class="lead text-center">{{$data['total_denied']}}</p>
                 </div>
             </a>
