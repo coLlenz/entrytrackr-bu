@@ -17,7 +17,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <!-- <link rel="stylesheet" href="{{ asset('font/iconsmind-s/css/iconsminds.css') }}" /> -->
-    <link rel="stylesheet" href="{{ asset('font/simple-line-icons/css/simple-line-icons.css') }}" />
+    <!-- <link rel="stylesheet" href="{{ asset('font/simple-line-icons/css/simple-line-icons.css') }}" /> -->
     
     <link rel="stylesheet" href="{{ asset('fontawesome/css/font-awesome.min.css') }}">
     
