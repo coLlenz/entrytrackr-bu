@@ -1,1 +1,0 @@
-ALTER TABLE `users` ADD `sub_account` BOOLEAN NOT NULL AFTER `uuid`, ADD `sub_account_id` INT NOT NULL AFTER `sub_account`;
