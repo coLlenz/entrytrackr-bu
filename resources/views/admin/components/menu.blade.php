@@ -37,8 +37,8 @@
                     </a>
                 </li>
                 
-                <li class="{{(request()->segment(2) == 'user') ? 'active' : ''}}">
-                    <a href="#">
+                <li class="{{(request()->segment(2) == 'clients') ? 'active' : ''}}">
+                    <a href="{{route('admin-clients')}}">
                         <i class="fa fa-user-circle-o" aria-hidden="true"></i> User Accounts
                     </a>
                 </li>
