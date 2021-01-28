@@ -68,7 +68,7 @@ class AdminController extends Controller
     }
     
     public function clients(){
-        $users = User::where('is_admin' , '=' , 0)->get();
+        $users = User::where('is_admin' , '=' , 0)->orderBy('created_at' , 'DESC')->get();
         return view('admin.clients.index')->with('users' ,$users );
     }
     
