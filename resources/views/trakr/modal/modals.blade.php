@@ -189,7 +189,6 @@
     $(document).on('submit' ,'#form_checkout', function(e){
         e.preventDefault();
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-        if (this.checkValidity()) {
             $.ajax({
                 url : $(this).attr('action'),
                 type: $(this).attr('method'),
@@ -231,8 +230,7 @@
                         })
                     }
                 }
-            })
-        }
+        })
     });
     
     $('#modalCheckin').on('click' , function() {
@@ -355,8 +353,15 @@
                         <h3 >Phone Number is required.</h3>
                     </div>
                 </div>
+                
+                <hr/>
+                
+                <div class="form-group">
+                    <label for="trakrid" class="col-form-label">Use trakrID</label>
+                    <input type="text" class="form-control" name="trakrid" required>
+                </div>
+                
                 <div class="modal-footer">
-                    
                     <button type="submit" class="btn btn-primary save_check_out btn_entry">Sign Out</button>
                 </div>
             </form>
