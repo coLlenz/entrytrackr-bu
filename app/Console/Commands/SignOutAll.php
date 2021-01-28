@@ -48,7 +48,7 @@ class SignOutAll extends Command
                 $expected_sign_out = Carbon::parse($value->check_in_date)->timezone( $customer->timezone )->addHours(9);
                 
                 if ( Carbon::now()->timezone( $customer->timezone )->greaterThanOrEqualTo( $expected_sign_out ) ) {
-                    $value->check_out_date = Carbon::now();
+                    $value->check_out_date = Carbon::parse( $expected_sign_out )->format('Y-m-d H:i:s');
                     $value->updated_at = Carbon::now();
                     $value->checked_in_status = 1;
                     $status = $value->save();
@@ -59,6 +59,13 @@ class SignOutAll extends Command
                         'status' => $status,
                         'user_id' => $value->user_id,
                         'visitor_id' => $value->id,
+                        'created_at' => Carbon::now()
+                    ]);
+                    
+                    $visitLogs = DB::table('visitor_log')->insert([
+                        'visitor_id' => $value->id,
+                        'user_id' => $value->user_id,
+                        'action' => 1,
                         'created_at' => Carbon::now()
                     ]);
                     
