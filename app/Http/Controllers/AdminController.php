@@ -8,6 +8,7 @@ use DB;
 use QrCode;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 class AdminController extends Controller
 {
     public function generateCode($uuid , $userid){
