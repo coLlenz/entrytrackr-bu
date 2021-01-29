@@ -1,3 +1,0 @@
-ALTER TABLE `trakrs` DROP `checked_out`;
-ALTER TABLE `trakrs` ADD `checked_in_status` BOOLEAN NULL COMMENT '0-signin, 1-signout' AFTER `date_marked_safe`;
-ALTER TABLE `trakrs` ADD `check_in_date` TIMESTAMP NULL AFTER `checked_in_status`, ADD `check_out_date` TIMESTAMP NULL AFTER `check_in_date`;

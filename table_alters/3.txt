@@ -1,1 +1,0 @@
-ALTER TABLE `trakrs` CHANGE `status` `status` BOOLEAN NULL DEFAULT 0 COMMENT '0-allowed, 1-denied';
