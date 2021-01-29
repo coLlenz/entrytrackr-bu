@@ -38,6 +38,10 @@ body.show-spinner::after{
     width: 70px;
     font-size: 10px;
 }
+.cancel_btn_out{
+    background-color: #757575;
+    border:none;
+}
 
 @keyframes spin {
     to {

@@ -170,11 +170,19 @@ class TrakrViewController extends Controller
     }
     
     public function trakrcheckout(Request $request){
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'phoneNumber' => 'required',
-        ]);
+        $validator = [];
+        $trakr = [];
+        if (isset($request->trakrid) && !empty($request->trakrid)) {
+            $validator = Validator::make($request->all(), [
+                'trakrid' => 'required',
+            ]);
+        }else{
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'phoneNumber' => 'required',
+            ]);
+        }
         
         $timezone = isset( $request->timezone  ) ? $request->timezone : userTz();
         
@@ -186,11 +194,19 @@ class TrakrViewController extends Controller
             }
             
             //get user datas
-            $trakr = Trakr::where([
-                'firstName' => $request->first_name,
-                'lastName' => $request->last_name,
-                'phoneNumber' => $request->phoneNumber,
-            ])->first();
+            if (isset($request->trakrid) && !empty($request->trakrid)) {
+                
+                $trakr = Trakr::where('trakr_id' , $request->trakrid)->first();
+                
+            }else{
+                
+                $trakr = Trakr::where([
+                    'firstName' => $request->first_name,
+                    'lastName' => $request->last_name,
+                    'phoneNumber' => $request->phoneNumber,
+                ])->first();
+                
+            }
             
             if (!$trakr) {
                 return response()->json(['status' => 'nodata'] , 200 );
@@ -200,11 +216,20 @@ class TrakrViewController extends Controller
             $trakr->checked_in_status = 1;
             $trakr->check_out_date = Carbon::now();
             if ($trakr->save()) {
-                $updated_data = Trakr::select('check_out_date')->where([
-                    'firstName' => $request->first_name,
-                    'lastName' => $request->last_name,
-                    'phoneNumber' => $request->phoneNumber,
-                ])->first();
+                $updated_data = [];
+                
+                if (isset($request->trakrid) && !empty($request->trakrid)) {
+                    
+                    $updated_data = Trakr::where('trakr_id' , $request->trakrid)->first();
+                    
+                }else{
+                    
+                    $updated_data = Trakr::select('check_out_date')->where([
+                        'firstName' => $request->first_name,
+                        'lastName' => $request->last_name,
+                        'phoneNumber' => $request->phoneNumber,
+                    ])->first();
+                }
                 
                 $this->visitLog($trakr->id , $trakr->user_id  , 1);
                 
