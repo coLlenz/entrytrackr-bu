@@ -134,6 +134,10 @@
         $('.invalid-email').hide();
     });
     
+    $(document).on('click' , '.cancel_btn_out' , function(){
+        Swal.close();
+    });
+    
     // $('.btnCheckoutCancel').on('click' , function() {
     //     $('#checkoutModal').modal('hide');
     //     form2[0].reset();
@@ -149,7 +153,7 @@
             html: signOutHtml(),
             showConfirmButton:false,
             allowOutsideClick:true,
-            showCloseButton:true
+            showCloseButton:false
         })
     })
     
@@ -208,11 +212,11 @@
     
                     if (response.status == 'loggedout') {
                         Swal.fire({
-                            title:'<strong> You already been signed out at </strong> <br/>',
+                            title:'<strong> You have already been signed out at </strong> <br/>',
                             html : '<b>'+response.check_date+'</b>',
                             allowOutsideClick : false,
                             showCloseButton: true,
-                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> Great!',
+                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> OK',
                             confirmButtonAriaLabel: 'Thumbs up, great!',
                         });
                     }
@@ -357,11 +361,12 @@
                 <hr/>
                 
                 <div class="form-group">
-                    <label for="trakrid" class="col-form-label">Use trakrID</label>
+                    <label for="trakrid" class="col-form-label font-weight-bold ">Sign Out with trakrID</label>
                     <input type="text" class="form-control" name="trakrid" required>
                 </div>
                 
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-primary cancel_btn_out btn_entry">Cancel</button>
                     <button type="submit" class="btn btn-primary save_check_out btn_entry">Sign Out</button>
                 </div>
             </form>
