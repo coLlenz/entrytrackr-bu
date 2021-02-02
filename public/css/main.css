@@ -42,6 +42,64 @@ body.show-spinner::after{
     background-color: #757575;
     border:none;
 }
+.choiceContainer , .formSubmit{
+    text-align: center;
+}
+.et_stepper_container{
+    background: #efefef;
+    border-radius:10px;
+}
+.et_btn {
+    border:2px solid #a3238e;
+    padding: 10px;
+    width: 90px;
+    border-radius: 5px;
+    font-weight: 800;
+}
+.et_btn_primary{
+    background: #fff;
+    color : #000;
+    font-weight: 800;
+}
+
+.et_btn_secondary{
+    background: #fff;
+    color : #000;
+    font-weight: 800;
+}
+.et_btn_primary:hover , .et_btn_secondary:hover{
+    background: #a3238e;
+    transition: 100ms ease;
+    color:#fff;
+}
+
+.et_btn_control{
+    background: #fff;
+    width: 50px;
+    border-radius: 50%;
+    color:#000;
+    border:2px solid #a3238e;
+}
+.et_btn_control:hover{
+    background: #a3238e;
+    color:#fff;
+}
+.et_trigger_active{
+    background : #a3238e;
+    color: #fff;
+}
+
+.et_section_none{
+    display: none;
+}
+.et_view_selected {
+    border: 3px solid #a3238e;
+    border-radius: 5px;
+}
+.et_view_not_selected:hover{
+    border: 3px solid #a3238e;
+    border-radius: 5px;
+}
 
 @keyframes spin {
     to {
