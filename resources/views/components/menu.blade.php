@@ -14,9 +14,15 @@
                     </a>
                 </li>
                 <li class="{{(request()->is('trakrid') || request()->segment(1) == 'trakrid') ? 'active' : ''}}">
+                    @if(!auth()->user()->is_admin)
                     <a href="/trakrid">
                         <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
                     </a>
+                    @else
+                    <a href="/admin/trakrid">
+                        <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
+                    </a>
+                    @endif
                 </li>
                 
                 <li class="{{(request()->is('templates') || request()->segment(1) == 'templates') ? 'active' : ''}}">

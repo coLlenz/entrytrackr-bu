@@ -21,6 +21,15 @@ class TrakrController extends Controller
         ->paginate(10);
         return view('trakrId.index',compact("list_data"));
     }
+    public function adminIndex(){
+        $list_data = Trakr::select('trakr_id','firstName' , 'lastName' , 'trakr_types.name' , 'trakrs.id' , 'check_in_date')
+        ->where('trakr_id', '!=' , '')
+        ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
+        ->orderBy('trakrs.created_at' , 'DESC')
+        // ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
+        ->paginate(10);
+        return view('trakrId.index',compact("list_data"));
+    }
 
     /**
      * Show the form for creating a new resource.
