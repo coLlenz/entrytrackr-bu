@@ -1,6 +1,8 @@
 <?php 
 use App\Http\Controllers\TrakrController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TemplateController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware(['auth' , 'isAdmin'])->group(function(){
@@ -12,6 +14,9 @@ Route::prefix('admin')->middleware(['auth' , 'isAdmin'])->group(function(){
 	Route::post('/client/update/{id}' , [AdminController::class , 'updateClient'])->name('admin-update-client');
 
 	Route::get('/trakrid' ,[TrakrController::class , 'adminIndex'])->name('admin-index');
+	Route::get('/templates' ,[TemplateController::class , 'index'])->name('admin-index');
+	Route::get('/reports' ,[ReportController::class , 'index'])->name('admin-index');
+	Route::get('/reports/summary' ,[ReportController::class , 'summaryReport'])->name('summaryReport');
 	// Route::get('/trakrid/add' ,[TrakrController::class , 'index'])->name('trakr-add');
 
 	// Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {

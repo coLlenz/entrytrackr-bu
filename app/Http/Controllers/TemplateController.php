@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Template;
@@ -12,12 +11,20 @@ class TemplateController extends Controller
 
     public function index(){
         if ( auth()->user()->is_admin ) {
-            $templates = Template::paginate(10);
+            // $templates = Template::paginate(10);
+            
+            $templates = DB::table('template_copy')
+            ->where([
+                'template_status' => 0,
+            ])
+            ->orderBy('created_at' , 'DESC')
+            ->paginate(10);
+
             return view('template.index')->with('templates' , $templates);
         }
         
         $templates = DB::table('template_copy')->where([
-            'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id,
+            // 'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id,
             'template_status' => 0
         ])
         ->orderBy('created_at' , 'DESC')
@@ -176,10 +183,11 @@ class TemplateController extends Controller
     }
     
     public function questionEdit($template_id){
-        if (auth()->user()->is_admin) {
-            $template = DB::table('templates')->where(['id' => $template_id , 'template_type' => 0])->first();
-            return view("template.questionEdit", compact("template"));
-        }
+        // if (auth()->user()->is_admin) {
+        //     $template = DB::table('template_copy')->where(['id' => $template_id , 'template_type' => 0])->first();
+        //     $template->questions_to_flg = json_decode( $template->questions_to_flg );
+        //     return view("template.questionEdit", compact("template"));
+        // }
         
         $template = DB::table('template_copy')->where(['id' => $template_id , 'template_type' => 0])->first();
         $template->questions_to_flg = json_decode( $template->questions_to_flg );

@@ -12,23 +12,29 @@
                     <a href="#reports">
                         <i class="fa fa-line-chart" aria-hidden="true"></i> Reports
                     </a>
+
                 </li>
                 <li class="{{(request()->is('trakrid') || request()->segment(1) == 'trakrid') ? 'active' : ''}}">
                     @if(!auth()->user()->is_admin)
-                    <a href="/trakrid">
-                        <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
-                    </a>
+                        <a href="/trakrid">
+                            <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
+                        </a>
                     @else
-                    <a href="/admin/trakrid">
-                        <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
-                    </a>
+                        <a href="/admin/trakrid">
+                            <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
+                        </a>
                     @endif
                 </li>
-                
                 <li class="{{(request()->is('templates') || request()->segment(1) == 'templates') ? 'active' : ''}}">
-                    <a href="/templates">
-                        <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
-                    </a>
+                    @if(!auth()->user()->is_admin)
+                        <a href="/templates">
+                            <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
+                        </a>
+                    @else
+                        <a href="/admin/templates">
+                            <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
+                        </a>
+                    @endif
                 </li>
                 
                 @if( !auth()->user()->is_admin && !auth()->user()->sub_account )
@@ -60,19 +66,32 @@
             </ul>
         </div>
     </div>
-    
     <div class="sub-menu">
         <div class="scroll">
             <ul class="list-unstyled" data-link="reports">
                 <li>
-                    <a href="/reports">
-                        <i class=""></i> <span class="d-inline-block font-weight-bold">Summary Report</span>
-                    </a>
+                    @if(!auth()->user()->is_admin)
+                        <a href="/reports">
+                            <i class=""></i> <span class="d-inline-block font-weight-bold">Summary Report</span>
+                        </a>
+                    @else
+                        <a href="/admin/reports">
+                            <i class=""></i> <span class="d-inline-block font-weight-bold">Summary Report</span>
+                        </a>
+                    @endif
                 </li>
                 <li>
-                    <a href="{{ route('summaryReport') }}">
-                        <i class=""></i> <span class="d-inline-block font-weight-bold">Screening Questions</span>
-                    </a>
+                    @if(!auth()->user()->is_admin)
+                        <!-- <a href="{{ route('summaryReport') }}"> -->
+                        <a href="/reports/summary">
+                            <i class=""></i> <span class="d-inline-block font-weight-bold">Screening Questions</span>
+                        </a>
+                    @else
+                        <!-- <a href="{{ route('summaryReport') }}"> -->
+                        <a href="/admin/reports/summary">
+                            <i class=""></i> <span class="d-inline-block font-weight-bold">Screening Questions</span>
+                        </a>
+                    @endif
                 </li>
             </ul>
         </div>

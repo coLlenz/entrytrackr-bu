@@ -21,6 +21,7 @@ class TrakrController extends Controller
         ->paginate(10);
         return view('trakrId.index',compact("list_data"));
     }
+    
     public function adminIndex(){
         $list_data = Trakr::select('trakr_id','firstName' , 'lastName' , 'trakr_types.name' , 'trakrs.id' , 'check_in_date')
         ->where('trakr_id', '!=' , '')
