@@ -54,6 +54,8 @@ Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
 	Route::post('/add_admin' , [SettingsController::class , 'new_admin'])->name('add-new-admin');
 	Route::get('/manage/all/admins' , [SettingsController::class , 'customerAdmins'])->name('customerAdmins');
 	Route::get('/qr/login/view' , [SettingsController::class , 'generatePDF'])->name('qrpdf');
+	Route::get('/question-settings' , [SettingsController::class , 'viewSettings'])->name('viewSettings');
+	Route::post('/question-settings' , [SettingsController::class , 'saveSettings'])->name('saveSettings');
 });
 
 Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
@@ -98,6 +100,10 @@ Route::prefix('trakr')->group(function () {
 	// qr
 	Route::get('/qr/login/{uuid}/{userid}' , [TrakrViewController::class,'QRLoginView'])->name('qr-login-view');
 	Route::post('/qr/login/{userid?}' , [TrakrViewController::class,'create'])->name('qr-login');
+	
+	//stepper questions
+	Route::get('/qr/login/stepper/{visitor_id}/{userid}/{question_id}' , [TrakrViewController::class , 'stepper'])->name('stepper');
+	Route::post('/stepper/save' , [TrakrViewController::class , 'stepperSave'])->name('stepperSave');
 	
 });
 

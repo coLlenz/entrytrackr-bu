@@ -66,13 +66,24 @@
                 </div> 
                 <div class="card mb-4">
                     <div class="card-body">
+                        <h4 class="mb-4"> Question View </h4>
+
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <a class="btn btn-primary btn-md mr-4 text-light" href="{{route('viewSettings')}}"> Change </a>
+                            </div>
+                        </div>
+                          
+                    </div>
+                </div> 
+                <div class="card mb-4">
+                    <div class="card-body">
                         <h4 class="mb-4"> QR Code </h4>
                         <p style=""> Print your QR code to create additional Sign In and Sign Out access points. </p>
                         
                         <div class="row justify-content-md-center">
                             <div class="col-md-12">
                                 <a href="{{ route('qrpdf') }}" class="btn btn-primary btn-md" > Print PDF </a>
-                            
                             </div>
                         </div>
                         
