@@ -128,8 +128,6 @@
         }
         
         function submitAnswers(){
-            console.log(answers);
-            return;
             $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
             var data = JSON.stringify(answers);
             var temp = answers['temperature'].answer;
