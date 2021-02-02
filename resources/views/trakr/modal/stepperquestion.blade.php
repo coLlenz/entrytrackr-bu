@@ -146,15 +146,19 @@
                     visitor_id : visitor_id
                 },
                 success:function(response){
-                    if (response.examStatus) {
-                        showCheckInMessage(response);
+                    if (!response.error) {
+                        if (response.examStatus) {
+                            if (response.has_trakr) {
+                                return showCheckInMessage(response);
+                            }else{
+                                return createTrakrID(response);
+                            }
+                        }else{
+                            return showDenied();
+                        }
                     }else{
-                        showDenied();
+                        alert('There\'s an error submitting your data. Please re-check and submit it again.');
                     }
-                    
-                    setTimeout(function () {
-                        window.history.back();
-                    }, 5000);
                 }
             })
         }
@@ -175,7 +179,11 @@
                 showConfirmButton:false,
                 timer: 5000,
                 footer: '<p> This message will automatically close in 5 seconds. </p>'
-            })
+            });
+            
+            setTimeout(function () {
+                window.history.back();
+            }, 5000);
         }
         
         function showDenied(){
@@ -190,6 +198,86 @@
                 timer: 5000,
                 footer: '<p> This message will automatically close in 5 seconds. </p>'
             });
+            
+            setTimeout(function () {
+                window.history.back();
+            }, 5000);
+        }
+        
+        function createTrakrID(trakr_data = false){
+            
+            if (trakr_data.has_trakr) {
+                return showCheckInMessage(trakr_data);
+            }
+            
+            Swal.fire({
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                icon:'info',
+                html:`
+                <p style="font-size: 17px;" class="mb-4">For a Faster Sign In on future visits, save your contact information as a trakrID.</p>
+                <p style="font-size: 17px;">Create your trakrID using letters, numbers and symbols.</p>
+                `,
+                input:'text',
+                inputPlaceholder: 'Type trakrID here...',
+                showCancelButton:true,
+                cancelButtonText:'Skip',
+                showConfirmButton:true,
+                confirmButtonText:'Save',
+                allowOutsideClick : false,
+                reverseButtons:true,
+                inputValidator : (value) => {
+                    return new Promise((resolve) => {
+                        if (value) {
+                            $.ajax({
+                                url : "{{route('check-trakr-id')}}",
+                                method: 'POST',
+                                data: {input : value},
+                                success: function(response){
+                                    if (response.is_existing) {
+                                        resolve('trakrID not available, try again.');
+                                    }else {
+                                        resolve();
+                                    }
+                                }
+                            });
+                        } else {
+                            resolve('Input data is required');
+                        }
+                    })
+                },
+                preConfirm:(data) => {
+                    $.ajax({
+                        url : "{{route('check-trakr-id')}}",
+                        method: 'POST',
+                        data: {input : data},
+                        success: function(response){
+                            if (response.is_existing) {
+                                return Swal.showValidationMessage('trakrID is not Available');
+                            }
+                        }
+                    });
+                }
+            }).then( btnPress => {
+                if (btnPress.isConfirmed) {
+                    var trakrID = btnPress.value;
+                    var visitor_id = trakr_data.trakrid;
+                    $.ajax({
+                        url: "{{ route('save-trakr-id') }}",
+                        method: "POST",
+                        data: {visitor_id:visitor_id , trakr_id:trakrID },
+                        success:function(trakrResponse){
+                            if (trakrResponse.status == 'success') {
+                                showCheckInMessage(trakr_data);
+                            }
+                        }
+                    })
+                }else{
+                    showCheckInMessage(trakr_data);
+                }
+            })
         }
     })
 </script>
