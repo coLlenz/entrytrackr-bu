@@ -453,97 +453,101 @@ class TrakrViewController extends Controller
     }
     
     public function stepperSave(Request $req){
-        $customer = User::select('timezone')->where('id' , $req->user_id)->first();
-        $question = DB::table('template_copy')->select('questions' , 'title' , 'user_id' , 'id')->where(['user_id' => $req->user_id , 'id' => $req->question_id ])->first();
-        $json = $question ? json_decode( $question->questions ) : [];
-        $request = json_decode($req->answers);
-        $basic = [];
-        $freetext = [];
-        $stepper_answers = [];
-        $answers = [];
-        $wrong = 0;
-        
-        //seperate basic answer & freetext
-        foreach ( $request as $step_key => $step_value ) {
-            if (!empty( $request[$step_key] ) && isset( $request[$step_key] ) && $step_value->type == 'basic'  ) {
-                array_push( $stepper_answers , $step_value );
-            }else{
-                array_push( $freetext , isset( $request[$step_key] ) ? $request[$step_key]->answer : null );
-            }
-        }
-        
-        //get all basic questions
-        foreach ( $json as $key => $value ) {
-            if ($value->type == 'basic') {
-                array_push( $basic, $value );
-            }
-        }
-        
-        if ( !empty( $basic ) && isset( $basic ) ) {
-            foreach ( $basic as $check_key => $check_value ) {
-                $count = count( explode( "," , $check_value->correctAnswer ) );
-                
-                if ( $count == 2 ) {
-                    array_push( $answers , $stepper_answers[$check_key]->answer );
+        try {
+            $customer = User::select('timezone')->where('id' , $req->user_id)->first();
+            $question = DB::table('template_copy')->select('questions' , 'title' , 'user_id' , 'id')->where(['user_id' => $req->user_id , 'id' => $req->question_id ])->first();
+            $json = $question ? json_decode( $question->questions ) : [];
+            $request = json_decode($req->answers);
+            $basic = [];
+            $freetext = [];
+            $stepper_answers = [];
+            $answers = [];
+            $wrong = 0;
+            
+            //seperate basic answer & freetext
+            foreach ( $request as $step_key => $step_value ) {
+                if (!empty( $request[$step_key] ) && isset( $request[$step_key] ) && $step_value->type == 'basic'  ) {
+                    array_push( $stepper_answers , $step_value );
                 }else{
-                    if (strtoupper( $check_value->correctAnswer ) == $stepper_answers[$check_key]->answer ) {
+                    array_push( $freetext , isset( $request[$step_key] ) ? $request[$step_key]->answer : null );
+                }
+            }
+            
+            //get all basic questions
+            foreach ( $json as $key => $value ) {
+                if ($value->type == 'basic') {
+                    array_push( $basic, $value );
+                }
+            }
+            
+            if ( !empty( $basic ) && isset( $basic ) ) {
+                foreach ( $basic as $check_key => $check_value ) {
+                    $count = count( explode( "," , $check_value->correctAnswer ) );
+                    
+                    if ( $count == 2 ) {
                         array_push( $answers , $stepper_answers[$check_key]->answer );
                     }else{
-                        $wrong++;
-                        array_push( $answers , $stepper_answers[$check_key]->answer );
+                        if (strtoupper( $check_value->correctAnswer ) == $stepper_answers[$check_key]->answer ) {
+                            array_push( $answers , $stepper_answers[$check_key]->answer );
+                        }else{
+                            $wrong++;
+                            array_push( $answers , $stepper_answers[$check_key]->answer );
+                        }
                     }
+                    
                 }
-                
             }
-        }
-        
-        // Temperature Check
-        if ($req->temp) {
-            $tempCheck = DB::table('entry_allowed_temp')->first();
-            if ($req->temp > $tempCheck->temp) {
-                $wrong++;
+            
+            // Temperature Check
+            if ($req->temp) {
+                $tempCheck = DB::table('entry_allowed_temp')->first();
+                if ($req->temp > $tempCheck->temp) {
+                    $wrong++;
+                }
             }
-        }
-        
-        $visitor = Trakr::findOrFail($req->visitor_id);
-        $visitor_name = $visitor->firstName." ".$visitor->lastName;
-        
-        // save logs
-        $logs = DB::table('question_logs')->insert([
-            'user_id' => $question->user_id,
-            'visitor_id' => $req->visitor_id,
-            'visitor_type' => $visitor->trakr_type_id,
-            'visitor_name' => $visitor_name ? $visitor_name : '',
-            'question_id' => $question->id ? $question->id : '',
-            'question_title' => $question->title ? $question->title : '',
-            'temperature' => $req->temp ? $req->temp : '',
-            'freetext' =>  $freetext ? json_encode($freetext) : '',
-            'answers' => $answers ? json_encode($answers) : [],
-            'status' => $wrong > 0 ? 1 : 0,
-            'created_at' => Carbon::now()
-        ]);
-        // end logs
-        
-        if ($wrong > 0) {
-            $visitor->status = 1;
-            $visitor->checked_in_status = 1;
-            $visitor->check_out_date = Carbon::now();
-            $visitor->save();
-            return response()->json(['status' => 'success' , 'examStatus' => false , 'logs' => $logs ? true : false] , 200);
-        }else{
-            $formated_date = $this->carbonFormat($visitor->check_in_date , $customer->timezone);
-            return response()->json(
-                [
-                    'status' => 'success',
-                    'has_trakr' => $visitor->trakr_id ? true : false,
-                    'msg' => 'Checked-In' , 
-                    'name' => $visitor->firstName ,
-                    'check_date' => $formated_date,
-                    'type_of_visitor' =>$visitor->trakr_type_id,
-                    'trakrid' => $visitor->id,
-                    'examStatus' => true,
-                    'logs' => $logs ? true : false
-            ],200);
+            
+            $visitor = Trakr::findOrFail($req->visitor_id);
+            $visitor_name = $visitor->firstName." ".$visitor->lastName;
+            
+            // save logs
+            $logs = DB::table('question_logs')->insert([
+                'user_id' => $question->user_id,
+                'visitor_id' => $req->visitor_id,
+                'visitor_type' => $visitor->trakr_type_id,
+                'visitor_name' => $visitor_name ? $visitor_name : '',
+                'question_id' => $question->id ? $question->id : '',
+                'question_title' => $question->title ? $question->title : '',
+                'temperature' => $req->temp ? $req->temp : '',
+                'freetext' =>  $freetext ? json_encode($freetext) : '',
+                'answers' => $answers ? json_encode($answers) : [],
+                'status' => $wrong > 0 ? 1 : 0,
+                'created_at' => Carbon::now()
+            ]);
+            // end logs
+            
+            if ($wrong > 0) {
+                $visitor->status = 1;
+                $visitor->checked_in_status = 1;
+                $visitor->check_out_date = Carbon::now();
+                $visitor->save();
+                return response()->json(['status' => 'success' , 'examStatus' => false , 'logs' => $logs ? true : false] , 200);
+            }else{
+                $formated_date = $this->carbonFormat($visitor->check_in_date , $customer->timezone);
+                return response()->json(
+                    [
+                        'status' => 'success',
+                        'has_trakr' => $visitor->trakr_id ? true : false,
+                        'msg' => 'Checked-In' , 
+                        'name' => $visitor->firstName ,
+                        'check_date' => $formated_date,
+                        'type_of_visitor' =>$visitor->trakr_type_id,
+                        'trakrid' => $visitor->id,
+                        'examStatus' => true,
+                        'logs' => $logs ? true : false
+                ],200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
         }
         
     }
