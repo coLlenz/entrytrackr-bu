@@ -13,44 +13,9 @@ class ReportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        if( auth()->user()->is_admin ) {
-            // $date_now = strtotime( date('Y-m-d H:i:s') );
-            // $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
-            // ->where(['user_id' => auth()->user()->id])
-            // ->orderBy('check_in_date' , 'DESC')
-            // ->paginate(10);
-            
-            // $formdata = [
-            //     'fdate' => date('Y-m-d' , strtotime("-7 days" , $date_now)),
-            //     'edate' => date('Y-m-d' , $date_now),
-            //     'ass' => 'all',
-            //     'tvis' => 'all',
-            //     'acc' => 'all',
-            // ];
-            
-            // return view('report.index')->with('formdata', $formdata)->with('table_data', $default_data);
-            
-            //for customers 
-            $date_now = strtotime( date('Y-m-d H:i:s') );
-            $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
-            // ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
-            ->where('check_in_date' ,'>=', date('Y-m-d',strtotime("-7 days" , $date_now))." 00:00:00")
-            ->orderBy('check_in_date' , 'DESC')
-            ->where('check_in_date' , '<=' , date('Y-m-d')." 23:59:59")->paginate(10);
-            $formdata = [
-                'fdate' => date('Y-m-d' , strtotime("-7 days" , $date_now)),
-                'edate' => date('Y-m-d' , $date_now),
-                'ass' => 'all',
-                'tvis' => 'all',
-                'acc' => 'all'
-            ];
-            return view('report.index')->with('formdata' , $formdata)->with('table_data' , $default_data);
-        }
-        
-        //for customers 
         $date_now = strtotime( date('Y-m-d H:i:s') );
         $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
-        ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
+        ->where('user_id' , user_id())
         ->where('check_in_date' ,'>=', date('Y-m-d',strtotime("-7 days" , $date_now))." 00:00:00")
         ->orderBy('check_in_date' , 'DESC')
         ->where('check_in_date' , '<=' , date('Y-m-d')." 23:59:59")->paginate(10);
@@ -80,7 +45,7 @@ class ReportController extends Controller
         $filter_query = Trakr::query();
         $filter_query->select('firstName','lastName' ,'trakr_type_id' , 'phoneNumber' ,'who' ,'name_of_company','check_in_date' , 'check_out_date' , 'assistance' , 'status');
         
-        $filter_query->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id );
+        $filter_query->where('user_id' , user_id() );
         
         $filter_query->when($start_date,function($q , $start_date) {
             return $q->where('check_in_date' , '>=' , $start_date);
@@ -147,7 +112,7 @@ class ReportController extends Controller
         $filter_query = Trakr::query();
         $filter_query->select('firstName','lastName' ,'trakr_type_id' , 'phoneNumber' ,'who' ,'trakr_types.name as visitor_type','name_of_company','check_in_date' , 'check_out_date' , 'assistance' , 'status');
         $filter_query->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id');
-        $filter_query->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id);
+        $filter_query->where('user_id' , user_id());
         
         $filter_query->when($start_date,function($q , $start_date) {
             return $q->where('check_in_date' , '>=' , $start_date);
@@ -206,20 +171,8 @@ class ReportController extends Controller
     }
     
     public function summaryReport(){
-
-        if( auth()->user()->is_admin ) {
-            $lists = DB::table('question_logs')
-            // ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
-            ->orderBy('created_at' , 'DESC')
-            ->get();
-            $formdata = 'all';
-            return view('report.summary')
-            ->with('lists' , $lists)
-            ->with('formdata' ,$formdata);
-        }
-
         $lists = DB::table('question_logs')
-        ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
+        ->where('user_id' , user_id() )
         ->orderBy('created_at' , 'DESC')
         ->get();
         $formdata = 'all';
