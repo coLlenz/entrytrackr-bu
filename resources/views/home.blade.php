@@ -61,7 +61,12 @@
                                 <div class="col-md-12">
                                     <div class="card mt-2">
                                         <div class="card-body text-left">
-                                            <h5 class="card-title">Visitors Currently Signed In</h5>
+                                            <h5 class="card-title">
+                                                Visitors Currently Signed In
+                                                <div class="float-right">
+                                                    <a href="{{route('showAll')}}" class="text-primary"> Show All </a>
+                                                </div>
+                                            </h5>
                                             <table class="table">
                                                 <tbody>
                                                     @if(!$list_data['current_signin']->isEmpty())

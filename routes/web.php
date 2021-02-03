@@ -41,9 +41,12 @@ Route::get('/', function () {
 // 	$user->save();
 // });
 
-Route::get('dashboard', [DashboardController::class, 'index'])
-	->name('home')
-	->middleware(['auth', 'verified']);
+
+Route::prefix('dashboard')->middleware(['auth'])->group(function(){
+	Route::get('/', [DashboardController::class, 'index'])->name('home');
+	Route::get('/show-all' ,[DashboardController::class , 'showAll'])->name('showAll');
+	Route::get('/show-all/search' ,[DashboardController::class , 'showAllSearch'])->name('showAllSearch');
+});
 Route::get('/generate_pdf' , [DashboardController::class , 'generate_pdf'])
 	->middleware(['auth'])
 	->name('generate_pdf');
