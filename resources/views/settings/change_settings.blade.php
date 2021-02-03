@@ -1,13 +1,10 @@
 @extends('layouts.app')
 @section('content')
-<<<<<<< HEAD
 <div class="row mb-4 justify-content-md-center">
     <div class="col-md-6 col-lg-8">
         <h2>Questionnaire View Option</h2>
     </div>
 </div>
-=======
->>>>>>> 8e6b6bfd482d8cf2c563375b88d669c9b817a411
 <div class="row justify-content-md-center">
     <div class="col-md-6 col-lg-4 mb-4 col-sm-12">
         @if(empty($settings) || $settings->settings == 0 )
@@ -15,27 +12,25 @@
         @else
             <div class="card et_view_not_selected change_view_settings" data-value="0">
         @endif
-<<<<<<< HEAD
+
         <div class="card-body">
             <p class="list-item-heading mb-4"> <h3>Multiple Question View</h3> </p>
         </div>
-=======
->>>>>>> 8e6b6bfd482d8cf2c563375b88d669c9b817a411
+
             <div class="position-relative">
                 <img class="card-img-top"src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/question_view/one_page_questionnaire.png" alt="Card image cap"> 
                 @if(empty($settings) || $settings->settings == 0)
                     <span class="badge badge-pill badge-secondary position-absolute badge-top-left">DEFAULT</span>
                 @endif
             </div>
-<<<<<<< HEAD
-=======
+
             <div class="card-body">
                 <p class="list-item-heading mb-4"> <h3>One Page Questionnaire</h3> </p>
                 <footer>
                     
                 </footer>
             </div>
->>>>>>> 8e6b6bfd482d8cf2c563375b88d669c9b817a411
+
         </div>
     </div>
     <div class="col-md-6 col-lg-4 col-sm-12">
@@ -44,7 +39,7 @@
         @else
             <div class="card et_view_not_selected change_view_settings" data-value="1">
         @endif
-<<<<<<< HEAD
+
         <div class="card-body">
             <p class="list-item-heading mb-4"> <h3> Single Question View </h3> </p>
                 @if(isset($settings) && $settings->settings == 1)
@@ -54,7 +49,7 @@
             <div class="position-relative">
                 <img class="card-img-top"  src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/question_view/stepper_questionnaire.png" alt="Card image cap"> 
             </div>
-=======
+
             <div class="position-relative">
                 <img class="card-img-top"  src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/question_view/stepper_questionnaire.png" alt="Card image cap"> 
             </div>
@@ -67,7 +62,7 @@
                     
                 </footer>
             </div>
->>>>>>> 8e6b6bfd482d8cf2c563375b88d669c9b817a411
+
         </div>
     </div>
 </div>
