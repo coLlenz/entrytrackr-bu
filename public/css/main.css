@@ -38,6 +38,11 @@ body.show-spinner::after{
     width: 70px;
     font-size: 10px;
 }
+.entry_md_btn{
+    padding: 3px;
+    border-radius: 3px;
+    width: 70px;
+}
 .cancel_btn_out{
     background-color: #757575;
     border:none;

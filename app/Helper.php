@@ -24,4 +24,5 @@ use Carbon\Carbon;
     function user_id(){
         $user_id = ( auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id );
         return $user_id;
-    }
+    } 
+
