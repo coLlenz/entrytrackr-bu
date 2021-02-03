@@ -5,6 +5,7 @@ use App\Models\DashBoard;
 use App\Models\Trakr;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use DB;
 class TrakrController extends Controller
 {
     /**
@@ -168,10 +169,7 @@ class TrakrController extends Controller
                 "marked_by" => $marked_by
             ]);
         }
-        echo "<pre>";
-            print_r($updating);
-        echo "</pre>";
-        exit();
+        
         if ($updating) {
             $response['status'] = 'success';
             $response['trakr_safe'] = Trakr::select('date_marked_safe')->where('id' , $request->id)->where('user_id' , auth()->user()->id)->first();
@@ -185,6 +183,14 @@ class TrakrController extends Controller
         $manual->checked_in_status = 1;
         $manual->check_out_date = Carbon::now();
         if ($manual->save()) {
+            // logs
+            $logs = DB::table('visitor_log')->insert([
+                'visitor_id' => $manual->id ? $manual->id : null,
+                'user_id' =>  $manual->user_id,
+                'action' => 1,
+                'created_at' => Carbon::now()
+            ]);
+            // end logs
             return response()->json(['status' => true] , 200);
         }
         return response()->json(['status' => false] , 200);
