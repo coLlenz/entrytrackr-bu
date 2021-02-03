@@ -33,7 +33,7 @@ class AdminController extends Controller
         ->where(['action' => 1])->count();
         $total_denied = DB::table('trakrs')->where(['status' => 1])->count();
         $trakr_id = DB::table('trakrs')->where('trakr_id' , '!=' , ' ')->count();
-        
+        //test
         $data = [
             'total_accounts' => $total_accounts,
             'total_sigin_in' => $total_sigin_in,
