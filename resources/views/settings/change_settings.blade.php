@@ -23,14 +23,6 @@
                     <span class="badge badge-pill badge-secondary position-absolute badge-top-left">DEFAULT</span>
                 @endif
             </div>
-
-            <div class="card-body">
-                <p class="list-item-heading mb-4"> <h3>One Page Questionnaire</h3> </p>
-                <footer>
-                    
-                </footer>
-            </div>
-
         </div>
     </div>
     <div class="col-md-6 col-lg-4 col-sm-12">
@@ -49,20 +41,6 @@
             <div class="position-relative">
                 <img class="card-img-top"  src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/question_view/stepper_questionnaire.png" alt="Card image cap"> 
             </div>
-
-            <div class="position-relative">
-                <img class="card-img-top"  src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/question_view/stepper_questionnaire.png" alt="Card image cap"> 
-            </div>
-            <div class="card-body">
-                <p class="list-item-heading mb-4"> <h3> Stepper Questionnaire </h3> </p>
-                    @if(isset($settings) && $settings->settings == 1)
-                        <span class="badge badge-pill badge-secondary position-absolute badge-top-left">SELECTED</span>
-                    @endif
-                <footer>
-                    
-                </footer>
-            </div>
-
         </div>
     </div>
 </div>
