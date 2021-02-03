@@ -42,8 +42,8 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" href="{{route("admin-edit-client",$user->id)}}">Edit</a>
-                                    {{--<a class="dropdown-item" href="{{route("user-delete",$user->id)}}">Delete</a>
-                                    <a class="dropdown-item" href="{{route("uploadimage-view",$user->id)}}">Upload Logo</a>--}}
+                                    <a class="dropdown-item" href="{{route("removeClient",$user->id)}}">Delete</a>
+                                    <a class="dropdown-item" href="{{route("uploadImageView",$user->id)}}">Upload Logo</a>
                                 </div>
                             </td>
                     </tr>

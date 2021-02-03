@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -9,6 +10,7 @@ use QrCode;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+
 class AdminController extends Controller
 {
     public function generateCode($uuid , $userid){
@@ -24,7 +26,7 @@ class AdminController extends Controller
     }
     
     public function index(Request $request){
-        $total_accounts = DB::table('users')->where(['is_admin' => '!= 1'])->count();
+        $total_accounts = DB::table('users')->where(['is_admin' => '!= 1' , 'status' => 0])->count();
         $total_sigin_in = DB::table('visitor_log')
         ->join('trakrs' , 'trakrs.id' , '=' , 'visitor_log.visitor_id')
         ->where(['visitor_log.action' => 0])->count();
@@ -69,7 +71,7 @@ class AdminController extends Controller
     }
     
     public function clients(){
-        $users = User::where('is_admin' , '=' , 0)->orderBy('created_at' , 'DESC')->get();
+        $users = User::where('is_admin' , '=' , 0)->where('status' , 0)->orderBy('created_at' , 'DESC')->get();
         return view('admin.clients.index')->with('users' ,$users );
     }
     
@@ -145,5 +147,34 @@ class AdminController extends Controller
         }
 
         return redirect()->route("admin-clients")->with('success', 'User Updated Successfully');
+    }
+    
+    public function removeClient($client){
+        $data = User::findOrFail($client);
+        $data->status = 1;
+        $data->save();
+        return redirect()->route("admin-clients")->with('success', 'User Deleted Successfully');
+    }
+    
+    public function uploadImageView($client){
+        return view('admin.clients.upload')->with('client_id' , $client);
+    }
+    
+    public function uploadClientImage(Request $request , $client){
+        $this->validate($request, [
+            'profile' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+        $extension = $request->file('profile')->getClientOriginalExtension();
+        $filename = strtotime('Y-m-d H:i:s').$extension;
+        
+        $s3_path = $request->file('profile')->store('profiles' , 's3');
+        if ($s3_path) {
+            $user = User::findOrFail($client);
+            $user->profile_path = Storage::disk('s3')->url($s3_path);
+            
+            if ($user->save()) {
+                return redirect()->back()->with('status', 'User Image Updated');
+            }
+        }
     }
 }
