@@ -13,10 +13,10 @@ Route::prefix('admin')->middleware(['auth' , 'isAdmin'])->group(function(){
 	Route::get('/client/edit/{id}' , [AdminController::class , 'editClient'])->name('admin-edit-client');
 	Route::post('/client/update/{id}' , [AdminController::class , 'updateClient'])->name('admin-update-client');
 
-	Route::get('/trakrid' ,[TrakrController::class , 'adminIndex'])->name('admin-index');
-	Route::get('/templates' ,[TemplateController::class , 'index'])->name('admin-index');
-	Route::get('/reports' ,[ReportController::class , 'index'])->name('admin-index');
-	Route::get('/reports/summary' ,[ReportController::class , 'summaryReport'])->name('summaryReport');
+	// Route::get('/trakrid' ,[TrakrController::class , 'adminIndex'])->name('admin-index');
+	// Route::get('/templates' ,[TemplateController::class , 'index'])->name('admin-index');
+	// Route::get('/reports' ,[ReportController::class , 'index'])->name('admin-index');
+	// Route::get('/reports/summary' ,[ReportController::class , 'summaryReport'])->name('summaryReport');
 	// Route::get('/trakrid/add' ,[TrakrController::class , 'index'])->name('trakr-add');
 
 	// Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
