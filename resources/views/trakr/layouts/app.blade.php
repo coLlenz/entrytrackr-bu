@@ -18,7 +18,9 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('font/iconsmind-s/css/iconsminds.css') }}" />
     <link rel="stylesheet" href="{{ asset('font/simple-line-icons/css/simple-line-icons.css') }}" />
-
+    @if(Route::currentRouteName() != 'qr-login-view')
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/font-awesome.min.css') }}">
+    @endif
     <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/dore.light.purple.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/vendor/component-custom-switch.min.css') }}" />

@@ -572,20 +572,34 @@
         }
     }
     
-    function showQuestions( data ){
-        Swal.fire({
-            showClass: {
-                popup: 'swal2-noanimation',
-                backdrop: 'swal2-noanimation'
-            },
-            title: data.questions.title,
-            icon: 'info',
-            customClass:'questionBox',
-            html: makeHtml(data.questions , data.trakrid),
-            allowOutsideClick:false,
-            focusConfirm: false,
-            showConfirmButton:false,
-        })
+    function showQuestions( content ){
+        console.log(content.questions.data.questions);
+        switch (content.questions.question_view_settings) {
+            case 0:
+            Swal.fire({
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                title: content.questions.data.title,
+                icon: 'info',
+                customClass:'questionBox',
+                html: makeHtml(content.questions.data , content.trakrid),
+                allowOutsideClick:false,
+                focusConfirm: false,
+                showConfirmButton:false,
+            })
+                break;
+            case 1:
+                var trakrid = content.trakrid;
+                var userid = content.questions.data.user_id
+                var question_id = content.questions.data.id
+                location.href = '/trakr/qr/login/stepper/'+trakrid+'/'+userid+'/'+question_id;
+                break;
+            default:
+                
+        }
+        
     }
     
     function makeHtml(questions , trakrid){

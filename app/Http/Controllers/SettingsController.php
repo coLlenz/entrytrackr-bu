@@ -9,6 +9,8 @@ use Hash;
 use Str;
 use PDF;
 use QrCode;
+use DB;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 class SettingsController extends Controller{
     
@@ -70,6 +72,28 @@ class SettingsController extends Controller{
         // ->setPaper('a4', 'landscape');
         $pdf = PDF::loadView('pdf.qrpdf');
         return $pdf->download('QR_LOGIN.pdf');
+    }
+    
+    public function viewSettings(){
+        $settings = DB::table('question_view_settings')->where('user_id' , user_id() )->first();
+        return view('settings.change_settings')->with('settings' , $settings );
+    }
+    
+    public function saveSettings( Request $request ){
+        $settings = DB::table('question_view_settings')->where('user_id' , user_id())->first();
+        
+        if (!$settings) {
+            $new_settings = DB::table('question_view_settings')->insert([
+                'user_id' => user_id(),
+                'settings' => $request->settings
+            ]);
+        }
+        
+        $new_settings = DB::table('question_view_settings')->where('user_id' , user_id() )
+        ->update(['settings' => $request->settings]);
+        
+        return $new_settings;
+        
     }
         
 }
