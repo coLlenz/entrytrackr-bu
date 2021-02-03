@@ -66,7 +66,7 @@
                 </div> 
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h4 class="mb-4"> Question View </h4>
+                        <h4 class="mb-4"> Questionnaire View Option </h4>
 
                         <div class="row align-items-center">
                             <div class="col-md-12">
