@@ -80,14 +80,25 @@ body.show-spinner::after{
 
 .et_btn_control{
     background: #fff;
-    width: 50px;
-    border-radius: 50%;
+    width: 64px;
     color:#000;
     border:2px solid #a3238e;
 }
 .et_btn_control:hover{
     background: #a3238e;
     color:#fff;
+}
+
+.et_btn_cancel{
+    background: #a3238e;
+    width: 64px;
+    color:#fff;
+    border:2px solid #fff;
+}
+.et_btn_cancel:hover{
+    color:#000;
+    background: #fff;
+    border : 2px solid #a3238e;
 }
 .et_trigger_active{
     background : #a3238e;

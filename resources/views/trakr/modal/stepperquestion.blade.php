@@ -39,11 +39,14 @@
                         </div>
                         
                     </div>
-                    <div class="stepsControll float-right">
-                        <button type="button" name="button" class="et_btn et_btn_secondary et_btn_control" data-value="Previous" > <i class="fa fa-arrow-left" aria-hidden="true"></i> </button>
-                        <button type="button" name="button" class="et_btn et_btn_primary et_btn_control" data-value="Next"> <i class="fa fa-arrow-right" aria-hidden="true"></i> </button>
+
+                    <div class="float-left ">
+                        <button type="button" name="button" class="et_btn et_btn_secondary et_btn_cancel"  > Cancel </button>
                     </div>
-                </div>
+                    <div class="stepsControll float-right">
+                        <button type="button" name="button" class="et_btn et_btn_secondary et_btn_control" data-value="Previous" > Back </button>
+                        <button type="button" name="button" class="et_btn et_btn_primary et_btn_control" data-value="Next"> Next </button>
+                    </div>
             </div>
         </div>
     </div>
