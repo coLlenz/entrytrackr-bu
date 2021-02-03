@@ -114,7 +114,7 @@ class TrakrViewController extends Controller
         ->where([
             'user_id' => $user_id,
             'template_type' => 0,
-            'status' => 1,
+            'template_copy.status' => 1,
             'template_status' => '!=0'
         ])->get();
         
