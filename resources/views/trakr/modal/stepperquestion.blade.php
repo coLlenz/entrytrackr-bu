@@ -1,9 +1,6 @@
 @extends('trakr.layouts.app')
 @section('content')
-<input type="hidden" id="user_id" value="{{$user_id}}">
-<input type="hidden" id="question_id" value="{{$question_id}}">
-<input type="hidden" id="visitor_id" value="{{$visitor_id}}">
-
+<input type="text" id="desc" value="{{$description}}">
 <div class="row justify-content-md-center to_center">
     <div class="col-lg-8 col-md-8 col-sm-12">
         <div class="card et_stepper_container">
@@ -61,8 +58,8 @@
         var steps = $(stepper).find('.steps');
         var length = $(steps).children().length;
         
+        showTitle();
         Stepper(index);
-        
         $('#btnSubmit').on('click' , function(){
             submitAnswers();
         });
@@ -294,6 +291,20 @@
                     showCheckInMessage(trakr_data);
                 }
             })
+        }
+        
+        function showTitle(){
+            var desc = $('#desc').val();
+            Swal.fire({
+                icon:'info',
+                title :"{{$title}}",
+                html : "<p>"+desc+"</p>",
+                allowOutsideClick:false,
+                customClass:'questionBox_2',
+                showCloseButton:true,
+                confirmButtonText : 'Continue',
+                confirmButtonColor:'#a3238e'
+            });
         }
     })
 </script>

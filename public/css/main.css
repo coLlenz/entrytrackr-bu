@@ -155,6 +155,10 @@ body.show-spinner::after{
 .questionBox{
     width: 50rem!important;
 }
+.questionBox_2{
+    width: 50rem!important;
+    top:-100px;
+}
 .sign_in_box{
     text-align: left;
 }
