@@ -8,20 +8,19 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-                
                 <li class="{{(request()->segment(2) == 'reports') ? 'active' : ''}}">
                     <a href="#">
                         <i class="fa fa-line-chart" aria-hidden="true"></i> Reports
                     </a>
                 </li>
                 <li class="{{(request()->segment(2) == 'trakrid') ? 'active' : ''}}">
-                    <a href="#">
+                    <a href="/admin/trakrid">
                         <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
                     </a>
                 </li>
-                
                 <li class="{{(request()->segment(2) == 'templates') ? 'active' : ''}}">
                     <a href="#">
+                    <!-- <a href="/admin/trakrid"> -->
                         <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
                     </a>
                 </li>
@@ -50,12 +49,12 @@
         <div class="scroll">
             <ul class="list-unstyled" data-link="reports">
                 <li>
-                    <a href="/reports">
+                    <a href="/admin/reports">
                         <i class=""></i> <span class="d-inline-block font-weight-bold">Summary Report</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('summaryReport') }}">
+                    <a href="/admin/reports/summary">
                         <i class=""></i> <span class="d-inline-block font-weight-bold">Screening Questions</span>
                     </a>
                 </li>
