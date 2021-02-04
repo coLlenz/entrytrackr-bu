@@ -460,7 +460,6 @@
                     data: {input : data},
                     success: function(response){
                         if (response.is_existing) {
-                            console.log('herrrrrrrrrrrrrrrrrrrrrrrreeeeeee');
                             return Swal.showValidationMessage('trakrID is not Available');
                         }
                     }
@@ -573,7 +572,6 @@
     }
     
     function showQuestions( content ){
-        console.log(content.questions.data.questions);
         switch (content.questions.question_view_settings) {
             case 0:
             Swal.fire({
