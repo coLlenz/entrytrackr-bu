@@ -2,7 +2,7 @@
 @section('content')
 <div class="row mb-4">
     <div class="col-md-6 col-lg-8">
-        <h1>Questionnaire View Option</h1>
+        <h1>Questionnaire View Options</h1>
     </div>
 </div>
 <div class="row justify-content-md-center">
