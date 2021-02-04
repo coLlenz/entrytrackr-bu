@@ -1,7 +1,10 @@
 <?php 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\AdminTrakrController;
 use App\Http\Controllers\Admin\ClientAccessController;
+
+use App\Http\Controllers\Admin\AdminTrakrController;
+use App\Http\Controllers\Admin\AdminReportController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware(['auth' , 'isAdmin'])->group(function(){
@@ -21,8 +24,10 @@ Route::prefix('admin')->middleware(['auth' , 'isAdmin'])->group(function(){
 	Route::post('/trakrid/edit/{trakr}', [AdminTrakrController::class, 'update'])->name("admin-trakr-update");
 	Route::post('/trakrid/manual/visitor/signout' , [AdminTrakrController::class , 'manualSignOut'])->name('admin-manualSignOut');
 
-	// Route::get('/', [ReportController::class, 'index'])->name("report-index");
-	// Route::get('/summary' , [ReportController::class , 'summaryReport'])->name('summaryReport');
+	Route::get('/reports', [AdminReportController::class, 'index'])->name("admin-report-index");
+	Route::get('/reports/summary' , [AdminReportController::class , 'summaryReport'])->name('admin-summaryReport');
+	Route::get('/reports/filter',[AdminReportController::class,'filter'])->name('admin-report-filter');
+	Route::get('/reports/generate_list',[AdminReportController::class,'generate_pdf'])->name('admin-list-report');
 	
 	// Route::get('/', [ReportController::class, 'index'])->name("report-index");
 	// Route::get('/filter',[ReportController::class,'filter'])->name('report-filter');
