@@ -67,6 +67,19 @@
             submitAnswers();
         });
         
+        $('.et_btn_cancel').on('click' ,function(){
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+            $.ajax({
+                url :"{{route('cancelSignin' , $visitor_id)}}",
+                type : 'GET',
+                success : function(response){
+                    if (response.status == 'success') {
+                        window.history.back();
+                    }
+                }
+            })
+        });
+        
         $('.et_trigger').on('click' , function(){
             var parent = $(this).parent();
             var active = $(parent).find('.et_trigger_active');
