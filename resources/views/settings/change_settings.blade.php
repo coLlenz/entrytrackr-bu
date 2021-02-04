@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
-<div class="row mb-4 justify-content-md-center">
+<div class="row mb-4">
     <div class="col-md-6 col-lg-8">
-        <h2>Questionnaire View Option</h2>
+        <h1>Questionnaire View Option</h1>
     </div>
 </div>
 <div class="row justify-content-md-center">
