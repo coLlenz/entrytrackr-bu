@@ -1,37 +1,49 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="mb-2">
-    <h1>trakrID</h1>
-    @if(!auth()->user()->is_admin)
-        <div class="top-right-button-container">
-            <button type="button" class="btn btn-primary btn-lg top-right-button  mr-1"
-        onclick="window.location.href='{{route("trakr-add")}}'">ADD NEW</button>
+<div class="row">
+    <div class="col-md-8">
+        <h1>trakrID</h1>
+    </div>
+    <div class="col-md-2">
+        <div class="float-right">
+            <form action="{{route('searchTrakr')}}" method="GET" style="display: flex">
+                <button type="submit" name="button" class="btn btn-primary entry_md_btn mr-2"> Search </button>
+                <input type="text" name="search" value="{{isset($_GET['search']) ? $_GET['search'] : ''}}" class="form-control">
+            </form>
         </div>
-    @endif
+    </div>
+<div class="col-md-2">
+    <div class="float-right">
+        <button type="button" class="btn btn-primary btn-lg top-right-button  mr-1"
+        onclick="window.location.href='{{route("trakr-add")}}'">ADD NEW</button>
+    </div>
 </div>
-<div class="card">
-    <div class="card-body">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="">trakrID</th>
-                    <th class="">Name</th>
-                    <th class="">Date Created</th>
-                    <th class="">Visitor Type</th>
-                    <th class="text-center">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($list_data as $trakr )
-                    <tr>
-
-                    <td>{{$trakr->trakr_id}}</td>
-                        <td>{{$trakr->firstName}} {{$trakr->lastName}}</td>
-                        <td>{{ \Carbon\Carbon::parse($trakr->check_in_date)->timezone(userTz())->format('d-m-Y H:i') }}</td>
-                        <td>{{$trakr->name}}</td>
-                        <td class="text-center">
-                            <button class="btn btn-primary dropdown-toggle mb-1" type="button"
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="">trakrID</th>
+                            <th class="">Name</th>
+                            <th class="">Date Created</th>
+                            <th class="">Visitor Type</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($list_data as $trakr )
+                        <tr>
+                            
+                            <td>{{$trakr->trakr_id}}</td>
+                            <td>{{$trakr->firstName}} {{$trakr->lastName}}</td>
+                            <td>{{ \Carbon\Carbon::parse($trakr->check_in_date)->timezone(userTz())->format('d-m-Y H:i') }}</td>
+                            <td>{{$trakr->type}}</td>
+                            <td class="text-center">
+                                <button class="btn btn-primary dropdown-toggle mb-1" type="button"
                                 id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
                                 Actions
@@ -43,11 +55,12 @@
                             </div>
                         </td>
                     </tr>
-                @endforeach
-            </div>
+                    @endforeach
+                </div>
             </tbody>
         </table>
         {{$list_data->links()}}
+    </div>
     </div>
 </div>
 

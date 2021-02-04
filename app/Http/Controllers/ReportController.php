@@ -229,4 +229,19 @@ class ReportController extends Controller
         $pdf = PDF::loadView('pdf.visitorResults')->setPaper('a4');
         return $pdf->download($filename.'.pdf');
     }
+    
+    public function searchSummary(Request $request){
+        $formdata = 'all';
+        $lists = DB::table('question_logs')
+        ->where('user_id' , user_id() )
+        ->where('visitor_name' , 'like', $request->search.'%')
+        ->orWhere('question_title' , 'like', $request->search.'%')
+        ->orWhere('temperature' , 'like', $request->search.'%')
+        ->orderBy('created_at' , 'DESC')
+        ->paginate(50);
+        
+        return view('report.summary')
+        ->with('lists' , $lists)
+        ->with('formdata' ,$formdata);
+    }
 }

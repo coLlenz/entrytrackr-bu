@@ -2,21 +2,33 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
+        <div class="col-md-8">
+            <div class="">
+                <form class="" action="{{ route('byVisitor') }}" method="GET" id="by_visitor">
+                    @csrf
+                    <label for="type_of_visitor">Visitor Type</label> <br>
+                    <select class="mb-2 custom_entr_select" name="type_of_visitor" id="type_of_visitor">
+                        <option value="all">All</option>
+                        <option value="1" {{$formdata == '1' ? 'selected' : ""}}>Visitor</option>
+                        <option value="2" {{$formdata == '2' ? 'selected' : ""}}>Contractor</option>
+                        <option value="3" {{$formdata == '3' ? 'selected' : ""}} >Employee</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="float-right">
+                <form action="{{route('searchSummary')}}" method="GET" style="display: flex">
+                    <button type="submit" name="button" class="btn btn-primary entry_md_btn mr-2"> Search </button>
+                    <input type="text" name="search" value="{{isset($_GET['search']) ? $_GET['search'] : ''}}" class="form-control">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="">
-                        <form class="" action="{{ route('byVisitor') }}" method="GET" id="by_visitor">
-                            @csrf
-                            <label for="type_of_visitor">Visitor Type</label> <br>
-                            <select class="mb-2 custom_entr_select" name="type_of_visitor" id="type_of_visitor">
-                                <option value="all">All</option>
-                                <option value="1" {{$formdata == '1' ? 'selected' : ""}}>Visitor</option>
-                                <option value="2" {{$formdata == '2' ? 'selected' : ""}}>Contractor</option>
-                                <option value="3" {{$formdata == '3' ? 'selected' : ""}} >Employee</option>
-                            </select>
-                        </form>
-                    </div>
                     <table class="table">
                         <thead>
                             <tr>

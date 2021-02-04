@@ -72,6 +72,8 @@ Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
 	Route::post('update/safe', [TrakrController::class, 'safeupdate'])->name("trakr-safe");
 	// manual sign out
 	Route::post('manual/visitor/signout' , [TrakrController::class , 'manualSignOut'])->name('manualSignOut');
+	// Search
+	Route::get('/search' , [TrakrController:: class , 'searchTrakr'])->name('searchTrakr');
 });
 Route::prefix('templates')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/', [TemplateController::class, 'index'])->name("template-index");
@@ -126,6 +128,7 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/summary/by/visitor' , [ReportController::class , 'byVisitor'])->name('byVisitor');
 	Route::get('/summary/get/results/{question_id}/{log_id}' , [ReportController::class , 'viewResults'])->name('viewResults');
 	Route::post('/summary/get/results/download/' , [ReportController::class , 'downloadResult'])->name('downloadResult');
+	Route::get('/summary/search/results' , [ReportController::class , 'searchSummary'])->name('searchSummary');
 });
 
 Route::prefix('locations')->middleware(['auth'])->group(function() {
