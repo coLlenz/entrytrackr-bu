@@ -443,12 +443,16 @@ class TrakrViewController extends Controller
     }
     
     public function stepper($visitor_id , $userid , $question_id){
-        $question = DB::table('template_copy')->select('questions')->where(['id' => $question_id , 'user_id' => $userid ])->first();
+        $question = DB::table('template_copy')->select('questions' , 'title' , 'description')->where(['id' => $question_id , 'user_id' => $userid ])->first();
         $json = json_decode($question->questions , true);
+        $title = $question->title;
+        $description = $question->description;
         return view('trakr.modal.stepperquestion')
         ->with('visitor_id' , $visitor_id)
         ->with('user_id' , $userid )
         ->with('question_id' ,  $question_id)
+        ->with('title' , $title)
+        ->with('description' , $description)
         ->with('questions' ,$json );
     }
     
