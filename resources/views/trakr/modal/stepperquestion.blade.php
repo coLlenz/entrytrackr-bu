@@ -4,8 +4,8 @@
 <input type="hidden" id="question_id" value="{{$question_id}}">
 <input type="hidden" id="visitor_id" value="{{$visitor_id}}">
 
-<div class="row justify-content-md-center">
-    <div class="col-lg-4 col-md-8 col-sm-12">
+<div class="row justify-content-md-center to_center">
+    <div class="col-lg-8 col-md-8 col-sm-12">
         <div class="card et_stepper_container">
             <div class="card-body ">
                 <div id="entryStepper">
@@ -16,7 +16,7 @@
                                 <h3 class="mb-4 font-weight-bold">{{$value['question']}}</h3>
                                     @if($value['type'] == 'basic')
                                         <div class="et_choices">
-                                            <button type="button" name="btn_choice" class="et_btn et_btn_primary et_trigger" data-value="A" data-idx="{{$key}}"> {{$value['answers']['a']}} </button>
+                                            <button type="button" name="btn_choice" class="et_btn et_btn_primary et_trigger mr-4" data-value="A" data-idx="{{$key}}"> {{$value['answers']['a']}} </button>
                                             <button type="button" name="btn_choice" class="et_btn et_btn_secondary et_trigger" data-value="B" data-idx="{{$key}}"> {{$value['answers']['b']}} </button>
                                         </div>
                                     @else
@@ -41,11 +41,11 @@
                     </div>
 
                     <div class="float-left ">
-                        <button type="button" name="button" class="et_btn et_btn_secondary et_btn_cancel"  > Cancel </button>
+                        <button type="button" name="button" class="et_btn et_btn_secondary et_btn_cancel et_btn_clored"  > Cancel </button>
                     </div>
                     <div class="stepsControll float-right">
-                        <button type="button" name="button" class="et_btn et_btn_secondary et_btn_control" data-value="Previous" > Back </button>
-                        <button type="button" name="button" class="et_btn et_btn_primary et_btn_control" data-value="Next"> Next </button>
+                        <button type="button" name="button" class="et_btn et_btn_secondary et_btn_control mr-4" data-value="Previous" > Back </button>
+                        <button type="button" name="button" class="et_btn et_btn_primary et_btn_control et_btn_control_next" data-value="Next"> Continue </button>
                     </div>
             </div>
         </div>
