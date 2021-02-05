@@ -3,7 +3,7 @@
 <div class="row mb-4">
     <div class="col-md-6 col-lg-8">
         <h1>Questionnaire View Options</h1>
-        <p>Click on one of the options below to change on how your questionnaire will be displayed to visitors</p>
+        <p>Select one of the options below to change how questionnaire will be displayed.</p>
     </div>
 </div>
 <div class="row justify-content-md-center">
