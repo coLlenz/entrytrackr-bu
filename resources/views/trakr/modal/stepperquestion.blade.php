@@ -23,17 +23,15 @@
                             </section>
                         @endforeach
                         
-                        <section class="et_section_none" >
-                            <div class="choiceContainer">
+                        <section class="et_section_none">
+                            <div class="choiceContainer" >
                             <h3 class="mb-4 font-weight-bold">{{'Temperature Check'}}</h3>
                             <span> <p> <h2>My temperature has been tested on entry today and the result was:</h2> </p> </span>
-                                <textarea name="name" rows="1" cols="10" class="form-control freetext" data-idx="temperature"></textarea>
+                                <div>
+                                    <input step=".1"type="number" name="name" class="form-control freetext tp" data-idx="temperature"></input>
+                                </div>
                             </div>
                         </section>
-                        
-                        <div class="formSubmit" style="display:none;">
-                            <button type="button" name="button" class="et_btn et_btn_primary" id="btnSubmit">Submit</button>
-                        </div>
                         
                     </div>
 
@@ -60,9 +58,6 @@
         
         showTitle();
         Stepper(index);
-        $('#btnSubmit').on('click' , function(){
-            submitAnswers();
-        });
         
         $('.et_btn_cancel').on('click' ,function(){
             $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
@@ -105,7 +100,6 @@
                 index--;
                 Stepper(index , action);
             }
-            
         });
         
         function Stepper(step , action){
@@ -126,14 +120,13 @@
                     }, 1000);
                 }
             } else {
-                $($(steps).children()[step]).fadeOut();
-                $('.formSubmit').fadeIn();
+                submitAnswers();
             }
             
         }
         
         function isLast(step){
-            return step >= length ? true : false;
+            return step == length ? true : false;
         }
         
         function myAnswers( index , value , type){
@@ -143,10 +136,15 @@
         function submitAnswers(){
             $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
             var data = JSON.stringify(answers);
-            var temp = answers['temperature'].answer;
             var user_id = "{{$user_id}}";
             var question_id = "{{$question_id}}";
             var visitor_id = "{{$visitor_id}}";
+            
+            if (typeof answers['temperature'] === 'undefined') {
+                return alert('Temperature is required.');
+            }
+            
+            var temp = answers['temperature'].answer;
             
             $.ajax({
                 url : "{{route('stepperSave')}}",
@@ -306,6 +304,7 @@
                 confirmButtonColor:'#a3238e'
             });
         }
+        
     })
 </script>
 @endsection

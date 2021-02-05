@@ -159,6 +159,11 @@ body.show-spinner::after{
     width: 50rem!important;
     top:-100px;
 }
+.tp {
+    width: 200px;
+    text-align: center;
+    margin: 0 auto;
+}
 .sign_in_box{
     text-align: left;
 }
