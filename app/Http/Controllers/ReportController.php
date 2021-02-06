@@ -234,9 +234,7 @@ class ReportController extends Controller
         $formdata = 'all';
         $lists = DB::table('question_logs')
         ->where('user_id' , user_id() )
-        ->where('visitor_name' , 'like', $request->search.'%')
-        ->orWhere('question_title' , 'like', $request->search.'%')
-        ->orWhere('temperature' , 'like', $request->search.'%')
+        ->where('visitor_name' , 'like', '%'.$request->search.'%')
         ->orderBy('created_at' , 'DESC')
         ->paginate(50);
         
