@@ -186,14 +186,24 @@ class TrakrController extends Controller
     }
     
     public function searchTrakr(Request $request){
+        if (!$request->search) {
+            $search = DB::table('trakrs')
+            ->select('trakrs.*' , 'trakr_types.name as type')
+            ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
+            ->whereNotNull('trakr_id')
+            ->orderBy('trakrs.created_at' , 'DESC')
+            ->where('user_id' , user_id())
+            ->paginate(50);
+            return view('trakrId.index')->with('list_data',$search);
+        }
+        
         $search = DB::table('trakrs')
         ->select('trakrs.*' , 'trakr_types.name as type')
         ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
         ->orderBy('trakrs.created_at' , 'DESC')
+        ->whereRaw('trakr_id IS NOT NULL')
         ->where('user_id' , user_id())
-        ->whereNotNull('trakr_id')
-        ->where('firstName' , 'like', $request->search.'%')
-        ->orWhere('lastName' , 'like', $request->search.'%')
+        ->where('firstName' , 'Like' , $request->search.'%')
         ->orderBy('check_in_date' , 'DESC')
         ->paginate(50);
         return view('trakrId.index')->with('list_data',$search);
