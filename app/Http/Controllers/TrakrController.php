@@ -188,13 +188,12 @@ class TrakrController extends Controller
     public function searchTrakr(Request $request){
         $search = DB::table('trakrs')
         ->select('trakrs.*' , 'trakr_types.name as type')
-        ->where('trakr_id', '!=' , '')
         ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
         ->orderBy('trakrs.created_at' , 'DESC')
         ->where('user_id' , user_id())
+        ->whereNotNull('trakr_id')
         ->where('firstName' , 'like', $request->search.'%')
         ->orWhere('lastName' , 'like', $request->search.'%')
-        ->orWhere('trakr_id' , 'like', $request->search.'%')
         ->orderBy('check_in_date' , 'DESC')
         ->paginate(50);
         return view('trakrId.index')->with('list_data',$search);
