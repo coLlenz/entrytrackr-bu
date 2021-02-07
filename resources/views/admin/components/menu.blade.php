@@ -19,8 +19,7 @@
                     </a>
                 </li>
                 <li class="{{(request()->segment(2) == 'templates') ? 'active' : ''}}">
-                    <a href="#">
-                    <!-- <a href="/admin/trakrid"> -->
+                    <a href="{{route('template-index')}}">
                         <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
                     </a>
                 </li>
