@@ -1,0 +1,1 @@
+ALTER TABLE `templates` ADD `status` BOOLEAN NULL DEFAULT FALSE COMMENT '0-not deleted, 1-deleted' AFTER `template_type`;

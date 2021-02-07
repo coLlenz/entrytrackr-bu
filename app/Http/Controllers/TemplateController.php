@@ -170,12 +170,6 @@ class TemplateController extends Controller
     }
     
     public function questionEdit($template_id){
-        // if (auth()->user()->is_admin) {
-        //     $template = DB::table('template_copy')->where(['id' => $template_id , 'template_type' => 0])->first();
-        //     $template->questions_to_flg = json_decode( $template->questions_to_flg );
-        //     return view("template.questionEdit", compact("template"));
-        // }
-        
         $template = DB::table('template_copy')->where(['id' => $template_id , 'template_type' => 0])->first();
         $template->questions_to_flg = json_decode( $template->questions_to_flg );
         return view("template.questionEdit", compact("template"));
