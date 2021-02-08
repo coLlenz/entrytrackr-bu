@@ -77,7 +77,7 @@
                         </table>
                         <h3 class="text-center"> <i> {{ $account['visitors']->isEmpty() ? 'No Results' : ''}} </i> </h3>
                     </table>
-                    {{ $account['visitors']->onEachSide(0)->links() }}
+                    {{ $account['visitors']->onEachSide(1)->links() }}
                 </div>
             </div>
         </div>

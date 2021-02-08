@@ -177,7 +177,7 @@
                                 @endif
                             </div>
                             <div class="col-md-4">
-                                {{$table_data->appends($_GET)->onEachSide(0)->links()}}
+                                {{$table_data->appends($_GET)->onEachSide(1)->links()}}
                             </div>
                         </div>
                     </div>
