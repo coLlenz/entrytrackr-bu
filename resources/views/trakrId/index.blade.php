@@ -59,7 +59,8 @@
                 </div>
             </tbody>
         </table>
-        {{$list_data->links()}}
+        <!-- {{$list_data->links()}} -->
+        {{$list_data->onEachSide(1)->links()}}
     </div>
     </div>
 </div>
