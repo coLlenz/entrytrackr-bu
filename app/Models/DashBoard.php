@@ -20,7 +20,7 @@ class DashBoard extends Model
         $dash = DB::table('trakrs')
         ->select('trakrs.id', 'trakr_id','firstName' , 'lastName' , 'trakrs.check_in_date' ,'trakrs.created_at','trakrs.id','trakr_types.name as type' , 'checked_in_status')
         ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
-        ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
+        ->where('user_id' , user_id())
         ->where('trakrs.check_in_date' , '>=' , $current  )
         ->where('trakrs.check_in_date' , '<=' , $span )
         ->where('checked_in_status' , 0)
@@ -34,10 +34,10 @@ class DashBoard extends Model
         $current = Carbon::now()->format('Y-m-d 00:00:00');
         $span = Carbon::now()->format('Y-m-d 23:59:59');
         $assist = DB::table('trakrs')
-            ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.id','name as type' , 'safe' , 'date_marked_safe')
+            ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.check_in_date','trakrs.id','name as type' , 'safe' , 'date_marked_safe')
             ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
             ->where([
-                ['user_id' , '=' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id],
+                ['user_id' , '=' , user_id()],
                 ['assistance' , '=' , 1]
             ])
             ->where('trakrs.check_in_date' , '>=' , $current  )
@@ -95,7 +95,7 @@ class DashBoard extends Model
         $total_signin = DB::table('trakrs')
         ->where([
             'checked_in_status' => 0,
-            'user_id' => auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id
+            'user_id' => user_id()
         ])
         ->where('trakrs.check_in_date' , '>=' , $current  )
         ->where('trakrs.check_in_date' , '<=' , $span )
