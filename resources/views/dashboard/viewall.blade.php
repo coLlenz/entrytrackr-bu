@@ -19,7 +19,7 @@
                             <tr>
                                 <td>{{$trakr->firstName}} {{$trakr->lastName}}</td>
                                 <td>{{$trakr->type}}</td>
-                                <td class="color-theme-1">{{\Carbon\Carbon::parse($trakr->created_at)->timezone(userTz())->diffForHumans()}}</td>
+                                <td class="color-theme-1">{{\Carbon\Carbon::parse($trakr->check_in_date)->timezone(userTz())->diffForHumans()}}</td>
                                 <td> <button type="button" name="dashBoardSignOut" class="btn btn-primary entry_sm_btn" visitor-id="{{$trakr->id}}">Sign Out</button> </td>
                             </tr>
                             @endforeach
