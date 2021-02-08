@@ -83,7 +83,7 @@
                                                     @endif
                                                 </tbody>
                                               </table>
-                                              {{$list_data['current_signin']->links()}}
+                                              {{$list_data['current_signin']->onEachSide(0)->links()}}
                                         </div>
                                     </div>
                                 </div>
