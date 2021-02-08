@@ -74,7 +74,7 @@
                                                         <tr>
                                                             <td>{{$signin->firstName}} {{$signin->lastName}}</td>
                                                             <td>{{$signin->type}}</td>
-                                                            <td class="color-theme-1">{{\Carbon\Carbon::parse($signin->created_at)->timezone(userTz())->diffForHumans()}}</td>
+                                                            <td class="color-theme-1">{{\Carbon\Carbon::parse($signin->check_in_date)->timezone(userTz())->diffForHumans()}}</td>
                                                             <td> <button type="button" name="dashBoardSignOut" class="btn btn-primary entry_sm_btn" visitor-id="{{$signin->id}}">Sign Out</button> </td>
                                                         </tr>
                                                         @endforeach
@@ -98,7 +98,7 @@
                                                             <tr>
                                                                 <td>{{$assist->firstName}} {{$assist->lastName}}</td>
                                                                 <td>{{$assist->type}}</td>
-                                                                <td class="color-theme-1">{{\Carbon\Carbon::parse($assist->created_at)->timezone(userTz())->diffForHumans()}}</td>
+                                                                <td class="color-theme-1">{{\Carbon\Carbon::parse($assist->check_in_date)->timezone(userTz())->diffForHumans()}}</td>
                                                             </tr>
                                                         @endforeach
                                                     @else
