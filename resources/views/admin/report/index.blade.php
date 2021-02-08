@@ -1,5 +1,5 @@
 
-@extends('layouts.app')
+@extends('admin.layouts.admin')
 
 @section('content')
 <style media="screen">

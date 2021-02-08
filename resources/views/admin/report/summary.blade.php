@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin.layouts.admin')
 @section('content')
 <div class="container-fluid">
     <div class="row">
@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="">
-                        <form class="" action="{{ route('byVisitor') }}" method="GET" id="by_visitor">
+                        <form class="" action="{{ route('admin-byVisitor') }}" method="GET" id="by_visitor">
                             @csrf
                             <label for="type_of_visitor">Visitor Type</label> <br>
                             <select class="mb-2 custom_entr_select" name="type_of_visitor" id="type_of_visitor">
@@ -43,7 +43,7 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{route('viewResults' ,[ $list->question_id , $list->id] )}}" > View </a>
+                                        <a href="{{route('admin-viewResults' ,[ $list->question_id , $list->id] )}}" > View </a>
                                     </td>
                                 </tr>
                             @endforeach

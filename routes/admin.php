@@ -2,9 +2,10 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ClientAccessController;
 use App\Http\Controllers\Admin\TemplateController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminTrakrController;
 use App\Http\Controllers\Admin\AdminReportController;
+
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware(['auth' , 'isAdmin'])->group(function(){
 	Route::get('/dashboard' ,[AdminController::class , 'index'])->name('admin-index');
@@ -35,18 +36,14 @@ Route::prefix('admin')->middleware(['auth' , 'isAdmin'])->group(function(){
 	Route::post('/trakrid/edit/{trakr}', [AdminTrakrController::class, 'update'])->name("admin-trakr-update");
 	Route::post('/trakrid/manual/visitor/signout' , [AdminTrakrController::class , 'manualSignOut'])->name('admin-manualSignOut');
 
+	//COMMENTED NI kay wala sa trakrID nga tab
+	// Route::post('/trakrid/update/safe', [TrakrController::class, 'safeupdate'])->name("admin-trakr-safe");
+
 	Route::get('/reports', [AdminReportController::class, 'index'])->name("admin-report-index");
 	Route::get('/reports/summary' , [AdminReportController::class , 'summaryReport'])->name('admin-summaryReport');
 	Route::get('/reports/filter',[AdminReportController::class,'filter'])->name('admin-report-filter');
 	Route::get('/reports/generate_list',[AdminReportController::class,'generate_pdf'])->name('admin-list-report');
-	
-	// Route::get('/', [ReportController::class, 'index'])->name("report-index");
-	// Route::get('/filter',[ReportController::class,'filter'])->name('report-filter');
-	// Route::get('/generate_list',[ReportController::class,'generate_pdf'])->name('list-report');
-	// Route::get('/summary' , [ReportController::class , 'summaryReport'])->name('summaryReport');
-	// Route::get('/summary/by/visitor' , [ReportController::class , 'byVisitor'])->name('byVisitor');
-	// Route::get('/summary/get/results/{question_id}/{log_id}' , [ReportController::class , 'viewResults'])->name('viewResults');
-	// Route::post('/summary/get/results/download/' , [ReportController::class , 'downloadResult'])->name('downloadResult');
-
-	
+	Route::get('/reports/summary/by/visitor' , [AdminReportController::class , 'byVisitor'])->name('admin-byVisitor');
+	Route::get('/reports/summary/get/results/{question_id}/{log_id}' , [AdminReportController::class , 'viewResults'])->name('admin-viewResults');
+	Route::post('/reports/summary/get/results/download/' , [AdminReportController::class , 'downloadResult'])->name('admin-downloadResult');
 });

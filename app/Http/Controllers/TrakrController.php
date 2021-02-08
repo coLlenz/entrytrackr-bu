@@ -14,6 +14,10 @@ class TrakrController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
+        if (auth()->user()->is_admin) {
+            return redirect()->route('admin-trakrid');
+        }
+        
         $list_data = Trakr::select('trakr_id','firstName' , 'lastName' , 'trakr_types.name as type' , 'trakrs.id' , 'check_in_date')
         ->where('trakr_id', '!=' , '')
         ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
