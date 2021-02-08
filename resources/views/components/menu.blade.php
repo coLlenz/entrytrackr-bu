@@ -12,29 +12,16 @@
                     <a href="#reports">
                         <i class="fa fa-line-chart" aria-hidden="true"></i> Reports
                     </a>
-
                 </li>
                 <li class="{{(request()->is('trakrid') || request()->segment(1) == 'trakrid') ? 'active' : ''}}">
-                    @if(!auth()->user()->is_admin)
-                        <a href="/trakrid">
-                            <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
-                        </a>
-                    @else
-                        <a href="/admin/trakrid">
-                            <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
-                        </a>
-                    @endif
+                    <a href="/trakrid">
+                        <i class="fa fa-id-card-o" aria-hidden="true"></i> trakrID
+                    </a>
                 </li>
                 <li class="{{(request()->is('templates') || request()->segment(1) == 'templates') ? 'active' : ''}}">
-                    @if(!auth()->user()->is_admin)
-                        <a href="/templates">
-                            <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
-                        </a>
-                    @else
-                        <a href="/admin/templates">
-                            <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
-                        </a>
-                    @endif
+                    <a href="/templates">
+                        <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
+                    </a>
                 </li>
                 
                 @if( !auth()->user()->is_admin && !auth()->user()->sub_account )
@@ -55,14 +42,6 @@
                         <i class="fa fa-life-ring" aria-hidden="true"></i> Help & Support
                     </a>
                 </li>
-                
-                @if(auth()->user()->is_admin)
-                <li class="{{(request()->is('user') || request()->segment(1) == 'user') ? 'active' : ''}}">
-                    <a href="/user">
-                        <i class="fa fa-user-circle-o" aria-hidden="true"></i> User Accounts
-                    </a>
-                </li>
-                @endif
             </ul>
         </div>
     </div>
@@ -70,28 +49,14 @@
         <div class="scroll">
             <ul class="list-unstyled" data-link="reports">
                 <li>
-                    @if(!auth()->user()->is_admin)
-                        <a href="/reports">
-                            <i class=""></i> <span class="d-inline-block font-weight-bold">Summary Report</span>
-                        </a>
-                    @else
-                        <a href="/admin/reports">
-                            <i class=""></i> <span class="d-inline-block font-weight-bold">Summary Report</span>
-                        </a>
-                    @endif
+                    <a href="/reports">
+                        <i class=""></i> <span class="d-inline-block font-weight-bold">Summary Report</span>
+                    </a>
                 </li>
                 <li>
-                    @if(!auth()->user()->is_admin)
-                        <!-- <a href="{{ route('summaryReport') }}"> -->
-                        <a href="/reports/summary">
-                            <i class=""></i> <span class="d-inline-block font-weight-bold">Screening Questions</span>
-                        </a>
-                    @else
-                        <!-- <a href="{{ route('summaryReport') }}"> -->
-                        <a href="/admin/reports/summary">
-                            <i class=""></i> <span class="d-inline-block font-weight-bold">Screening Questions</span>
-                        </a>
-                    @endif
+                    <a href="{{ route('summaryReport') }}">
+                        <i class=""></i> <span class="d-inline-block font-weight-bold">Screening Questions</span>
+                    </a>
                 </li>
             </ul>
         </div>

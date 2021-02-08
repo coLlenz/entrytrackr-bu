@@ -66,11 +66,11 @@
                 </div> 
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h4 class="mb-4"> Questionnaire View Option </h4>
+                        <h4 class="mb-4"> Questionnaire View Options </h4>
 
                         <div class="row align-items-center">
                             <div class="col-md-12">
-                                <a class="btn btn-primary btn-md mr-4 text-light" href="{{route('viewSettings')}}"> Change </a>
+                                <a class="btn btn-primary btn-md mr-4 text-light" href="{{route('viewSettings')}}"> Change View </a>
                             </div>
                         </div>
                           

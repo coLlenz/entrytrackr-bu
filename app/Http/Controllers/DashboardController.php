@@ -57,8 +57,22 @@ class DashboardController extends Controller
     }
     
     public function showAllSearch( Request $request ){
+        
         $current = Carbon::now()->format('Y-m-d 00:00:00');
         $span = Carbon::now()->format('Y-m-d 23:59:59');
+        
+        if (!$request->search) {
+            $trakrs = DB::table('trakrs')->select('trakrs.*' , 'trakr_types.name as type')
+            ->where([
+                'user_id' => user_id(),
+                'checked_in_status' => 0,
+            ])
+            ->where('check_in_date' , '>=' , $current)
+            ->where('check_in_date' , '<=' , $span)
+            ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id' )
+            ->orderBy('checked_in_status' , 'DESC')
+            ->get();
+        }
         
         $trakrs = DB::table('trakrs')->select('trakrs.*' , 'trakr_types.name as type')
         ->where([
@@ -66,7 +80,7 @@ class DashboardController extends Controller
             'checked_in_status' => 0,
         ])
         ->where('check_in_date' , '>=' , $current)
-        // ->where('check_in_date' , '<=' , $span)
+        ->where('check_in_date' , '<=' , $span)
         ->where('firstName' , 'like', $request->search.'%')
         ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id' )
         ->orderBy('checked_in_status' , 'DESC')

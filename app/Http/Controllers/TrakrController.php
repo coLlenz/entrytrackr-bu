@@ -14,25 +14,18 @@ class TrakrController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $list_data = Trakr::select('trakr_id','firstName' , 'lastName' , 'trakr_types.name' , 'trakrs.id' , 'check_in_date')
+        if (auth()->user()->is_admin) {
+            return redirect()->route('admin-trakrid');
+        }
+        
+        $list_data = Trakr::select('trakr_id','firstName' , 'lastName' , 'trakr_types.name as type' , 'trakrs.id' , 'check_in_date')
         ->where('trakr_id', '!=' , '')
         ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
         ->orderBy('trakrs.created_at' , 'DESC')
         ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
-        ->paginate(10);
+        ->paginate(50);
         return view('trakrId.index',compact("list_data"));
     }
-    
-    public function adminIndex(){
-        $list_data = Trakr::select('trakr_id','firstName' , 'lastName' , 'trakr_types.name' , 'trakrs.id' , 'check_in_date')
-        ->where('trakr_id', '!=' , '')
-        ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
-        ->orderBy('trakrs.created_at' , 'DESC')
-        // ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
-        ->paginate(10);
-        return view('trakrId.index',compact("list_data"));
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -194,5 +187,29 @@ class TrakrController extends Controller
             return response()->json(['status' => true] , 200);
         }
         return response()->json(['status' => false] , 200);
+    }
+    
+    public function searchTrakr(Request $request){
+        if (!$request->search) {
+            $search = DB::table('trakrs')
+            ->select('trakrs.*' , 'trakr_types.name as type')
+            ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
+            ->whereNotNull('trakr_id')
+            ->orderBy('trakrs.created_at' , 'DESC')
+            ->where('user_id' , user_id())
+            ->paginate(50);
+            return view('trakrId.index')->with('list_data',$search);
+        }
+        
+        $search = DB::table('trakrs')
+        ->select('trakrs.*' , 'trakr_types.name as type')
+        ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
+        ->orderBy('trakrs.created_at' , 'DESC')
+        ->whereRaw('trakr_id IS NOT NULL')
+        ->where('user_id' , user_id())
+        ->where('firstName' , 'Like' , $request->search.'%')
+        ->orderBy('check_in_date' , 'DESC')
+        ->paginate(50);
+        return view('trakrId.index')->with('list_data',$search);
     }
 }

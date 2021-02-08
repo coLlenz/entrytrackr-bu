@@ -31,7 +31,9 @@ body.show-spinner::after{
     position: fixed;
     z-index: 1;
 }
-
+.to_center{
+    margin-top:5%
+}
 .entry_sm_btn{
     padding: 3px;
     border-radius: 3px;
@@ -84,12 +86,22 @@ body.show-spinner::after{
     color:#000;
     border:2px solid #a3238e;
 }
+
+.et_btn_control_next{
+    background: #a3238e;
+    color:#fff;
+    width: 100px;
+}
+.et_btn_control_next:hover{
+    background: #fff!important;
+    color:#000!important;
+}
 .et_btn_control:hover{
     background: #a3238e;
     color:#fff;
 }
 
-.et_btn_cancel{
+.et_btn_clored{
     background: #a3238e;
     width: 64px;
     color:#fff;
@@ -142,6 +154,15 @@ body.show-spinner::after{
 }
 .questionBox{
     width: 50rem!important;
+}
+.questionBox_2{
+    width: 50rem!important;
+    top:-100px;
+}
+.tp {
+    width: 200px;
+    text-align: center;
+    margin: 0 auto;
 }
 .sign_in_box{
     text-align: left;

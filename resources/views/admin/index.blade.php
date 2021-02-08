@@ -3,7 +3,7 @@
     <div class="container-fluid">
         <div class="row justify-content-md-center">
             <div class="col-md-8 col-sm-4 col-xs-6 col-lg-2 mb-4">
-            <a href="#" class="card">
+            <a href="#" class="card" style="cursor:default">
                 <div class="card-body text-center">
                     <i class="fa fa-user fa-3x" aria-hidden="true"></i>
                     <p class="card-text mb-4">Total Accounts</p>
@@ -12,7 +12,7 @@
             </a>
             </div>
             <div class="col-md-8 col-sm-4 col-xs-6 col-lg-2 mb-4">
-            <a href="#" class="card">
+            <a href="#" class="card" style="cursor:default">
                 <div class="card-body text-center">
                     <i class="fa fa-sign-in fa-3x" aria-hidden="true"></i>
                     <p class="card-text mb-4">Total Sign In's</p>
@@ -21,7 +21,7 @@
             </a>
             </div>
             <div class="col-md-8 col-sm-4 col-xs-6 col-lg-2 mb-4">
-            <a href="#" class="card">
+            <a href="#" class="card" style="cursor:default">
                 <div class="card-body text-center">
                     <i class="fa fa-sign-out fa-3x" aria-hidden="true"></i>
                     <p class="card-text mb-4">Total Sign Out's</p>
@@ -30,7 +30,7 @@
             </a>
             </div>
             <div class="col-md-8 col-sm-4 col-xs-6 col-lg-2 mb-4">
-            <a href="#" class="card">
+            <a href="#" class="card" style="cursor:default">
                 <div class="card-body text-center">
                     <i class="fa fa-user-times fa-3x" aria-hidden="true"></i>
                     <p class="card-text mb-4">Denied</p>
@@ -39,7 +39,7 @@
             </a>
             </div>
             <div class="col-md-8 col-sm-4 col-xs-6 col-lg-2 mb-4">
-            <a href="#" class="card">
+            <a href="#" class="card" style="cursor:default">
                 <div class="card-body text-center">
                     <i class="fa fa-id-card-o fa-3x"></i>
                     <p class="card-text mb-4">trakr ID's</p>

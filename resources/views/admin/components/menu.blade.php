@@ -8,8 +8,8 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li class="{{(request()->segment(2) == 'reports') ? 'active' : ''}}">
-                    <a href="#">
+                <li class="{{(request()->is('reports') || request()->segment(2) == 'reports') ? 'active' : ''}}">
+                    <a href="#reports">
                         <i class="fa fa-line-chart" aria-hidden="true"></i> Reports
                     </a>
                 </li>
@@ -19,23 +19,20 @@
                     </a>
                 </li>
                 <li class="{{(request()->segment(2) == 'templates') ? 'active' : ''}}">
-                    <a href="#">
-                    <!-- <a href="/admin/trakrid"> -->
+                    <a href="{{route('template-index')}}">
                         <i class="fa fa-list-ul" aria-hidden="true"></i> Templates
                     </a>
                 </li>
-                
-                <li class="{{(request()->segment(2) == 'settings') ? 'active' : ''}}">
-                    <a href="#">
+                <!-- <li class="{{(request()->is('settings') || request()->segment(2) == 'settings') ? 'active' : ''}}">
+                    <a href="/settings">
                         <i class="fa fa-cog" aria-hidden="true"></i> Settings
                     </a>
-                </li>
-                <li class="{{(request()->segment(2) == 'support') ? 'active' : ''}}">   
-                    <a href="#">
+                </li> -->
+                <li class="{{(request()->is('support') || request()->segment(2) == 'support') ? 'active' : ''}}">   
+                    <a href="/support">
                         <i class="fa fa-life-ring" aria-hidden="true"></i> Help & Support
                     </a>
                 </li>
-                
                 <li class="{{(request()->segment(2) == 'clients') ? 'active' : ''}}">
                     <a href="{{route('admin-clients')}}">
                         <i class="fa fa-user-circle-o" aria-hidden="true"></i> User Accounts

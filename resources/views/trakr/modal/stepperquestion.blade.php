@@ -1,11 +1,8 @@
 @extends('trakr.layouts.app')
 @section('content')
-<input type="hidden" id="user_id" value="{{$user_id}}">
-<input type="hidden" id="question_id" value="{{$question_id}}">
-<input type="hidden" id="visitor_id" value="{{$visitor_id}}">
-
-<div class="row justify-content-md-center">
-    <div class="col-lg-4 col-md-8 col-sm-12">
+<input type="text" id="desc" value="{{$description}}">
+<div class="row justify-content-md-center to_center">
+    <div class="col-lg-8 col-md-8 col-sm-12">
         <div class="card et_stepper_container">
             <div class="card-body ">
                 <div id="entryStepper">
@@ -16,7 +13,7 @@
                                 <h3 class="mb-4 font-weight-bold">{{$value['question']}}</h3>
                                     @if($value['type'] == 'basic')
                                         <div class="et_choices">
-                                            <button type="button" name="btn_choice" class="et_btn et_btn_primary et_trigger" data-value="A" data-idx="{{$key}}"> {{$value['answers']['a']}} </button>
+                                            <button type="button" name="btn_choice" class="et_btn et_btn_primary et_trigger mr-4" data-value="A" data-idx="{{$key}}"> {{$value['answers']['a']}} </button>
                                             <button type="button" name="btn_choice" class="et_btn et_btn_secondary et_trigger" data-value="B" data-idx="{{$key}}"> {{$value['answers']['b']}} </button>
                                         </div>
                                     @else
@@ -26,26 +23,24 @@
                             </section>
                         @endforeach
                         
-                        <section class="et_section_none" >
-                            <div class="choiceContainer">
+                        <section class="et_section_none">
+                            <div class="choiceContainer" >
                             <h3 class="mb-4 font-weight-bold">{{'Temperature Check'}}</h3>
                             <span> <p> <h2>My temperature has been tested on entry today and the result was:</h2> </p> </span>
-                                <textarea name="name" rows="1" cols="10" class="form-control freetext" data-idx="temperature"></textarea>
+                                <div>
+                                    <input step=".1"type="number" name="name" class="form-control freetext tp" data-idx="temperature"></input>
+                                </div>
                             </div>
                         </section>
-                        
-                        <div class="formSubmit" style="display:none;">
-                            <button type="button" name="button" class="et_btn et_btn_primary" id="btnSubmit">Submit</button>
-                        </div>
                         
                     </div>
 
                     <div class="float-left ">
-                        <button type="button" name="button" class="et_btn et_btn_secondary et_btn_cancel"  > Cancel </button>
+                        <button type="button" name="button" class="et_btn et_btn_secondary et_btn_cancel et_btn_clored"  > Cancel </button>
                     </div>
                     <div class="stepsControll float-right">
-                        <button type="button" name="button" class="et_btn et_btn_secondary et_btn_control" data-value="Previous" > Back </button>
-                        <button type="button" name="button" class="et_btn et_btn_primary et_btn_control" data-value="Next"> Next </button>
+                        <button type="button" name="button" class="et_btn et_btn_secondary et_btn_control mr-4" data-value="Previous" > Back </button>
+                        <button type="button" name="button" class="et_btn et_btn_primary et_btn_control et_btn_control_next" data-value="Next"> Continue </button>
                     </div>
             </div>
         </div>
@@ -61,10 +56,20 @@
         var steps = $(stepper).find('.steps');
         var length = $(steps).children().length;
         
+        showTitle();
         Stepper(index);
         
-        $('#btnSubmit').on('click' , function(){
-            submitAnswers();
+        $('.et_btn_cancel').on('click' ,function(){
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+            $.ajax({
+                url :"{{route('cancelSignin' , $visitor_id)}}",
+                type : 'GET',
+                success : function(response){
+                    if (response.status == 'success') {
+                        window.history.back();
+                    }
+                }
+            })
         });
         
         $('.et_trigger').on('click' , function(){
@@ -95,7 +100,6 @@
                 index--;
                 Stepper(index , action);
             }
-            
         });
         
         function Stepper(step , action){
@@ -116,14 +120,13 @@
                     }, 1000);
                 }
             } else {
-                $($(steps).children()[step]).fadeOut();
-                $('.formSubmit').fadeIn();
+                submitAnswers();
             }
             
         }
         
         function isLast(step){
-            return step >= length ? true : false;
+            return step == length ? true : false;
         }
         
         function myAnswers( index , value , type){
@@ -133,10 +136,15 @@
         function submitAnswers(){
             $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
             var data = JSON.stringify(answers);
-            var temp = answers['temperature'].answer;
             var user_id = "{{$user_id}}";
             var question_id = "{{$question_id}}";
             var visitor_id = "{{$visitor_id}}";
+            
+            if (typeof answers['temperature'] === 'undefined') {
+                return alert('Temperature is required.');
+            }
+            
+            var temp = answers['temperature'].answer;
             
             $.ajax({
                 url : "{{route('stepperSave')}}",
@@ -282,6 +290,21 @@
                 }
             })
         }
+        
+        function showTitle(){
+            var desc = $('#desc').val();
+            Swal.fire({
+                icon:'info',
+                title :"{{$title}}",
+                html : "<p>"+desc+"</p>",
+                allowOutsideClick:false,
+                customClass:'questionBox_2',
+                showCloseButton:true,
+                confirmButtonText : 'Continue',
+                confirmButtonColor:'#a3238e'
+            });
+        }
+        
     })
 </script>
 @endsection

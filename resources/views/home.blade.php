@@ -46,7 +46,7 @@
                                                     <canvas id="doughnutChart" style="height:400px; width:400px"></canvas>
                                                 </div>
                                             @else
-                                                <h3 class="text-center" >{{ 'No data to show' }}</h3>
+                                                <p class="text-center"> {{ 'No data to show' }} </p>
                                             @endif
                                             {{-- <p class="lead text-bold color-theme-1" style="font-size: 56px;">1</p> --}}
                                         </div>
@@ -64,7 +64,7 @@
                                             <h5 class="card-title">
                                                 Visitors Currently Signed In
                                                 <div class="float-right">
-                                                    <a href="{{route('showAll')}}" class="text-primary"> Show All </a>
+                                                    <a href="{{route('showAll')}}" class="text-primary" style="font-size: 16px;"> Show All </a>
                                                 </div>
                                             </h5>
                                             <table class="table">
@@ -74,7 +74,7 @@
                                                         <tr>
                                                             <td>{{$signin->firstName}} {{$signin->lastName}}</td>
                                                             <td>{{$signin->type}}</td>
-                                                            <td class="color-theme-1">{{\Carbon\Carbon::parse($signin->created_at)->timezone(userTz())->diffForHumans()}}</td>
+                                                            <td class="color-theme-1">{{\Carbon\Carbon::parse($signin->check_in_date)->timezone(userTz())->diffForHumans()}}</td>
                                                             <td> <button type="button" name="dashBoardSignOut" class="btn btn-primary entry_sm_btn" visitor-id="{{$signin->id}}">Sign Out</button> </td>
                                                         </tr>
                                                         @endforeach
@@ -98,7 +98,7 @@
                                                             <tr>
                                                                 <td>{{$assist->firstName}} {{$assist->lastName}}</td>
                                                                 <td>{{$assist->type}}</td>
-                                                                <td class="color-theme-1">{{\Carbon\Carbon::parse($assist->created_at)->timezone(userTz())->diffForHumans()}}</td>
+                                                                <td class="color-theme-1">{{\Carbon\Carbon::parse($assist->check_in_date)->timezone(userTz())->diffForHumans()}}</td>
                                                             </tr>
                                                         @endforeach
                                                     @else
