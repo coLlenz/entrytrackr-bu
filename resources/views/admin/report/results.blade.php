@@ -57,7 +57,7 @@
                                 $freetxt = 0;
                             @endphp
                             @foreach( json_decode($questions->questions) as $key => $question )
-                                <tr>   
+                                <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $question->question }}</td>
                                     <td class="text-center">
@@ -79,7 +79,7 @@
             </div>
         </div>
     </div>
-    
+
     <div style="display:none">
         <form class="" action="{{ route('downloadResult') }}" method="POST" id="dl_submit">
             @csrf
@@ -96,28 +96,28 @@
         $('#dl_html').attr('value' , clone.html())
         $('#dl_submit').submit();
     })
-    {{--var data = {!! json_encode($results) !!};
+    var data = {!! json_encode($results) !!};
     var answers  = JSON.parse(data.answers);
-    
+
     var freetxt  = data.freetext
-    
+
     var content_html = `{!! $questions->content_html !!}`;
     $('#resultContainer').append(content_html);
-    
+
     var target = $('#resultContainer').find('.target');
-    
+
     $(target).each( (idx , val) => {
         $(val).find('.float-right').remove();
         $(val).find('.form-group').find('input').remove();
         $(val).find('.form-group').append(`<p> ${answers[idx]} </p>`);
     });
-    
+
     $( $(target).find('.txtarea').find('textarea') ).each( (idx,val) =>{
         $(val).text(freetxt[idx])
     });
-    
-    $('#resultContainer').append('<button class="btn btn-primary btn-lg float-right btnResultDownload" >Download</button>'); --}}
-    
-    
+
+    $('#resultContainer').append('<button class="btn btn-primary btn-lg float-right btnResultDownload" >Download</button>');
+
+
 </script>
 @endsection

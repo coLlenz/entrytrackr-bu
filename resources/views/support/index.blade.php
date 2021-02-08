@@ -113,17 +113,19 @@
                     @endif
                     @foreach ($supports as $support)
                     <div class="card mb-3">
-                        <div class="d-flex flex-grow-1 min-width-zero" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <div class="d-flex flex-grow-1 min-width-zero" data-toggle="collapse" data-target="#toggle{{$support->id}}" aria-expanded="true" aria-controls="collapseOne">
                             <div class="card-body btn btn-empty list-item-heading text-left text-one">
                                 {{$support->title}}
                             </div>
                         </div>
-                        <div id="collapseOne" class="collapse" data-parent="#accordion">
+
+                        <div id="toggle{{$support->id}}" class="collapse" data-parent="#accordion">
                             <div class="card-body accordion-content">
                                 {!! $support->content !!}
                             </div>
                         </div>
                     </div>
+                    
                     @if(auth()->user()->is_admin)
                     <button type="button" class="btn btn-primary" onclick="window.location.href='{{route("support-edit",$support->id)}}'">
                         Edit
