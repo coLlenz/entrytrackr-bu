@@ -29,8 +29,13 @@
                     </a>
                 </li> -->
                 <li class="{{(request()->is('support') || request()->segment(2) == 'support') ? 'active' : ''}}">   
-                    <a href="/support">
+                    <a href="#">
                         <i class="fa fa-life-ring" aria-hidden="true"></i> Help & Support
+                    </a>
+                </li>
+                <li class="{{(request()->is('special_access') || request()->segment(2) == 'special_access') ? 'active' : ''}}">   
+                    <a href="{{route('special-index')}}">
+                        <i class="fa fa-key" aria-hidden="true"></i> Special Access
                     </a>
                 </li>
                 <li class="{{(request()->segment(2) == 'clients') ? 'active' : ''}}">

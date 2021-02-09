@@ -1,0 +1,2 @@
+ALTER TABLE `users` ADD `access_flg` BOOLEAN NULL DEFAULT FALSE AFTER `status`;
+ALTER TABLE `users` CHANGE `access_flg` `access_flg` TINYINT(1) NULL DEFAULT '0' COMMENT '0-cant be given special access, 1- can have special access\r\n';

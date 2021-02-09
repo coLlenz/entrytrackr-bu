@@ -46,4 +46,8 @@ Route::prefix('admin')->middleware(['auth' , 'isAdmin'])->group(function(){
 	Route::get('/reports/summary/by/visitor' , [AdminReportController::class , 'byVisitor'])->name('admin-byVisitor');
 	Route::get('/reports/summary/get/results/{question_id}/{log_id}' , [AdminReportController::class , 'viewResults'])->name('admin-viewResults');
 	Route::post('/reports/summary/get/results/download/' , [AdminReportController::class , 'downloadResult'])->name('admin-downloadResult');
+	
+	// Special Access
+	Route::get('/special_access' , [ClientAccessController::class , 'index'])->name('special-index');
+	Route::post('/special_access' , [ClientAccessController::class , 'save'])->name('special-save');
 });

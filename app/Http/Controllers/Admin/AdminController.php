@@ -27,15 +27,15 @@ class AdminController extends Controller
     
     public function index(Request $request){
         $total_accounts = DB::table('users')->where(['is_admin' => '!= 1' , 'status' => 0])->count();
-        $total_sigin_in = DB::table('visitor_log')
-        ->join('trakrs' , 'trakrs.id' , '=' , 'visitor_log.visitor_id')
-        ->where(['visitor_log.action' => 0])->count();
-        $total_sigin_out = DB::table('visitor_log')
-        ->join('trakrs' , 'trakrs.id' , '=' , 'visitor_log.visitor_id')
-        ->where(['action' => 1])->count();
+        
+        $total_sigin_in = DB::table('visitor_log')->where(['visitor_log.action' => 0])->count();
+        
+        $total_sigin_out = DB::table('visitor_log')->where(['action' => 1])->count();
+        
         $total_denied = DB::table('trakrs')->where(['status' => 1])->count();
+        
         $trakr_id = DB::table('trakrs')->where('trakr_id' , '!=' , ' ')->count();
-        //test
+        
         $data = [
             'total_accounts' => $total_accounts,
             'total_sigin_in' => $total_sigin_in,
@@ -44,18 +44,15 @@ class AdminController extends Controller
             'trakr_id' => $trakr_id
         ];
         
-        $visitors = DB::table('visitor_log')
-        ->join('trakrs' , 'trakrs.id' , '=' , 'visitor_log.visitor_id')
+        $visitors = DB::table('trakrs')
         ->where('trakrs.trakr_type_id' , '=' , 1)
         ->count();
         
-        $contractor = DB::table('visitor_log')
-        ->join('trakrs' , 'trakrs.id' , '=' , 'visitor_log.visitor_id')
+        $contractor = DB::table('trakrs')
         ->where('trakrs.trakr_type_id' , '=' , 2)
         ->count();
         
-        $employee = DB::table('visitor_log')
-        ->join('trakrs' , 'trakrs.id' , '=' , 'visitor_log.visitor_id')
+        $employee = DB::table('trakrs')
         ->where('trakrs.trakr_type_id' , '=' , 3)
         ->count();
         
