@@ -46,6 +46,7 @@ class TrakrViewController extends Controller
                 $visitor->checked_in_status = 0;
                 $visitor->check_in_date = date('Y-m-d H:i:s');
                 $visitor->check_out_date = null;
+                $visitor->status = 0;
                 $visitor->trakr_type_id = $request->visitor_type;
                 
                 $formated_date = Carbon::parse($visitor->check_in_date)->timezone( $timezone )->format('d F Y g:i A');
@@ -374,6 +375,7 @@ class TrakrViewController extends Controller
         
         // get current signin data
         $trakr = Trakr::findOrFail($request->trakrid);
+        
         $visitor_name = $trakr->firstName." ".$trakr->lastName;
         
         // save logs
@@ -399,6 +401,11 @@ class TrakrViewController extends Controller
             $trakr->save();
             return response()->json(['status' => 'success' , 'examStatus' => false , 'logs' => $logs ? true : false] , 200);
         }else{
+            // always set to Allowed
+            $trakr->status = 0;
+            $trakr->save(); 
+            // 
+            
             $formated_date = $this->carbonFormat($trakr->check_in_date , $timezone);
             return response()->json(
                 [
@@ -536,6 +543,11 @@ class TrakrViewController extends Controller
                 $visitor->save();
                 return response()->json(['status' => 'success' , 'examStatus' => false , 'logs' => $logs ? true : false] , 200);
             }else{
+                // always set to Allowed
+                $trakr->status = 0;
+                $trakr->save(); 
+                // // // // // 
+                
                 $formated_date = $this->carbonFormat($visitor->check_in_date , $customer->timezone);
                 return response()->json(
                     [

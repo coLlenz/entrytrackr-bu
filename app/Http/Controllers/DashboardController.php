@@ -50,6 +50,7 @@ class DashboardController extends Controller
         ])
         ->where('trakrs.check_in_date' , '>=' , $current  )
         ->where('trakrs.check_in_date' , '<=' , $span )
+        ->where('trakrs.status' , 0)
         ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id' )
         ->orderBy('checked_in_status' , 'DESC')
         ->get();
