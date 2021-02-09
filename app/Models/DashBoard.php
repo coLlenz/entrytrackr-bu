@@ -13,8 +13,8 @@ class DashBoard extends Model
     use HasFactory;
     
     public function getdash_data(){
-        $current = Carbon::now()->format('Y-m-d 00:00:00');
-        $span = Carbon::now()->format('Y-m-d 23:59:59');
+        $current = Carbon::now()->timezone( userTz() )->format('Y-m-d 00:00:00');
+        $span = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
         
         //for customers and sub account 
         $dash = DB::table('trakrs')
@@ -31,8 +31,8 @@ class DashBoard extends Model
     }
     
     public function getdash_assistance(){
-        $current = Carbon::now()->format('Y-m-d 00:00:00');
-        $span = Carbon::now()->format('Y-m-d 23:59:59');
+        $current = Carbon::now()->timezone( userTz() )->format('Y-m-d 00:00:00');
+        $span = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
         $assist = DB::table('trakrs')
             ->select('firstName' , 'lastName' , 'trakrs.created_at','trakrs.check_in_date','trakrs.id','name as type' , 'safe' , 'date_marked_safe')
             ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
@@ -49,8 +49,8 @@ class DashBoard extends Model
     }
     
     public function getdash_evac(){
-        $current = Carbon::now()->format('Y-m-d 00:00:00');
-        $span = Carbon::now()->format('Y-m-d 23:59:59');
+        $current = Carbon::now()->timezone( userTz() )->format('Y-m-d 00:00:00');
+        $span = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
         
         $assist = DB::table('trakrs')
         ->select('firstName' , 'lastName' , 'trakrs.check_in_date','trakrs.id','name as type' , 'assistance' , 'safe' , 'date_marked_safe' , 'marked_by')
@@ -65,8 +65,8 @@ class DashBoard extends Model
     }
     
     public function getdast_pie(){
-        $current = Carbon::now()->format('Y-m-d 00:00:00');
-        $span = Carbon::now()->format('Y-m-d 23:59:59');
+        $current = Carbon::now()->timezone( userTz() )->format('Y-m-d 00:00:00');
+        $span = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
         $counts = [];
         
         $counts['visitors'] = Trakr::where(['trakr_type_id' => 1 , 'user_id' => user_id() , 'checked_in_status' => 0])
@@ -88,8 +88,8 @@ class DashBoard extends Model
     }
     
     public function total_sign_in(){
-        $current = Carbon::now()->format('Y-m-d 00:00:00');
-        $span = Carbon::now()->format('Y-m-d 23:59:59');
+        $current = Carbon::now()->timezone( userTz() )->format('Y-m-d 00:00:00');
+        $span = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
         
         // customers
         $total_signin = DB::table('trakrs')

@@ -40,8 +40,8 @@ class DashboardController extends Controller
     }
     
     public function showAll(){
-        $current = Carbon::now()->format('Y-m-d 00:00:00');
-        $span = Carbon::now()->format('Y-m-d 23:59:59');
+        $current = Carbon::now()->timezone( userTz() )->format('Y-m-d 00:00:00');
+        $span = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
         
         $trakrs = DB::table('trakrs')->select('trakrs.*' , 'trakr_types.name as type')
         ->where([
@@ -58,8 +58,8 @@ class DashboardController extends Controller
     
     public function showAllSearch( Request $request ){
         
-        $current = Carbon::now()->format('Y-m-d 00:00:00');
-        $span = Carbon::now()->format('Y-m-d 23:59:59');
+        $current = Carbon::now()->timezone( userTz() )->format('Y-m-d 00:00:00');
+        $span = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
         
         if (!$request->search) {
             $trakrs = DB::table('trakrs')->select('trakrs.*' , 'trakr_types.name as type')
