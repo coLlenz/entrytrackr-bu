@@ -43,11 +43,10 @@ class TrakrViewController extends Controller
                 'first_name'    => isset($request->first_name)  ?  $request->first_name : "",
                 'last_name'     => isset($request->last_name)   ?  $request->last_name  : "",
                 'phoneNumber'   => isset($request->last_name)   ?  $request->phoneNumber: "",
-                'trakr_id'      => isset($request->trakrid)     ?  $request->trakrid    : "",
                 'user_id'       => $userid
             ];
             
-            $checking = $this->checkIfLoggedIn( $conditions ,  $userid );
+            $checking = $this->checkIfLoggedIn( $conditions );
             
             if (isset($checking['has_record']) && $checking['has_record']) {
                 $visitor = Trakr::findOrFail($checking['visitor_id']);
