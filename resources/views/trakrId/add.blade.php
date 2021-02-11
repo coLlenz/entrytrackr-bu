@@ -15,30 +15,30 @@
     <div class="row justify-content-md-center">
         <div class="col-md-6">
             <div class="card">
-                 @if (session('success'))
-                    <div class="alert alert-success">
-                        <span>{{session('success')}}</span>
-                    </div>
-                 @endif
-               
+                
                 <div class="card-body">
+                    @if (Session::has('error'))
+                       <div class="alert alert-danger">
+                           <span>{{Session::get('error')}}</span>
+                       </div>
+                    @endif
                     <form action="{{route("trakr-store")}}" method="post" id="fadd">
                     @csrf
                     <div class="form-group">
                         <label>First Name</label>
-                        <input type="text" class="form-control" name="fname" required>
+                        <input type="text" class="form-control" name="fname" value="{{old('fname')}}" required>
                     </div>
                     <div class="form-group">
                         <label>Last Name</label>
-                        <input type="text" class="form-control" name="lname" required>
+                        <input type="text" class="form-control" name="lname" value="{{old('lname')}}" required>
                     </div>
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="text" class="form-control" name="number" required>
+                        <input type="text" class="form-control" name="number" value="{{old('number')}}" required>
                     </div>
                     <div class="form-group">
                         <label>Enter a trakrID</label>
-                        <input type="text" class="form-control" name="trakrid" required>
+                        <input type="text" class="form-control" name="trakrid" value="{{old('trakrid')}}" required>
                     </div>
                     <div class="form-group">
                         <label>Visitor Type</label>
