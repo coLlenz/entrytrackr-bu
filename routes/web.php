@@ -51,7 +51,7 @@ Route::get('/generate_pdf' , [DashboardController::class , 'generate_pdf'])
 	->middleware(['auth'])
 	->name('generate_pdf');
 	
-Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('settings')->middleware(['auth', 'verified' , 'notAdmin'])->group(function () {
 	Route::view('/', 'profile.show')->name('profile');
 	Route::view('/changepassword', 'profile.update_password')->name('profile-update');
 	Route::post('/add_admin' , [SettingsController::class , 'new_admin'])->name('add-new-admin');
@@ -61,7 +61,7 @@ Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
 	Route::post('/question-settings' , [SettingsController::class , 'saveSettings'])->name('saveSettings');
 });
 
-Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('trakrid')->middleware(['auth', 'verified' , 'notAdmin'])->group(function () {
 	Route::get('/', [TrakrController::class, 'index'])->name("trakr-index");
 	Route::get('/add', [TrakrController::class, 'create'])->name("trakr-add");
 	Route::post('/add', [TrakrController::class, 'store'])->name("trakr-store");
@@ -75,7 +75,7 @@ Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
 	// Search
 	Route::get('/search' , [TrakrController:: class , 'searchTrakr'])->name('searchTrakr');
 });
-Route::prefix('templates')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('templates')->middleware(['auth', 'verified' , 'notAdmin'])->group(function () {
 	Route::get('/', [TemplateController::class, 'index'])->name("template-index");
 	Route::get('/notification-add', [TemplateController::class, 'notificationcreate'])->name("notification-add");
 	Route::get('/notification-edit/{id}', [TemplateController::class, 'notificationedit'])->name("notification-edit");
@@ -112,7 +112,7 @@ Route::prefix('trakr')->group(function () {
 	
 });
 
-Route::prefix('support')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('support')->middleware(['auth', 'verified' , 'notAdmin'])->group(function () {
 	Route::get('/', [SupportController::class, 'index'])->name("support-index");
 	Route::post('contact/add', [ContactController::class, 'contact'])->name("contact-store");
 	Route::post('support/add', [SupportController::class, 'Supportstore'])->name("support-store");
@@ -120,7 +120,7 @@ Route::prefix('support')->middleware(['auth', 'verified'])->group(function () {
 	Route::post('support/update/{id}', [SupportController::class, 'update'])->name("support-update");
 });
 
-Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('reports')->middleware(['auth', 'verified' , 'notAdmin'])->group(function () {
 	Route::get('/', [ReportController::class, 'index'])->name("report-index");
 	Route::get('/filter',[ReportController::class,'filter'])->name('report-filter');
 	Route::get('/generate_list',[ReportController::class,'generate_pdf'])->name('list-report');
@@ -131,7 +131,7 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/summary/search/results' , [ReportController::class , 'searchSummary'])->name('searchSummary');
 });
 
-Route::prefix('locations')->middleware(['auth'])->group(function() {
+Route::prefix('locations')->middleware(['auth' , 'notAdmin'])->group(function() {
 	Route::get('/', [LocationController::class, 'index'])->name("index");
 	Route::get('/visit/{uuid}/{id}' , [LocationController::class , 'visit'])->name('visit');
 	Route::get('/visit/show/visitor_logs/{user_id}/{visitor_id}' ,[LocationController::class,'visitorLogs'])->name('visitorLogs');
