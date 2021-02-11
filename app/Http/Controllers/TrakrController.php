@@ -6,6 +6,7 @@ use App\Models\Trakr;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DB;
+use Session;
 class TrakrController extends Controller
 {
     /**
@@ -14,15 +15,11 @@ class TrakrController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        if (auth()->user()->is_admin) {
-            return redirect()->route('admin-trakrid');
-        }
-        
         $list_data = Trakr::select('trakr_id','firstName' , 'lastName' , 'trakr_types.name as type' , 'trakrs.id' , 'check_in_date')
-        ->where('trakr_id', '!=' , '')
         ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
+        ->whereNotNull('trakr_id')
+        ->where('user_id' , user_id())
         ->orderBy('trakrs.created_at' , 'DESC')
-        ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
         ->paginate(50);
         return view('trakrId.index',compact("list_data"));
     }
@@ -43,7 +40,6 @@ class TrakrController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        
         $this->validate($request, [
             'fname' => 'required|min:3|max:255',
             'lname' => 'required',
@@ -51,18 +47,24 @@ class TrakrController extends Controller
             'number' => 'required',
             'vtype' => 'required',
         ]);
-        // dd($request);
+        
+        $checker = $this->trakrIdCheck($request->trakrid , user_id());
+        
+        if ($checker) {
+            Session::flash('error', 'trakrID not available.'); 
+            return back()->withInput();
+        }
+        
         $trakrr = new Trakr;
         $trakrr->firstName = $request->fname;
         $trakrr->lastName = $request->lname;
         $trakrr->trakr_id = $request->trakrid;
         $trakrr->phoneNumber = $request->number;
         $trakrr->trakr_type_id = $request->vtype;
-        $trakrr->user_id = auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id;
-        $trakrr->assistance = 0;
-        $trakrr->status = 0;
-        $trakrr->checked_in_status = 0;
-        $trakrr->check_in_date = date('Y-m-d H:i:s');
+        $trakrr->user_id = user_id();
+        $trakrr->assistance = NULL;
+        $trakrr->status = NULL;
+        $trakrr->checked_in_status = NULL;
         
         if ($trakrr->save()) {
             return redirect('/trakrid')
@@ -71,21 +73,15 @@ class TrakrController extends Controller
         return redirect('/trakrid')->with('success' , 'Complete the Form');
     }
     
-    public function setUsernameAttribute($value)
-    {
-        $firstName = $value['firstName'];
-        $lastName = strtolower($value['lastName']);
-
-        $username = $firstName[0] . $lastName;
-
-        $i = 0;
-        while(Trakr::whereTrakrId($username)->exists())
-        {
-            $i++;
-            $username = $firstName[0] . $lastName . $i;
+    
+    function trakrIdCheck($trakr_id  , $user_id){
+        
+        $trakr = Trakr::where(['trakr_id' => $trakr_id , 'user_id' => $user_id])->get();
+        
+        if (!$trakr->isEmpty()) {
+            return true;
         }
-
-        return $username;
+        return false;
     }
     /**
      * Display the specified resource.
