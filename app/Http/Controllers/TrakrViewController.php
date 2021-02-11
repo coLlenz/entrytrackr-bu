@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use DB;
+use Exception;
 class TrakrViewController extends Controller
 {
     /**
@@ -31,15 +32,23 @@ class TrakrViewController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'phoneNumber' => 'required',
-            // 'email' => 'email|nullable',
             'visitor_type' => 'required'
         ]);
         
         $timezone = isset( $request->timezone  ) ? $request->timezone : userTz();
         
         if ($validator->passes()) {
-            // check if existing data 
-            $checking = $this->checkIfLoggedIn($request->all());
+            
+            $conditions = [
+                'first_name'    => isset($request->first_name)  ?  $request->first_name : "",
+                'last_name'     => isset($request->last_name)   ?  $request->last_name  : "",
+                'phoneNumber'   => isset($request->last_name)   ?  $request->phoneNumber: "",
+                'trakr_id'      => isset($request->trakrid)     ?  $request->trakrid    : "",
+                'user_id'       => $userid
+            ];
+            
+            $checking = $this->checkIfLoggedIn( $conditions ,  $userid );
+            
             if (isset($checking['has_record']) && $checking['has_record']) {
                 $visitor = Trakr::findOrFail($checking['visitor_id']);
                 $visitor->assistance = isset($request->need_assistance) ? 1:0; 
@@ -77,7 +86,6 @@ class TrakrViewController extends Controller
             $trakr_new->lastName = $request->last_name;
             $trakr_new->assistance = isset($request->need_assistance) ? 1:0;
             $trakr_new->phoneNumber = $request->phoneNumber;
-            // $trakr_new->email = $request->email;
             $trakr_new->trakr_type_id = $request->visitor_type;
             $trakr_new->user_id = ($userid) ? $userid : auth()->user()->id;
             $trakr_new->status = 0;
@@ -138,7 +146,6 @@ class TrakrViewController extends Controller
     }
     
     public function trakrid(Request $request){
-        
         // SIMPLE CHECK IN
         $validator = Validator::make($request->all(), [
             'trakrid' => 'required',
@@ -147,10 +154,22 @@ class TrakrViewController extends Controller
         $timezone = isset( $request->timezone  ) ? $request->timezone : userTz();
         
         if ($validator->passes()) {
+            
+            $conditions = [
+                'trakr_id' => isset($request->trakrid) ? $request->trakrid : '',
+                'user_id' =>  $request->user_id
+            ];
+            
             // check if logged in already
-            $checking = $this->checkIfLoggedIn($request->all());
+            $checking = $this->checkIfLoggedIn($conditions);
+            
             if (isset( $checking['is_loggedin'] ) && $checking['is_loggedin'] == 0) {
                 return response()->json(['status' => 'loggedin' , 'check_date' => $this->carbonFormat($checking['check_date'] , $timezone)] , 200 );
+            }
+            
+            // check if existing on customers records
+            if (!$checking) {
+                throw new Exception('Not Existing');
             }
             
             //update status if not logged in
@@ -180,8 +199,10 @@ class TrakrViewController extends Controller
     }
     
     public function trakrcheckout(Request $request){
+        $user_id = $request->user_id;
         $validator = [];
         $trakr = [];
+        
         if (isset($request->trakrid) && !empty($request->trakrid)) {
             $validator = Validator::make($request->all(), [
                 'trakrid' => 'required',
@@ -197,16 +218,27 @@ class TrakrViewController extends Controller
         $timezone = isset( $request->timezone  ) ? $request->timezone : userTz();
         
         if ($validator->passes()) {
+            
+            $conditions = [
+                'first_name'    => isset($request->first_name)  ?  $request->first_name : "",
+                'last_name'     => isset($request->last_name)   ?  $request->last_name  : "",
+                'phoneNumber'   => isset($request->last_name)   ?  $request->phoneNumber: "",
+                'trakr_id'      => isset($request->trakrid)     ?  $request->trakrid    : "",
+                'user_id'       => $user_id
+            ];
+            
             // checking user status
-            $checking = $this->checkIfLoggedIn($request->all());
+            $checking = $this->checkIfLoggedIn( $conditions );
+            
             if (isset( $checking['is_loggedin'] ) && $checking['is_loggedin'] == 1) {
                 return response()->json(['status' => 'loggedout' , 'check_date' => $this->carbonFormat($checking['check_out_date'] , $timezone)] , 200 );
             }
             
+            
             //get user datas
             if (isset($request->trakrid) && !empty($request->trakrid)) {
                 
-                $trakr = Trakr::where('trakr_id' , $request->trakrid)->first();
+                $trakr = Trakr::where(['trakr_id' => $request->trakrid , 'user_id' => $user_id])->first();
                 
             }else{
                 
@@ -214,6 +246,7 @@ class TrakrViewController extends Controller
                     'firstName' => $request->first_name,
                     'lastName' => $request->last_name,
                     'phoneNumber' => $request->phoneNumber,
+                    'user_id' => $user_id
                 ])->first();
                 
             }
@@ -282,42 +315,54 @@ class TrakrViewController extends Controller
         return Carbon::parse($date)->timezone( $timezone )->format('d F Y g:i A');
     }
     
-    public function checkIfLoggedIn($condition){
+    public function checkIfLoggedIn($conditions){
+        /* 
+        params format
+        [
+            first_name
+            last_name
+            phoneNumber
+            trakr_id
+            user_id
+            
+        ]
+        */
+        $firstname = isset($conditions['first_name']) ? $conditions['first_name'] : "";
+        $lastname = isset($conditions['last_name']) ? $conditions['last_name'] : "";
+        $phoneNumber = isset($conditions['phoneNumber']) ? $conditions['phoneNumber'] : "";
+        $trakr_id = isset($conditions['trakr_id']) ? $conditions['trakr_id'] : "";
+        $user_id = isset($conditions['user_id']) ? $conditions['user_id'] : "";
         $returndata = [];
-        $checker_query = Trakr::query();
-        $checker_query->select('checked_in_status' , 'check_in_date','check_out_date' , 'id as visitor_id');
+        // DB::enableQueryLog();
         
-        // 
-        if (!empty($condition['first_name']) && isset($condition['first_name'])) {
-            $checker_query->where('firstName' , $condition['first_name']);
-        }
+        $checker_query = Trakr::select('checked_in_status' , 'check_in_date','check_out_date' , 'id as visitor_id' , 'firstName')
+        ->where('user_id' , $user_id)
+        ->when($firstname, function ($query , $firstname) {
+            return $query->where('firstName' , $firstname);
+        })
+        ->when($lastname , function ($query , $lastname){
+            return $query->where('lastName' , $lastname);
+        })
+        ->when($phoneNumber , function ($query , $phoneNumber){
+            return $query->where('phoneNumber' , $phoneNumber);
+        })
+        ->when($trakr_id , function ($query , $trakr_id){
+            return $query->where('trakr_id' , $trakr_id);
+        })->first();
         
-        if (!empty($condition['last_name']) && isset($condition['last_name'])) {
-            $checker_query->where('lastName' , $condition['last_name']);
-        }
-        
-        if (!empty($condition['phoneNumber']) && isset($condition['phoneNumber'])) {
-            $checker_query->where('phoneNumber' , $condition['phoneNumber']);
-        }
-        
-        // if trakrid only provided;
-        
-        if (!empty($condition['trakrid']) && isset($condition['trakrid'])) {
-            $checker_query->where('trakr_id' , $condition['trakrid']);
-        }
-        
-        $isLoggedIn = $checker_query->first();
-        
-        if ($isLoggedIn) {
-            $returndata['visitor_id'] = $isLoggedIn->visitor_id;
-            $returndata['is_loggedin'] = $isLoggedIn->checked_in_status;
-            $returndata['check_date'] = $isLoggedIn->check_in_date;
-            $returndata['check_out_date'] = $isLoggedIn->check_out_date;
-            $returndata['firstName'] = $isLoggedIn->firstName;
+        if ($checker_query) {
+            $returndata['visitor_id'] = $checker_query->visitor_id;
+            $returndata['is_loggedin'] = $checker_query->checked_in_status;
+            $returndata['check_date'] = $checker_query->check_in_date;
+            $returndata['check_out_date'] = $checker_query->check_out_date;
+            $returndata['firstName'] = $checker_query->firstName;
             $returndata['has_record'] = true;
+            
+            return $returndata;
         }
         
-        return $isLoggedIn ? $returndata : false;
+        return false;
+        
     }
     
     public function notificationCheck($userid = false){
@@ -431,7 +476,8 @@ class TrakrViewController extends Controller
     }
     
     function trakrIdCheck(Request $request){
-        $trakr = Trakr::where('trakr_id' , $request->input)->get();
+        
+        $trakr = Trakr::where(['trakr_id' => $request->input , 'user_id' => $request->user_id])->get();
         
         if (!$trakr->isEmpty()) {
             return response()->json(['status' => 'success' , 'is_existing' => true] , 200);
