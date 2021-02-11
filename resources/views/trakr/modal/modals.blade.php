@@ -89,7 +89,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         method: 'POST',
-                        body : JSON.stringify({trakrid:trakrid , timezone : "{{$view_data['timezone']}}"})
+                        body : JSON.stringify({trakrid:trakrid , user_id:"{{$view_data['userid']}}" ,timezone : "{{$view_data['timezone']}}"})
                     })
                     .then(response => {
                         
@@ -196,7 +196,7 @@
             $.ajax({
                 url : $(this).attr('action'),
                 type: $(this).attr('method'),
-                data: $(this).serialize(),
+                data: $(this).serialize() + "&user_id=" + "{{$view_data['userid']}}",
                 success: function(response){
                     if (response.status == 'nodata') {
                         Swal.fire({
@@ -439,7 +439,7 @@
                         $.ajax({
                             url : "{{route('check-trakr-id')}}",
                             method: 'POST',
-                            data: {input : value},
+                            data: {input : value , user_id:"{{$view_data['userid']}}"},
                             success: function(response){
                                 if (response.is_existing) {
                                     resolve('trakrID not available, try again.');
