@@ -590,8 +590,8 @@ class TrakrViewController extends Controller
                 return response()->json(['status' => 'success' , 'examStatus' => false , 'logs' => $logs ? true : false] , 200);
             }else{
                 // always set to Allowed
-                $trakr->status = 0;
-                $trakr->save(); 
+                $visitor->status = 0;
+                $visitor->save(); 
                 // // // // // 
                 
                 $formated_date = $this->carbonFormat($visitor->check_in_date , $customer->timezone);
