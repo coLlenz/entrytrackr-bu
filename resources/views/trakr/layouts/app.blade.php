@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{{ asset('css/dore.light.purple.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/vendor/component-custom-switch.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/vendor/perfect-scrollbar.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/question.css') }}" />
     @yield('style')
     <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
     <style media="screen">
