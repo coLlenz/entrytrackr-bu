@@ -319,7 +319,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary save_check_in btn_entry">Next</button>
+                <button type="submit" class="et_btn et_btn_clored save_check_in btn_entry">Next</button>
             </div>
         </form>
         `;
@@ -366,8 +366,8 @@
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary cancel_btn_out btn_entry">Cancel</button>
-                    <button type="submit" class="btn btn-primary save_check_out btn_entry">Sign Out</button>
+                    <button type="button" class="et_btn et_btn_secondary cancel_btn_out btn_entry">Cancel</button>
+                    <button type="submit" class="et_btn et_btn_clored save_check_out btn_entry">Sign Out</button>
                 </div>
             </form>
         `;
@@ -605,8 +605,8 @@
         var form = document.createElement('form');
         var button = `
             <div class="float-right">
-            <button type="button"  class="btn btn-outline-secondary mr-2 btnCancelQuestion" cancel-btn-data="${trakrid}">Cancel</>
-            <br/><button type="submit"  class="btn btn-primary " >Submit</>
+            <button type="button"  class="et_btn et_btn_secondary mr-2 btnCancelQuestion" cancel-btn-data="${trakrid}">Cancel</>
+            <br/><button type="submit"  class="et_btn et_btn_clored" >Submit</>
             </div>
         `;
         var hiddenId = `<input type="hidden" name="questionId" value="${questions.id}" >`;
@@ -621,10 +621,18 @@
         $(form).append(trakrid);
         $(form).find('.form-group').remove();
         $( $(form).find('.custom-control') ).each( (idx , item) => {
-            $(item).css('display' , 'flex');
+            
+            $(item).removeClass('custom-control custom-radio');
+            $(item).addClass('et_');
+            
             $( $(item).find('input[type=radio]') ).each( (idx2 , item2) => {
+                $(item2).removeClass('custom-control-input');
+                $(item2).addClass('et_radio');
                 $(item2).attr('required' , 'true');
+                $(item).find('label').removeClass('custom-control-label');
+                $(item).find('label').addClass('et_radio_label');
             });
+            
         })
         $(form).append( tempCheck() );
         $(form).append(button);

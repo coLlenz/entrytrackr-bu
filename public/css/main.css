@@ -56,12 +56,12 @@ body.show-spinner::after{
     background: #efefef;
     border-radius:10px;
 }
-.et_btn {
+.et_btn{
     border:2px solid #a3238e;
     padding: 10px;
     width: 90px;
     border-radius: 5px;
-    font-weight: 800;
+    font-weight: 400;
 }
 .et_btn_primary{
     background: #fff;
@@ -72,7 +72,7 @@ body.show-spinner::after{
 .et_btn_secondary{
     background: #fff;
     color : #000;
-    font-weight: 800;
+    font-weight: 400;
 }
 .et_btn_primary:hover , .et_btn_secondary:hover{
     background: #a3238e;
@@ -103,9 +103,13 @@ body.show-spinner::after{
 
 .et_btn_clored{
     background: #a3238e;
-    width: 64px;
     color:#fff;
-    border:2px solid #fff;
+    border:2px solid #a3238e;
+}
+.et_btn_clored:hover{
+    background: #fff;
+    color:#000;
+    border:2px solid #a3238e;
 }
 .et_btn_cancel:hover{
     color:#000;
