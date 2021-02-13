@@ -620,6 +620,7 @@
         $(form).append(hiddenId);
         $(form).append(trakrid);
         $(form).find('.form-group').remove();
+        $(form).find('h2').addClass('mb-4');
         $( $(form).find('.custom-control') ).each( (idx , item) => {
             
             $(item).removeClass('custom-control custom-radio');
