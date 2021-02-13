@@ -1,0 +1,24 @@
+.et_radio{
+    opacity: 0;
+}
+.et_ {
+    width: 50%;
+    display: inline;
+}
+.et_radio_label {
+    border:2px solid #a3238e;
+    padding: 10px;
+    width: 90px;
+    border-radius: 5px;
+    font-weight: 400;
+    transition: 100ms ease;
+}
+
+.et_radio:checked+label{
+    background: #a3238e;
+    color: #fff;
+}
+.et_radio_label:hover{
+    background: #a3238e;
+    color:#fff;
+}

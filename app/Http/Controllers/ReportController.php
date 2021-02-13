@@ -13,15 +13,18 @@ class ReportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $date_now = strtotime( date('Y-m-d H:i:s') );
+        $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
+        $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
+        
         $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
-        ->where('user_id' , user_id())
-        ->where('check_in_date' ,'>=', date('Y-m-d',strtotime("-7 days" , $date_now))." 00:00:00")
-        ->orderBy('check_in_date' , 'DESC')
-        ->where('check_in_date' , '<=' , date('Y-m-d')." 23:59:59")->paginate(10);
+        ->where('user_id' , user_id() )
+        ->where('check_in_date' ,'>=', $date_7_days_ago )
+        ->where('check_in_date' , '<=' ,  $date_now )
+        ->orderBy('check_in_date' , 'DESC' )
+        ->paginate(10);
         $formdata = [
-            'fdate' => date('Y-m-d' , strtotime("-7 days" , $date_now)),
-            'edate' => date('Y-m-d' , $date_now),
+            'fdate' => Carbon::parse( $date_7_days_ago )->format('Y-m-d'),
+            'edate' => Carbon::parse( $date_now )->format('Y-m-d'),
             'ass' => 'all',
             'tvis' => 'all',
             'acc' => 'all'
@@ -94,6 +97,8 @@ class ReportController extends Controller
         $filter_query->when($status == '1',function($q , $status ) {
             return $q->where('status' , '=' , 1);
         });
+        
+        $filter_query->orderBy('check_in_date' , 'DESC');
         
         $data = $filter_query->paginate(10);
         // $query = DB::getQueryLog();
@@ -188,13 +193,13 @@ class ReportController extends Controller
         if ($type == 'all') {
             $lists = DB::table('question_logs')
             ->where('visitor_type' ,'>',0)
-            ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
+            ->where('user_id' , user_id())
             ->orderBy('created_at' , 'DESC')
             ->get();
         }else {
             $lists = DB::table('question_logs')
             ->where('visitor_type' , $type)
-            ->where('user_id' , auth()->user()->sub_account ? auth()->user()->sub_account_id : auth()->user()->id)
+            ->where('user_id' , user_id())
             ->orderBy('created_at' , 'DESC')
             ->get();
         }
