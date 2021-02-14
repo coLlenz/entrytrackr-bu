@@ -20,32 +20,30 @@
 </style>
     <section class="uk-section">
         <div class="uk-container">
-            @if( !auth()->user()->sub_account && !auth()->user()->is_admin )
-                <div class="row">
-                    <div class="col-12">
-                        <div class="row icon-cards-row mb-4">
-                            <div class="col-md-3 col-lg-2 col-sm-4 col-6 mb-4 entry_box">
-                                <a href="" class="card" data-toggle="modal" data-target="#add_user_modal">
-                                    <div class="card-body text-center">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row icon-cards-row mb-4">
+                        <div class="col-md-3 col-lg-2 col-sm-4 col-6 mb-4 entry_box">
+                            <a href="" class="card" data-toggle="modal" data-target="#add_user_modal">
+                                <div class="card-body text-center">
                                     <i class="fa fa-user-plus" aria-hidden="true"></i>
                                     <p class="card-text font-weight-semibold mb-0">Add User</p>
                                     <!-- <p class="lead text-center">10</p> -->
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-md-3 col-lg-2 col-sm-4 col-6 mb-4 entry_box">
-                                <a href="{{route('customerAdmins')}}" class="card">
-                                    <div class="card-body text-center">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-lg-2 col-sm-4 col-6 mb-4 entry_box">
+                            <a href="{{route('customerAdmins')}}" class="card">
+                                <div class="card-body text-center">
                                     <i class="fa fa-users" aria-hidden="true"></i>
                                     <p class="card-text font-weight-semibold mb-0">Manage Users</p>
                                     <!-- <p class="lead text-center">10</p> -->
-                                    </div>
-                                </a>
-                            </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
-            @endif
+            </div>
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updateProfileInformation()))
                 @include('profile.update-profile-information-form')
             @endif
@@ -71,6 +69,43 @@
                         <div class="row align-items-center">
                             <div class="col-md-12">
                                 <a class="btn btn-primary btn-md mr-4 text-light" href="{{route('viewSettings')}}"> Change View </a>
+                            </div>
+                        </div>
+                          
+                    </div>
+                </div> 
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="mb-4"> Automatic Sign Out Settings </h4>
+                        <p>Set the length of time (in hours) for each Visitor Type to be automatically signed out.</p>
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                @if (Session::has('message'))
+                                   <div class="alert alert-info">
+                                       <span>{{Session::get('message')}}</span>
+                                   </div>
+                                @endif
+                                <form class="" action="{{route('signOutSettings')}}" method="POST" id="signOutSettings">
+                                        @csrf
+                                        <div class="et_signout_settings">
+                                            <div class="settings_">
+                                                <input type="checkbox" name="employee" value="1" id="employee" {{$settings->employee != 0 ? 'checked' : 'asdsa'}}>
+                                                <label for="employee">Employee</label>
+                                                <input type="number" name="set_employee" value="{{$settings->employee}}" class="et_signOut_input" min="0" >
+                                            </div>
+                                            <div class="settings_">
+                                                <input type="checkbox" name="visitor" value="1" id="visitor" {{$settings->visitor != 0 ? 'checked' : 'asdasd'}}>
+                                                <label for="visitor">Visitor</label>
+                                                <input type="number" name="set_visitor" value="{{$settings->visitor}}" class="et_signOut_input" min="0" >
+                                            </div>
+                                            <div class="settings_">
+                                                <input type="checkbox" name="contractor" value="1" id="contractor" {{$settings->contractor != 0 ? 'checked' : 'asdas'}} >
+                                                <label for="contractor">Contractor</label>
+                                                <input type="number" name="set_contractor" value="{{$settings->contractor}}" class="et_signOut_input" min="0" >
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-md" name="saveBtn">Save</button>
+                                </form>
                             </div>
                         </div>
                           
@@ -176,6 +211,7 @@
                 }
             })
         })
+        
     });
 </script>
 

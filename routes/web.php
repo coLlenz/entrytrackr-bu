@@ -52,13 +52,14 @@ Route::get('/generate_pdf' , [DashboardController::class , 'generate_pdf'])
 	->name('generate_pdf');
 	
 Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
-	Route::view('/', 'profile.show')->name('profile');
+	Route::get('/', [SettingsController::class , 'index'])->name('profile');
 	Route::view('/changepassword', 'profile.update_password')->name('profile-update');
 	Route::post('/add_admin' , [SettingsController::class , 'new_admin'])->name('add-new-admin');
 	Route::get('/manage/all/admins' , [SettingsController::class , 'customerAdmins'])->name('customerAdmins');
 	Route::get('/qr/login/view' , [SettingsController::class , 'generatePDF'])->name('qrpdf');
 	Route::get('/question-settings' , [SettingsController::class , 'viewSettings'])->name('viewSettings');
 	Route::post('/question-settings' , [SettingsController::class , 'saveSettings'])->name('saveSettings');
+	Route::post('/signin-settings' , [SettingsController::class , 'signOutSettings'])->name('signOutSettings');
 });
 
 Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
