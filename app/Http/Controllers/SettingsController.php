@@ -17,7 +17,7 @@ class SettingsController extends Controller{
     
     public function index(){
         $settings = DB::table('question_view_settings')->select('auto_sign_out')->where('user_id' , user_id())->first();
-        $json = json_decode($settings->auto_sign_out);
+        $json = $settings ? json_decode($settings->auto_sign_out) : [];
         return view('profile.show')->with('settings' , $json);
     }
     

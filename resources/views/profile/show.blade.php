@@ -91,17 +91,17 @@
                                             <div class="settings_">
                                                 <input type="checkbox" name="employee" value="1" id="employee" {{isset($settings->employee) && $settings->employee != 0 ? 'checked' : ''}}>
                                                 <label for="employee">Employee</label>
-                                                <input type="number" name="set_employee" value="{{$settings->employee ? $settings->employee : 0}}" class="et_signOut_input" min="0" >
+                                                <input type="number" name="set_employee" value="{{isset($settings->employee) ? $settings->employee : 0}}" class="et_signOut_input" min="0" >
                                             </div>
                                             <div class="settings_">
                                                 <input type="checkbox" name="visitor" value="1" id="visitor" {{isset($settings->visitor) && $settings->visitor != 0 ? 'checked' : ''}}>
                                                 <label for="visitor">Visitor</label>
-                                                <input type="number" name="set_visitor" value="{{$settings->visitor ? $settings->visitor : 0}}" class="et_signOut_input" min="0" >
+                                                <input type="number" name="set_visitor" value="{{isset($settings->visitor) ? $settings->visitor : 0}}" class="et_signOut_input" min="0" >
                                             </div>
                                             <div class="settings_">
                                                 <input type="checkbox" name="contractor" value="1" id="contractor" {{isset($settings->contractor) && $settings->contractor != 0 ? 'checked' : ''}} >
                                                 <label for="contractor">Contractor</label>
-                                                <input type="number" name="set_contractor" value="{{$settings->contractor ? $settings->contractor : 0}}" class="et_signOut_input" min="0" >
+                                                <input type="number" name="set_contractor" value="{{isset($settings->contractor) ? $settings->contractor : 0}}" class="et_signOut_input" min="0" >
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-md" name="saveBtn">Save</button>
