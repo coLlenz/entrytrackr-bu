@@ -1,11 +1,9 @@
 <?php
 
 namespace App\Console\Commands;
-
-use App\Models\Trakr;
+use App\Http\Controllers\Cron\AutoSignOutController;
 use Illuminate\Console\Command;
-use Carbon\Carbon;
-use DB;
+
 class SignOutAll extends Command
 {
     /**
@@ -37,43 +35,10 @@ class SignOutAll extends Command
      *
      * @return int
      */
-    public function handle(Trakr $trakr)
+    public function handle()
     {
-        $signin = Trakr::where('checked_in_status' , 0)->get();
-        
-        if (!$signin->isEmpty()) {
-            
-            foreach ($signin as $key => $value) {
-                $customer = DB::table('users')->select('timezone')->where(['id' => $value->user_id])->first();
-                $expected_sign_out = Carbon::parse($value->check_in_date)->timezone( $customer->timezone )->addHours(9);
-                
-                if ( Carbon::now()->timezone( $customer->timezone )->greaterThanOrEqualTo( $expected_sign_out ) ) {
-                    $value->check_out_date = Carbon::parse( $expected_sign_out )->format('Y-m-d H:i:s');
-                    $value->updated_at = Carbon::now();
-                    $value->checked_in_status = 1;
-                    $status = $value->save();
-                    
-                    // save logs
-                    $logs = DB::table('scheduled_jobs')->insert([
-                        'job' => 'signout:all',
-                        'status' => $status,
-                        'user_id' => $value->user_id,
-                        'visitor_id' => $value->id,
-                        'created_at' => Carbon::now()
-                    ]);
-                    
-                    $visitLogs = DB::table('visitor_log')->insert([
-                        'visitor_id' => $value->id,
-                        'user_id' => $value->user_id,
-                        'action' => 1,
-                        'created_at' => Carbon::now()
-                    ]);
-                    
-                }
-                
-            }// end foreach
-            
-        }
+        $autosignout = new AutoSignOutController();
+        $autosignout->autoSignOut();
         
     }
 }

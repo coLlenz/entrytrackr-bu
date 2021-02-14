@@ -293,6 +293,22 @@ body.show-spinner::after{
     }
 
 }
-
+.et_signout_settings{
+    display: inline-flex;
+    width: 100%;
+}
+.settings_ {
+    padding: 10px;
+    margin-right: 10px;
+}
+.et_signOut_input {
+    padding: 10px;
+    width: 60px;
+    text-align: center;
+    margin: 10px;
+    border: 1px solid #e3e3e3;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
 

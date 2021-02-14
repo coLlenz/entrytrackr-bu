@@ -1,0 +1,2 @@
+ALTER TABLE `question_view_settings` ADD `auto_sign_out` VARCHAR(100) NOT NULL AFTER `settings`;
+ALTER TABLE `question_view_settings` CHANGE `auto_sign_out` `auto_sign_out` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
