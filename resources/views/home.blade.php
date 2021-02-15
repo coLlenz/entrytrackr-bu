@@ -1,4 +1,4 @@
-  @extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
     <div class="card">
@@ -144,7 +144,7 @@
                                         </div>
                                     </td>
                                     <td class="text-center safe_date{{$evac->id}}">{{$evac->date_marked_safe ? \Carbon\Carbon::parse($evac->date_marked_safe)->timezone(userTz())->format('d-m-y H:i') : 'No records yet'}}</td>
-                                    <td class="text-center safe_date{{$evac->id}}">{{$evac->marked_by ? $evac->marked_by : 'Pending'}}</td>
+                                    <td class="text-center marked_by">{{$evac->marked_by ? $evac->marked_by : 'Pending'}}</td>
                                   </tr>
                               @endforeach
                             @endif
@@ -295,8 +295,7 @@
                     data : {data_id : id},
                     success: function(response){
                         if (response.status) {
-                            target.remove();
-                            $('#visit_count').text(Number($('#visit_count').text()) - 1);
+                            location.reload();
                         }
                     }
                 })
