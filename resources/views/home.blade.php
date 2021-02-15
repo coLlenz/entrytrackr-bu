@@ -295,8 +295,7 @@
                     data : {data_id : id},
                     success: function(response){
                         if (response.status) {
-                            target.remove();
-                            $('#visit_count').text(Number($('#visit_count').text()) - 1);
+                            location.reload();
                         }
                     }
                 })
