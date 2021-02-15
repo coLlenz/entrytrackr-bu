@@ -23,7 +23,6 @@ environments:
         memory: 1024
         cli-memory: 512
         storage: qrlogins
-        scheduler: true
         layers:
             - 'vapor:php-7.4'
             - 'vapor:php-7.4:imagick'
