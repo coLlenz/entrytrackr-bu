@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         // $schedule->command( 'signout:all' )->everyMinute()->sendOutputTo(public_path().'/tasks/log.txt')->timezone('UTC');
-        $schedule->command( 'signout:all' )->everyFifteenMinutes()->timezone('UTC');
+        $schedule->command( 'signout:all' )->everyTwoMinutes()->timezone('UTC');
     }
 
     /**
