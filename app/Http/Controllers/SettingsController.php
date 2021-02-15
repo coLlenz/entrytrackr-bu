@@ -12,7 +12,14 @@ use QrCode;
 use DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Session;
 class SettingsController extends Controller{
+    
+    public function index(){
+        $settings = DB::table('question_view_settings')->select('auto_sign_out')->where('user_id' , user_id())->first();
+        $json = $settings ? json_decode($settings->auto_sign_out) : [];
+        return view('profile.show')->with('settings' , $json);
+    }
     
     public function customerAdmins(){
         $userlist = User::where(
@@ -87,12 +94,54 @@ class SettingsController extends Controller{
                 'user_id' => user_id(),
                 'settings' => $request->settings
             ]);
+            
+            return $new_settings;
         }
         
         $new_settings = DB::table('question_view_settings')->where('user_id' , user_id() )
         ->update(['settings' => $request->settings]);
         
         return $new_settings;
+        
+    }
+    
+    public function signOutSettings( Request $request ){
+        $settings_data = [];
+        $settings = [];
+        $result = false;
+        
+        $settings_data = [
+            'employee' => isset( $request->employee ) ? $request->set_employee : 0,
+            'visitor' => isset( $request->visitor ) ? $request->set_visitor : 0,
+            'contractor' => isset( $request->contractor ) ? $request->set_contractor : 0
+        ];
+        
+        $encode = json_encode( $settings_data );
+        
+        $settings = DB::table('question_view_settings')->where('user_id' , user_id())->first();
+        
+        if (!$settings) {
+            
+            $result = DB::table('question_view_settings')->insert([
+                'user_id' => user_id(),
+                'auto_sign_out' => $encode
+            ]);
+            
+        }else{
+            
+            $result = DB::table('question_view_settings')->where('user_id' , user_id() )
+            ->update(['auto_sign_out' => $encode ]);
+            
+        }
+        
+        if ($result) {
+            Session::flash('message', 'Save'); 
+        }else{
+            Session::flash('message', 'Error saving Settings'); 
+        }
+        
+        return back();
+        
         
     }
         
