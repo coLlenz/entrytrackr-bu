@@ -15,8 +15,9 @@
                 </h3>
                 <table class="table">
                     <tbody>
-                        @foreach($trakrs as $trakr)
+                        @foreach($trakrs as $count => $trakr)
                             <tr>
+                                <td>{{ $count + 1 }}</td>
                                 <td>{{$trakr->firstName}} {{$trakr->lastName}}</td>
                                 <td>{{$trakr->type}}</td>
                                 <td class="color-theme-1">{{\Carbon\Carbon::parse($trakr->check_in_date)->timezone(userTz())->diffForHumans()}}</td>
