@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\ClientAccessController;
 use App\Http\Controllers\Admin\TemplateController;
 use App\Http\Controllers\Admin\AdminTrakrController;
 use App\Http\Controllers\Admin\AdminReportController;
-use App\Http\Controllers\Admin\TemplateController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware(['auth' , 'isAdmin'])->group(function(){
