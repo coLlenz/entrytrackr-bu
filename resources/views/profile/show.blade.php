@@ -20,6 +20,7 @@
 </style>
     <section class="uk-section">
         <div class="uk-container">
+            @if( !auth()->user()->sub_account )
             <div class="row">
                 <div class="col-12">
                     <div class="row icon-cards-row mb-4">
@@ -44,6 +45,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updateProfileInformation()))
                 @include('profile.update-profile-information-form')
             @endif
