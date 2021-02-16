@@ -14,7 +14,6 @@ use App\Http\Controllers\LocationController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use App\Http\Controllers\Cron\AutoSignOutController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,7 +24,7 @@ use App\Http\Controllers\Cron\AutoSignOutController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/sched' , [AutoSignOutController::class , 'autoSignOut'] );
+
 Route::get('/', function () {
 	// return view('welcome');
 	return redirect()->route('login');

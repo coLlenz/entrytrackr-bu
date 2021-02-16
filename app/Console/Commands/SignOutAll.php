@@ -37,8 +37,9 @@ class SignOutAll extends Command
      */
     public function handle()
     {
-        $autosignout = new AutoSignOutController();
-        $autosignout->autoSignOut();
+        $auto_sign_out = new AutoSignOutController();
+        $auto_sign_out->autoSignOut();
         
     }
+    
 }
