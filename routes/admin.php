@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin\ClientAccessController;
 use App\Http\Controllers\Admin\TemplateController;
 use App\Http\Controllers\Admin\AdminTrakrController;
 use App\Http\Controllers\Admin\AdminReportController;
-
+use App\Http\Controllers\Admin\TemplateController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware(['auth' , 'isAdmin'])->group(function(){
@@ -46,4 +46,16 @@ Route::prefix('admin')->middleware(['auth' , 'isAdmin'])->group(function(){
 	Route::get('/reports/summary/by/visitor' , [AdminReportController::class , 'byVisitor'])->name('admin-byVisitor');
 	Route::get('/reports/summary/get/results/{question_id}/{log_id}' , [AdminReportController::class , 'viewResults'])->name('admin-viewResults');
 	Route::post('/reports/summary/get/results/download/' , [AdminReportController::class , 'downloadResult'])->name('admin-downloadResult');
+	
+	// Templates
+	Route::get('/templates' , [TemplateController::class , 'index'])->name('template-index');
+	Route::get('/templates/add' , [TemplateController::class , 'addView'])->name('addView');
+	Route::post('/templates/save' , [TemplateController::class , 'save_new_notifications'])->name('saveNotif');
+	Route::get('/templates/edit/{template_id}' , [TemplateController::class , 'notificationedit'])->name('editNotif');
+	Route::get('/templates/save/{template_id}' , [TemplateController::class , 'notificatioSaveEdit'])->name('saveEditNotif');
+	Route::get('/templates/question/new' , [TemplateController::class , 'questionView'])->name('questionView');
+	Route::post('/templates/question/save' , [TemplateController::class , 'questionSave'])->name('questionSave');
+	Route::get('/templates/edit/questionnaire/{id}' , [TemplateController::class , 'questionEditView'])->name('questionEditView');
+	Route::post('/templates/save/questionnaire/{id}' , [TemplateController::class , 'questionEditSave'])->name('questionEditSave');
+	Route::get('/templates/remove/{template_id}' , [TemplateController::class , 'templateRemove'])->name('templateRemove');
 });

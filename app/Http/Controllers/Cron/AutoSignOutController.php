@@ -56,12 +56,12 @@ class AutoSignOutController extends Controller
                             'action' => 1,
                             'created_at' => Carbon::now()
                         ]);
-                        echo 'logged out'.$value->id;
+                    
                     }
                 }
-        
+                
             }// end foreach
-        
+            
         }
     }
     

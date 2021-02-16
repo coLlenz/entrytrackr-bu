@@ -40,6 +40,7 @@ class DashboardController extends Controller
     }
     
     public function showAll(){
+        
         $trakrs = DB::table('trakrs')->select('trakrs.*' , 'trakr_types.name as type')
         ->where([
             'user_id' => user_id(),
