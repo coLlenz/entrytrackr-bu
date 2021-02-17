@@ -151,7 +151,7 @@
                         <form id="add_admin_user" method="POST" action={{route('add-new-admin')}}>
                             @csrf
                             <div class="form-group">
-                                <label>Name</label> 
+                                <label>Full Name</label> 
                                 <input type="text" class="form-control" placeholder="" name="admin_name">
                             </div>
                             <div class="form-group">

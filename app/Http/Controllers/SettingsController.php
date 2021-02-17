@@ -45,8 +45,8 @@ class SettingsController extends Controller{
             $new_admin->uuid = auth()->user()->uuid;
             $new_admin->sub_account = 1;
             $new_admin->sub_account_id = auth()->user()->id;
-            $new_admin->name = $request->admin_name;
-            $new_admin->contactName = '';
+            $new_admin->name =  auth()->user()->name;
+            $new_admin->contactName = $request->admin_name;
             $new_admin->email = $request->admin_email;
             $new_admin->password = Hash::make($request->admin_password);
             $new_admin->is_admin = 0;
@@ -141,8 +141,44 @@ class SettingsController extends Controller{
         }
         
         return back();
-        
-        
     }
+    
+    public function accountDetails(Request $request){
+        $account = User::select('contactName' , 'email')->where(['id' => $request->account_id])->first();
         
+        if ($account) {
+            return [
+                'username' =>  $account->contactName,
+                'email' => $account->email
+            ];
+        }
+        
+        return false;
+    }
+    
+    public function accountDetailsSave( Request $request ){
+        $validator = Validator::make($request->all(), [
+            'username' => 'required',
+            'email' => 'required|email:rfc,dns|unique:users,email,' . $request->account,
+            'account' => 'required',
+        ]);
+        
+        if ($validator->passes()) {
+            $account = User::findOrFail($request->account);
+            if ($account) {
+                
+                $account->contactName = $request->username;
+                $account->email = $request->email;
+                
+                if ($account->save()) {
+                    return response()->json(['status'=> 'success']);
+                }
+                
+            }else{
+                return response()->json(['error'=> 'nodata']);
+            }
+        }
+        
+        return response()->json(['form_error'=>$validator->errors()->all()]);
+    }
 }

@@ -59,6 +59,8 @@ Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/question-settings' , [SettingsController::class , 'viewSettings'])->name('viewSettings');
 	Route::post('/question-settings' , [SettingsController::class , 'saveSettings'])->name('saveSettings');
 	Route::post('/signin-settings' , [SettingsController::class , 'signOutSettings'])->name('signOutSettings');
+	Route::post('/get-account-details' , [SettingsController::class , 'accountDetails'])->name('accountDetails');
+	Route::post('/save-account-details' , [SettingsController::class , 'accountDetailsSave'])->name('accountDetailsSave');
 });
 
 Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
