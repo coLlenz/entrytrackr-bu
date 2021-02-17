@@ -4,7 +4,8 @@
 </head>
     <body>
         <center>
-            <h3>Visitor Entry & Exit Log: {{ auth()->user()->name }}</h3>
+            <h3>Visitor Entry & Exit Log:</h3>
+            <h3>  {{ auth()->user()->name }} </h3>
             <h3>Created: {{ date('d-m-Y H:i:s') }}</h3>
         </center>
         <table cellspacing="1" cellpadding="1" align="center" border="1">
