@@ -175,8 +175,17 @@
                 type: $(this).attr('method'),
                 data : $(this).serialize(),
                 success:function(response){
+                    if (response.status == 'loggedin') {
+                        Swal.fire({
+                            title:'<strong> You have already been signed in at </strong> <br/>',
+                            html : '<b>'+response.check_date+'</b>',
+                            allowOutsideClick : false,
+                            showCloseButton: true,
+                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> OK',
+                            confirmButtonAriaLabel: 'Thumbs up, great!',
+                        });
+                    }
                     if (response.status == 'success') {
-                        // $('#checkinModal').modal('hide');
                         flowCheckpoint(response);
                         $(form).removeClass('was-validated');
                         $('.invalid-email').hide();
