@@ -108,11 +108,28 @@ class ReportController extends Controller
     
     public function generate_pdf(Request $request){
         DB::enableQueryLog();
+        
+        if ( count($request->all()) == 0 ) {
+            $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
+            $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
+            $filename = strtotime(date('Y-m-d H:i:s'));
+            $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
+            ->where('user_id' , user_id() )
+            ->where('check_in_date' ,'>=', $date_7_days_ago )
+            ->where('check_in_date' , '<=' ,  $date_now )
+            ->orderBy('check_in_date' , 'DESC' )
+            ->get();
+            view()->share('data',$default_data);
+            $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
+            return $pdf->download($filename.'.pdf');
+        }
+        
+        // 
         $start_date = Carbon::parse($request->input('fdate'))->format('Y-m-d 00:00:00');
         $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
-        $assistance = $request->input('ass');
-        $type_of_visitor = $request->input('tvis');
-        $status = $request->input('acc');
+        $assistance = $request->input('ass') ? $request->input('ass') : '';
+        $type_of_visitor = $request->input('tvis') ? $request->input('tvis') : '';
+        $status = $request->input('acc') ? $request->input('acc') : '';
         $filename = strtotime(date('Y-m-d H:i:s'));
         $filter_query = Trakr::query();
         $filter_query->select('firstName','lastName' ,'trakr_type_id' , 'phoneNumber' ,'who' ,'trakr_types.name as visitor_type','name_of_company','check_in_date' , 'check_out_date' , 'assistance' , 'status');
