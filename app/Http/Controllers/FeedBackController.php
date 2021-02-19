@@ -19,16 +19,21 @@ class FeedBackController extends Controller
     public function feedback(){
         $total_feedback_count = DB::table('feedbacks')->count();
 
-        $excellent = DB::table('feedbacks')->where(['rating' => 'excellent' , 'user_id' => user_id()])->count() / $total_feedback_count * 100;
-        $good = DB::table('feedbacks')->where(['rating' => 'good' , 'user_id' => user_id()])->count() / $total_feedback_count * 100;
-        $avg = DB::table('feedbacks')->where(['rating' => 'average' , 'user_id' => user_id()])->count() / $total_feedback_count * 100;
-        $bad = DB::table('feedbacks')->where(['rating' => 'bad' , 'user_id' => user_id()])->count() / $total_feedback_count * 100;
+        $excellent = DB::table('feedbacks')->where(['rating' => 'excellent' , 'user_id' => user_id()])->count();
+        $good = DB::table('feedbacks')->where(['rating' => 'good' , 'user_id' => user_id()])->count();
+        $avg = DB::table('feedbacks')->where(['rating' => 'average' , 'user_id' => user_id()])->count();
+        $bad = DB::table('feedbacks')->where(['rating' => 'bad' , 'user_id' => user_id()])->count();
 
+        $excellent = $excellent ? $excellent / $total_feedback_count * 100 : 0;
+        $good = $good ? $good / $total_feedback_count * 100 : 0;
+        $avg = $avg ? $avg / $total_feedback_count * 100 : 0;
+        $bad = $bad ? $bad / $total_feedback_count * 100 : 0;
+        
         $ratings = [
-            'excellent' =>  $excellent,
-            'good' => $good,
-            'avg' => $avg,
-            'bad' => $bad
+            'excellent' =>  $excellent ? number_format($excellent , 2) : 0,
+            'good' => $good ?  number_format($good , 2) : 0,
+            'avg' => $avg ? number_format($avg , 2) : 0,
+            'bad' => $bad ? number_format($bad , 2) : 0,
         ];
 
         return view('report.feedback')->with('ratings' ,  $ratings);
