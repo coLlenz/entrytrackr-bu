@@ -59,4 +59,29 @@ class CheckerController extends Controller
         return false;
         
     }
+
+    public static function isAbleToFeedBack($user_id , $visitor_type){
+        $settings = DB::table('question_view_settings')->select('feedback_settings')->where('user_id' , $user_id )->first();
+        $settings_json = $settings ? json_decode( $settings->feedback_settings ) : [];
+        
+        return self::visitor_check($visitor_type , $settings_json);
+    }
+
+    public static function visitor_check($visitor_type , $settings){
+        switch ($visitor_type) {
+            case '1':
+                return $settings->visitor;
+                break;
+            case '2':
+                return $settings->contractor;
+                break;
+            case '3':
+                return $settings->employee;
+                break;    
+            default:
+            return false;
+                break;
+        }
+    }
+ 
 }
