@@ -25,9 +25,11 @@
 
 /* FEEDBACK */
 .icon_container{
-    display: inline-flex;
-    text-align: center;
-    
+    width: 100%;
+}
+.icon_container .icon{
+    width: 25%;
+    display: inline;
 }
 .icon_container .icon label {
     border-radius: 16px;
