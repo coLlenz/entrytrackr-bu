@@ -525,7 +525,7 @@
                             $.ajax({
                                 url: "{{route('visiting-who')}}",
                                 method:'POST',
-                                data: {trakrid: response.trakrid , visited: complete.value},
+                                data: {trakrid: response.trakrid , visited: complete.value , report_log : response.report_log},
                                 success:function(data){
                                     if (response.status == 'success') {
                                         if (response.questions) {
@@ -558,7 +558,7 @@
                             $.ajax({
                                 url : "{{route('business')}}",
                                 method: 'POST',
-                                data:{trakrid:response.trakrid, name_of_business:complete.value },
+                                data:{trakrid:response.trakrid, name_of_business:complete.value , report_log : response.report_log },
                                 success:function(data){
                                     if (data.status == 'success') {
                                         if (response.questions) {
