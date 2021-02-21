@@ -310,11 +310,12 @@ class TrakrViewController extends Controller
             $trakr->checked_in_status = 1;
             $trakr->check_out_date = Carbon::now();
             if ($trakr->save()) {
+                // get fresh data or updated data
                 $updated_data =  $trakr->fresh();
-                
+
                 $this->visitLog($updated_data->id , $updated_data->user_id  , 1);
                 
-                // update Report Logs to current visitor
+                // update Report Logs from current visitor
                 $params = [
                     'user_id' => $user_id,
                     'visitor_id' => $trakr->id,
@@ -324,11 +325,25 @@ class TrakrViewController extends Controller
                 $report = new LogReport();
                 $report_log_result_id = $report->reportCheckout( $params );
 
+                // check if able to feedback
+                $can_feedback = CheckerController::isAbleToFeedBack( $updated_data->user_id , $updated_data->trakr_type_id  );
+                $feedback_data = [];
+
+                // return additional data
+                if ( $can_feedback && $can_feedback != 0 ) {
+                    $feedback_data = [
+                        'can_feedback' => true,
+                        'visitor_id' =>  $updated_data->id,
+                        'user_id' => $updated_data->user_id
+                    ];
+                }
+
                 return response()->json(
                     [
                         'status' => 'success' ,
                         'name' => $updated_data->firstName ,
-                        'check_date' => $this->carbonFormat($updated_data->check_out_date , $timezone)
+                        'check_date' => $this->carbonFormat($updated_data->check_out_date , $timezone),
+                        'can_feedback' => $can_feedback ?  $feedback_data : false
                     ] , 200 );
             }
         }else{
