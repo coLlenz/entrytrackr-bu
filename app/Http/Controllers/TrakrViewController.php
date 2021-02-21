@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Trakr;
+use App\Models\LogReport;
 use App\Models\Template;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -46,9 +47,7 @@ class TrakrViewController extends Controller
                 'phoneNumber'   => isset($request->last_name)   ?  $request->phoneNumber: "",
                 'user_id'       => $userid
             ];
-            
-            $checking = CheckerController::checkIfLoggedIn(  $conditions );
-        
+           
             if (isset($checking['has_record']) && $checking['has_record']) {
                 // check if already sign in
                 if (isset( $checking['is_loggedin'] ) && $checking['is_loggedin'] == 0) {
@@ -71,6 +70,20 @@ class TrakrViewController extends Controller
                 
                 // save logs
                 $this->visitLog($visitor->id , $visitor->user_id ,0);
+
+                 // Report Logs
+                 $params = [
+                    'user_id' => $userid,
+                    'visitor_id' =>  $visitor->id,
+                    'assistance' => $visitor->assistance ? $visitor->assistance : '',
+                    'trakr_type_id' => $visitor->trakr_type_id ? $visitor->trakr_type_id : '',
+                    'status' => 0,
+                    'checked_in_status' => 0,
+                    'check_in_date' => Carbon::now(),
+                ];
+                
+                $report = new LogReport();
+                $report_log_result_id = $report->saveReport( $params );
                 
                 return response()->json(
                     [
@@ -81,9 +94,11 @@ class TrakrViewController extends Controller
                         'check_date' => $formated_date,
                         'type_of_visitor' => $visitor->trakr_type_id,
                         'trakrid' => $visitor->id,
-                        'questions' => $this->getVisitorQuestions(  $visitor->user_id  , $visitor->trakr_type_id)
+                        'questions' => $this->getVisitorQuestions(  $visitor->user_id  , $visitor->trakr_type_id),
+                        'report_log' => $report_log_result_id
                     ],200);
             }
+
             
             $trakr_new = new Trakr();
             
@@ -102,6 +117,20 @@ class TrakrViewController extends Controller
                 // save logs
                 $this->visitLog($trakr_new->id , $trakr_new->user_id , 0);
                 
+                // Report Logs
+                $params = [
+                    'user_id' => $userid,
+                    'visitor_id' =>  $trakr_new->id,
+                    'assistance' => $trakr_new->assistance ? $trakr_new->assistance : '',
+                    'trakr_type_id' => $trakr_new->trakr_type_id ? $trakr_new->trakr_type_id : '',
+                    'status' => 0,
+                    'checked_in_status' => 0,
+                    'check_in_date' => Carbon::now(),
+                ];
+
+                $report = new LogReport();
+                $report_log_result_id = $report->saveReport( $params );
+
                 return response()->json(
                     [
                         'status' => 'success',
@@ -111,7 +140,8 @@ class TrakrViewController extends Controller
                         'check_date' => $formated_date,
                         'type_of_visitor' => $trakr_new->trakr_type_id,
                         'trakrid' => $trakr_new->id,
-                        'questions' => $this->getVisitorQuestions(  $trakr_new->user_id  , $trakr_new->trakr_type_id)
+                        'questions' => $this->getVisitorQuestions(  $trakr_new->user_id  , $trakr_new->trakr_type_id ),
+                        'report_log' => $report_log_result_id
                 ],200);
             }else{
                 return response()->json(['status' => 'fail','msg' => 'There\'s a problem creating your record.'],200);
@@ -157,12 +187,13 @@ class TrakrViewController extends Controller
         ]);
         
         $timezone = isset( $request->timezone  ) ? $request->timezone : userTz();
+        $user_id = $request->input('user_id');
         
         if ($validator->passes()) {
             
             $conditions = [
                 'trakr_id' => isset($request->trakrid) ? $request->trakrid : '',
-                'user_id' =>  $request->user_id
+                'user_id' =>  $user_id
             ];
             
             // check if logged in already
@@ -187,6 +218,20 @@ class TrakrViewController extends Controller
             // save log
             $this->visitLog($check_in_data->id , $check_in_data->user_id , 0);
             
+            // Report Logs
+            $params = [
+                'user_id' => $user_id,
+                'visitor_id' => $check_in_data->id,
+                'assistance' => $check_in_data->assistance ? $check_in_data->assistance : '',
+                'trakr_type_id' => $check_in_data->trakr_type_id ? $check_in_data->trakr_type_id : '',
+                'status' => 0,
+                'checked_in_status' => 0,
+                'check_in_date' => Carbon::now(),
+            ];
+            
+            $report = new LogReport();
+            $report_log_result_id = $report->saveReport( $params );
+
             return response()->json(
                 [
                     'has_trakr' => $check_in_data->trakr_id ? true : false,
@@ -196,7 +241,8 @@ class TrakrViewController extends Controller
                     'msg' => 'Checked-In' , 
                     'type_of_visitor' => $check_in_data->trakr_type_id,
                     'trakrid' => $check_in_data->id,
-                    'questions' => $this->getVisitorQuestions(  $check_in_data->user_id  , $check_in_data->trakr_type_id)
+                    'questions' => $this->getVisitorQuestions(  $check_in_data->user_id  , $check_in_data->trakr_type_id),
+                    'report_log' => $report_log_result_id
                 ] , 200);
         }else{
             return response()->json(['validation_error' => $validator->errors()->all()] , 200 );
@@ -264,24 +310,20 @@ class TrakrViewController extends Controller
             $trakr->checked_in_status = 1;
             $trakr->check_out_date = Carbon::now();
             if ($trakr->save()) {
-                $updated_data = [];
+                $updated_data =  $trakr->fresh();
                 
-                if (isset($request->trakrid) && !empty($request->trakrid)) {
-                    
-                    $updated_data = Trakr::where(['trakr_id' => $request->trakrid , 'user_id' => $user_id ])->first();
-                    
-                }else{
-                    
-                    $updated_data = Trakr::select('check_out_date' , 'firstName')->where([
-                        'firstName' => $request->first_name,
-                        'lastName' => $request->last_name,
-                        'phoneNumber' => $request->phoneNumber,
-                        'user_id' => $user_id
-                    ])->first();
-                }
+                $this->visitLog($updated_data->id , $updated_data->user_id  , 1);
                 
-                $this->visitLog($trakr->id , $trakr->user_id  , 1);
+                // update Report Logs to current visitor
+                $params = [
+                    'user_id' => $user_id,
+                    'visitor_id' => $trakr->id,
+                    'check_out_date' => $trakr->check_out_date,
+                ];
                 
+                $report = new LogReport();
+                $report_log_result_id = $report->reportCheckout( $params );
+
                 return response()->json(
                     [
                         'status' => 'success' ,
@@ -300,7 +342,19 @@ class TrakrViewController extends Controller
         $trakr->who = $request->visited;
         
         if ($trakr->save()) {
-            return response()->json(['status' => 'success'] , 200);
+            // update report logs
+            $report = new LogReport();
+
+            $params = [
+                'user_id' => $trakr->user_id,
+                'visitor_id' =>  $trakr->id,
+                'who' => $request->input('visited'),
+                'report_log_id' => $request->input('report_log')
+            ];
+            
+            $report_log_result = $report->reportVisitingWho( $params );
+
+            return response()->json(['status' => 'success' , 'report_log' =>  $report_log_result ? true : false ] , 200);
         }
         
         return response()->json(['status' => 'fail'] , 200);
@@ -311,6 +365,17 @@ class TrakrViewController extends Controller
         $trakr->name_of_company = $request->name_of_business;
         
         if ($trakr->save()) {
+            $report = new LogReport();
+
+            $params = [
+                'user_id' => $trakr->user_id,
+                'visitor_id' =>  $trakr->id,
+                'who' => $request->input('name_of_business'),
+                'report_log_id' => $request->input('report_log')
+            ];
+            
+            $report_log_result = $report->reportBusiness( $params );
+
             return response()->json(['status' => 'success'] , 200);
         }
         
@@ -376,7 +441,10 @@ class TrakrViewController extends Controller
         
         // get current signin data
         $trakr = Trakr::findOrFail($request->trakrid);
-        
+
+        // get latest report log by current visitor
+        $report_log = LogReport::where([ 'user_id' =>  $trakr->user_id, 'visitor_id' =>  $trakr->id])->latest('id')->first();
+
         $visitor_name = $trakr->firstName." ".$trakr->lastName;
         
         // save logs
@@ -400,14 +468,31 @@ class TrakrViewController extends Controller
             $trakr->checked_in_status = 1;
             $trakr->check_out_date = date('Y-m-d H:i:s');
             $trakr->save();
-            return response()->json(['status' => 'success' , 'examStatus' => false , 'logs' => $logs ? true : false] , 200);
+
+            // Report Logs
+            $report_log->status = 1;
+            $report_log->checked_in_status = 1;
+            $report_log->check_out_date = Carbon::now();
+            $report_result = $report_log->save();
+
+            return response()->json([
+                'status' => 'success',
+                'examStatus' => false, 
+                'logs' => $logs ? true : false, 
+                'report_log' => $report_result ? true : false
+                ],200);
+
         }else{
             // always set to Allowed
             $trakr->status = 0;
             $trakr->save(); 
-            // 
+            //
+            // Report Logs
+            $report_log->status = 0;
+            $report_log = $report_log->save();
             
             $formated_date = $this->carbonFormat($trakr->check_in_date , $timezone);
+
             return response()->json(
                 [
                     'status' => 'success',
@@ -418,7 +503,8 @@ class TrakrViewController extends Controller
                     'type_of_visitor' => $trakr->trakr_type_id,
                     'trakrid' => $trakr->id,
                     'examStatus' => true,
-                    'logs' => $logs ? true : false
+                    'logs' => $logs ? true : false,
+                    'report_log' => $report_log ? true : false
             ],200);
         }
     }
@@ -520,6 +606,10 @@ class TrakrViewController extends Controller
             }
             
             $visitor = Trakr::findOrFail($req->visitor_id);
+
+            // get latest report log by current visitor
+            $report_log = LogReport::where(['user_id' =>  $visitor->user_id, 'visitor_id' =>  $visitor->id])->latest('id')->first();
+
             $visitor_name = $visitor->firstName." ".$visitor->lastName;
             
             // save logs
@@ -543,12 +633,23 @@ class TrakrViewController extends Controller
                 $visitor->checked_in_status = 1;
                 $visitor->check_out_date = Carbon::now();
                 $visitor->save();
+
+                // Report Logs
+                $report_log->status = 1;
+                $report_log->checked_in_status = 1;
+                $report_log->check_out_date = Carbon::now();
+                $report_result = $report_log->save();
+
                 return response()->json(['status' => 'success' , 'examStatus' => false , 'logs' => $logs ? true : false] , 200);
             }else{
                 // always set to Allowed
                 $visitor->status = 0;
                 $visitor->save(); 
-                // // // // // 
+                //
+
+                // Report Logs
+                $report_log->status = 0;
+                $report_log = $report_log->save();
                 
                 $formated_date = $this->carbonFormat($visitor->check_in_date , $customer->timezone);
                 return response()->json(
@@ -561,7 +662,8 @@ class TrakrViewController extends Controller
                         'type_of_visitor' =>$visitor->trakr_type_id,
                         'trakrid' => $visitor->id,
                         'examStatus' => true,
-                        'logs' => $logs ? true : false
+                        'logs' => $logs ? true : false,
+                        'report_log' => $report_log ? true : false
                 ],200);
             }
         } catch (\Exception $e) {
