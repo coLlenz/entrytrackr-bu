@@ -39,6 +39,7 @@ class SignOutAll extends Command
      */
     public function handle(Trakr $trakr)
     {
+<<<<<<< HEAD
         $signin = Trakr::where('checked_in_status' , 0)->get();
         
         if (!$signin->isEmpty()) {
@@ -74,6 +75,11 @@ class SignOutAll extends Command
             }// end foreach
             
         }
+=======
+        $auto_sign_out = new AutoSignOutController();
+        $auto_sign_out->autoSignOut();
+>>>>>>> 3f084edb9964ffa49c2e117c6222277358cbd5f1
         
     }
+    
 }

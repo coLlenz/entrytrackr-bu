@@ -20,6 +20,7 @@
 </style>
     <section class="uk-section">
         <div class="uk-container">
+            @if( !auth()->user()->sub_account )
             <div class="row">
                 <div class="col-12">
                     <div class="row icon-cards-row mb-4">
@@ -44,6 +45,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updateProfileInformation()))
                 @include('profile.update-profile-information-form')
             @endif
@@ -111,6 +113,35 @@
                           
                     </div>
                 </div> 
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                    <h4 class="mb-4"> Feedback Settings </h4>
+                    <p></p>
+                    <div class="alert alert-info" style="display:none;">
+                        <span>{{'Save'}}</span>
+                    </div>
+                    <form action="{{route('feedbackSettings')}}" id="feedbackForm">
+                        @csrf
+                        <div class="et_signout_settings">
+                            <div class="settings_">
+                                <input type="checkbox" name="employee" value="1" id="feed_employee" {{isset($feedback->employee) && $feedback->employee != 0 ? 'checked' : ''}}>
+                                <label for="feed_employee">Employee</label>
+                            </div>
+                            <div class="settings_">
+                                <input type="checkbox" name="visitor" value="1" id="feed_visitor" {{isset($feedback->visitor) && $feedback->visitor != 0 ? 'checked' : ''}}>
+                                <label for="feed_visitor">Visitor</label>
+                            </div>
+                            <div class="settings_">
+                                <input type="checkbox" name="contractor" value="1" id="feed_contractor" {{isset($feedback->contractor) && $feedback->contractor != 0 ? 'checked' : ''}}>
+                                <label for="feed_contractor">Contractor</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-md" name="saveBtn_feed">Save</button>
+                    </form>
+                    </div>
+                </div>
+
                 <div class="card mb-4">
                     <div class="card-body">
                         <h4 class="mb-4"> QR Code </h4>
@@ -149,7 +180,7 @@
                         <form id="add_admin_user" method="POST" action={{route('add-new-admin')}}>
                             @csrf
                             <div class="form-group">
-                                <label>Name</label> 
+                                <label>Full Name</label> 
                                 <input type="text" class="form-control" placeholder="" name="admin_name">
                             </div>
                             <div class="form-group">
@@ -187,6 +218,7 @@
         $.ajaxSetup({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
         });
+
         $('#add_admin_user').on('submit' , function(e) {
             e.preventDefault();
             $.ajax({
@@ -210,7 +242,24 @@
                     }
                 }
             })
-        })
+        });
+
+        $('#feedbackForm').on('submit' , function(form){
+            form.preventDefault();
+            var data = $(this).serialize();
+            var url = $(this).attr('action');
+
+            $.ajax({
+                url : url ,
+                type : 'POST',
+                data : data,
+                success:function(res){
+                    if (res) {
+                        $('.alert-info').show();
+                    }
+                }
+            })
+        });
         
     });
 </script>

@@ -28,7 +28,8 @@
                     <thead>
                         <tr>
                             <th class="">trakrID</th>
-                            <th class="">Name</th>
+                            <th class="">First Name</th>
+                            <th class="">Last Name</th>
                             <th class="">Date Created</th>
                             <th class="">Visitor Type</th>
                             <th class="text-center">Action</th>
@@ -39,7 +40,8 @@
                         <tr>
                             
                             <td>{{$trakr->trakr_id}}</td>
-                            <td>{{$trakr->firstName}} {{$trakr->lastName}}</td>
+                            <td>{{$trakr->firstName}}</td>
+                            <td>{{$trakr->lastName}}</td>
                             <td>{{ \Carbon\Carbon::parse($trakr->check_in_date)->timezone(userTz())->format('d-m-Y H:i') }}</td>
                             <td>{{$trakr->type}}</td>
                             <td class="text-center">

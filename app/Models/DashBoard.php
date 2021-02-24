@@ -18,10 +18,13 @@ class DashBoard extends Model
         ->join('trakr_types' , 'trakr_types.id' , '=' , 'trakrs.trakr_type_id')
         ->where('user_id' , user_id())
 <<<<<<< HEAD
+<<<<<<< HEAD
         ->where('trakrs.check_in_date' , '>=' , $current  )
         ->where('trakrs.check_in_date' , '<=' , $span )
 =======
 >>>>>>> b437667c2ff9554125822af43aad32aff0e3a699
+=======
+>>>>>>> 3f084edb9964ffa49c2e117c6222277358cbd5f1
         ->where('checked_in_status' , 0)
         ->where('trakrs.status' , 0)
         ->orderBy('trakrs.check_in_date','desc')
@@ -81,11 +84,16 @@ class DashBoard extends Model
         ->where([
             'checked_in_status' => 0,
 <<<<<<< HEAD
+<<<<<<< HEAD
             'user_id' => user_id()
 =======
             'user_id' => user_id(),
             'status' => 0
 >>>>>>> b437667c2ff9554125822af43aad32aff0e3a699
+=======
+            'user_id' => user_id(),
+            'status' => 0
+>>>>>>> 3f084edb9964ffa49c2e117c6222277358cbd5f1
         ])
         ->orderBy('trakrs.check_in_date','desc')
         ->get();

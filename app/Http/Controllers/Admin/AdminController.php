@@ -26,7 +26,7 @@ class AdminController extends Controller
     }
     
     public function index(Request $request){
-        $total_accounts = DB::table('users')->where(['is_admin' => '!= 1' , 'status' => 0])->count();
+        $total_accounts = DB::table('users')->where(['is_admin' => '!= 1' , 'status' => 0 , 'sub_account' => 0 , 'sub_account_id' => 0])->count();
         $total_sigin_in = DB::table('visitor_log')
         ->join('trakrs' , 'trakrs.id' , '=' , 'visitor_log.visitor_id')
         ->where(['visitor_log.action' => 0])->count();
@@ -71,7 +71,10 @@ class AdminController extends Controller
     }
     
     public function clients(){
-        $users = User::where('is_admin' , '=' , 0)->where('status' , 0)->orderBy('created_at' , 'DESC')->get();
+        $users = User::where('is_admin' , '=' , 0)->where('status' , 0)
+        ->where('sub_account' , 0)
+        ->where('sub_account_id' , 0)
+        ->orderBy('created_at' , 'DESC')->get();
         return view('admin.clients.index')->with('users' ,$users );
     }
     

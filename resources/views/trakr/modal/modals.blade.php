@@ -175,8 +175,17 @@
                 type: $(this).attr('method'),
                 data : $(this).serialize(),
                 success:function(response){
+                    if (response.status == 'loggedin') {
+                        Swal.fire({
+                            title:'<strong> You have already been signed in at </strong> <br/>',
+                            html : '<b>'+response.check_date+'</b>',
+                            allowOutsideClick : false,
+                            showCloseButton: true,
+                            confirmButtonText:'<i class="fa fa-thumbs-up"></i> OK',
+                            confirmButtonAriaLabel: 'Thumbs up, great!',
+                        });
+                    }
                     if (response.status == 'success') {
-                        // $('#checkinModal').modal('hide');
                         flowCheckpoint(response);
                         $(form).removeClass('was-validated');
                         $('.invalid-email').hide();
@@ -223,7 +232,12 @@
     
                     if (response.status == 'success') {
                         $('#checkoutModal').modal('hide');
-                        showCheckOutMessage(response);
+
+                        if (response.can_feedback) {
+                            showFeedBack(response);
+                        }else{
+                            showCheckOutMessage(response);
+                        }
                     }
     
                     if (response.validation_error) {
@@ -511,7 +525,7 @@
                             $.ajax({
                                 url: "{{route('visiting-who')}}",
                                 method:'POST',
-                                data: {trakrid: response.trakrid , visited: complete.value},
+                                data: {trakrid: response.trakrid , visited: complete.value , report_log : response.report_log},
                                 success:function(data){
                                     if (response.status == 'success') {
                                         if (response.questions) {
@@ -544,7 +558,7 @@
                             $.ajax({
                                 url : "{{route('business')}}",
                                 method: 'POST',
-                                data:{trakrid:response.trakrid, name_of_business:complete.value },
+                                data:{trakrid:response.trakrid, name_of_business:complete.value , report_log : response.report_log },
                                 success:function(data){
                                     if (data.status == 'success') {
                                         if (response.questions) {
@@ -695,6 +709,81 @@
                 }
             }
         })
-    })
+    });
+    
+    
+    // FEEDBACK SECTION
+   
+    function showFeedBack(res_data){
+        Swal.fire({
+            customClass: {
+                confirmButton: 'et_btn et_btn_clored',
+                cancelButton: 'et_btn et_btn_secondary cancel_btn_out',
+            },
+            confirmButtonText : 'Rate',
+            cancelButtonText : 'Skip',
+            reverseButtons: true,
+            buttonsStyling: false,
+            showCancelButton : true,
+            html : feedback(),
+        }).then( (result) =>{
+            if (result.isConfirmed) {
+                submitFeedBack(res_data);
+            }
+        })
+    }
+
+    function submitFeedBack(res_data){
+        var action = $('#feedback').attr('action');
+        var method = $('#feedback').attr('method');
+        var data = $('#feedback').serialize() + "&user_id="+res_data.can_feedback.user_id + "&visitor_id="+res_data.can_feedback.visitor_id;
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+        $.ajax({
+            url : action,
+            type : method,
+            data : data,
+            success:function(response){
+               if (response) {
+                   showCheckOutMessage(res_data);
+               }
+            }
+        })
+    }
+    
+    function feedback(){
+        var html = '';
+        
+        html += `
+        <form class="" action="{{route('getFeedBack')}}" method="post" id="feedback">
+            <div class="icon_container">
+                <div class="icon">
+                    <input type="radio" name="feedback" value="excellent" id="excellent" class="feedback_radio">
+                    <label for="excellent">
+                        <img src="{{asset('feedbacks/_excellent.svg')}}" alt="">
+                    </label>
+                </div>
+                <div class="icon">
+                    <input type="radio" name="feedback" value="good" id="good" class="feedback_radio">
+                    <label for="good">
+                        <img src="{{asset('feedbacks/_good.svg')}}" alt="">
+                    </label>
+                </div>
+                <div class="icon">
+                    <input type="radio" name="feedback" value="average" id="average" class="feedback_radio">
+                    <label for="average">
+                        <img src="{{asset('feedbacks/_average.svg')}}" alt="">
+                    </label>
+                </div>
+                <div class="icon">
+                    <input type="radio" name="feedback" value="bad" id="bad" class="feedback_radio">
+                    <label for="bad">
+                        <img src="{{asset('feedbacks/_bad.svg')}}" alt="">
+                    </label>
+                </div>
+            </div>
+        </form>
+        `;
+        return html;
+    }
     
 </script>

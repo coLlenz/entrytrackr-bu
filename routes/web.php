@@ -11,6 +11,7 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UploadImages;
 use App\Http\Controllers\UploadImagesController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\FeedBackController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -24,6 +25,9 @@ use Illuminate\Support\Facades\App;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/feed' , function(){
+	return view('feed');
+});
 Route::get('/', function () {
 	// return view('welcome');
 	return redirect()->route('login');
@@ -59,6 +63,9 @@ Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/question-settings' , [SettingsController::class , 'viewSettings'])->name('viewSettings');
 	Route::post('/question-settings' , [SettingsController::class , 'saveSettings'])->name('saveSettings');
 	Route::post('/signin-settings' , [SettingsController::class , 'signOutSettings'])->name('signOutSettings');
+	Route::post('/feedback-settings' , [SettingsController::class , 'feedbackSettings'])->name('feedbackSettings');
+	Route::post('/get-account-details' , [SettingsController::class , 'accountDetails'])->name('accountDetails');
+	Route::post('/save-account-details' , [SettingsController::class , 'accountDetailsSave'])->name('accountDetailsSave');
 });
 
 Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {
@@ -110,6 +117,8 @@ Route::prefix('trakr')->group(function () {
 	Route::get('/qr/login/stepper/{visitor_id}/{userid}/{question_id}' , [TrakrViewController::class , 'stepper'])->name('stepper');
 	Route::post('/stepper/save' , [TrakrViewController::class , 'stepperSave'])->name('stepperSave');
 	
+	// Feedback
+	Route::post('/feedback' , [FeedBackController::class , 'getFeedBack'])->name('getFeedBack');
 });
 
 Route::prefix('support')->middleware(['auth', 'verified'])->group(function () {
@@ -129,6 +138,7 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/summary/get/results/{question_id}/{log_id}' , [ReportController::class , 'viewResults'])->name('viewResults');
 	Route::post('/summary/get/results/download/' , [ReportController::class , 'downloadResult'])->name('downloadResult');
 	Route::get('/summary/search/results' , [ReportController::class , 'searchSummary'])->name('searchSummary');
+	Route::get('/feedbacks' , [FeedBackController::class , 'feedback'])->name('feedback');
 });
 
 Route::prefix('locations')->middleware(['auth'])->group(function() {

@@ -22,3 +22,31 @@
     background: #a3238e;
     color:#fff;
 }
+
+/* FEEDBACK */
+.icon_container{
+    width: 100%
+    
+}
+.icon{
+    display: inline;
+    width: 25%;
+}
+.icon_container .icon label {
+    border-radius: 16px;
+    text-align: center;
+    padding: 10px 0px 10px 0px;
+}
+.icon_container .icon img{
+    width: 100px;
+    height: 100px;
+}
+.feedback_radio{
+    display: none;
+}
+.icon_container .icon label:hover{
+    background: #f5e9f3;
+}
+.feedback_radio:checked+label  {
+    background:  #f5e9f3;
+}

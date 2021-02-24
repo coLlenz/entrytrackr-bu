@@ -11,32 +11,31 @@ class AutoSignOutController extends Controller
 {
     public function autoSignOut(){
         
-        $signin = Trakr::where('checked_in_status' , 0)->get();
+        $signin = Trakr::where(['checked_in_status' => 0])->get();
         
         if (!$signin->isEmpty()) {
-            
+        
             foreach ($signin as $key => $value) {
-                
+        
                 $customer = DB::table('users')->select('timezone')->where(['id' => $value->user_id])->first();
                 $expected_sign_out_hour = DB::table('question_view_settings')->select('auto_sign_out')->where('user_id' , $value->user_id)->first();
                 $expected_sign_out_hour = $expected_sign_out_hour ? json_decode( $expected_sign_out_hour->auto_sign_out ) : [];
-                
+        
                 $_hours = $expected_sign_out_hour ? self::visitortype(  $value->trakr_type_id , $expected_sign_out_hour ) : 0;
-                
+        
                 // default UTC
-                // convert check in date to customers timezone
-                $visitor_check_in_date_on_timezone = Carbon::parse( $value->check_in_date )->timezone( $customer->timezone );
-                
+                $visitor_check_in_date = Carbon::parse( $value->check_in_date );
+        
                 if ( $_hours != 0 && !empty( $_hours ) && isset( $_hours ) ) {
-                
-                    $expected_sign_out = Carbon::parse( $visitor_check_in_date_on_timezone )->addHours( $_hours );
+        
+                    $expected_sign_out = Carbon::parse( $visitor_check_in_date )->addHours( $_hours );
                     
-                    if ( $visitor_check_in_date_on_timezone->greaterThanOrEqualTo( $expected_sign_out ) ) {
-                        
+                    if ( Carbon::now()->greaterThanOrEqualTo( $expected_sign_out ) ) {
+                    
                         // use UTC timezone
                         $check_out_date_utc = Carbon::parse( $value->check_in_date )->addHours( $_hours );
                         //
-                         
+                        
                         $value->check_out_date = $check_out_date_utc;
                         $value->updated_at = Carbon::now();
                         $value->checked_in_status = 1;
