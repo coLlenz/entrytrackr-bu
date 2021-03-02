@@ -132,6 +132,7 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/summary/get/results/{question_id}/{log_id}' , [ReportController::class , 'viewResults'])->name('viewResults');
 	Route::post('/summary/get/results/download/' , [ReportController::class , 'downloadResult'])->name('downloadResult');
 	Route::get('/summary/search/results' , [ReportController::class , 'searchSummary'])->name('searchSummary');
+	Route::get('/export_csv' , [ReportController::class , 'export_csv'])->name('export_csv');
 });
 
 Route::prefix('locations')->middleware(['auth'])->group(function() {
