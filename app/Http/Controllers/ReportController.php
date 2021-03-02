@@ -368,6 +368,9 @@ class ReportController extends Controller
         $filter_query->orderBy('report_logs.created_at' , 'DESC');
         
         $data = $filter_query->get();
-        return Excel::download(new ReportExport( $data ),$filename);
+        
+        return (new ReportExport( $data  ))->download($filename, \Maatwebsite\Excel\Excel::XLSX, [
+            'X-Vapor-Base64-Encode' => 'True'
+          ]);
     }
 }
