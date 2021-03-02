@@ -173,7 +173,8 @@
                         <div class="row">
                             <div class="col-md-3">
                                 @if($table_data->count() >0)
-                                    <a href="{{ route('list-report', $_GET ) }}" class="btn btn-primary btn-md">Download PDF</a>
+                                    <a href="{{ route('list-report', $_GET ) }}" class="btn btn-primary btn-md mr-2">Download PDF</a>
+                                    <a href="{{ route('export_csv' , $_GET ) }}" class="btn btn-primary btn-md">Export CSV</a>
                                 @endif
                             </div>
                             <div class="col-md-4">
