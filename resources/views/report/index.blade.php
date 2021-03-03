@@ -159,7 +159,7 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center"> {{ $list->trakr_type_id == 1 ? $list->who : $list->name_of_company }}</td>
-                                                <td class="text-center"> {{ 'data here' }} </td>
+                                                <td class="text-center"> {{ $list->area_access }} </td>
                                             </tr>
                                         @endforeach
                                     @else

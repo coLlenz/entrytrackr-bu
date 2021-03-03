@@ -19,7 +19,7 @@ class ReportController extends Controller
         $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
         
         $default_data = LogReport::select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
-        'report_logs.check_out_date' , 'report_logs.assistance',
+        'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
         'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
         ->where('report_logs.user_id' , user_id() )
         ->where('report_logs.created_at' ,'>=', $date_7_days_ago )
@@ -53,7 +53,7 @@ class ReportController extends Controller
         $filter_query = LogReport::query();
         
         $filter_query->select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
-        'report_logs.check_out_date' , 'report_logs.assistance',
+        'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
         'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company');
         
         $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');
@@ -123,7 +123,7 @@ class ReportController extends Controller
             $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
             $filename = strtotime(date('Y-m-d H:i:s'));
             $default_data = LogReport::select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
-            'report_logs.check_out_date' , 'report_logs.assistance',
+            'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
             'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
             ->where('report_logs.user_id' , user_id() )
             ->where('report_logs.created_at' ,'>=', $date_7_days_ago )
@@ -147,7 +147,7 @@ class ReportController extends Controller
         $filter_query = LogReport::query();
         
         $filter_query->select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
-        'report_logs.check_out_date' , 'report_logs.assistance',
+        'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
         'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company');
         
         $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');
@@ -292,7 +292,7 @@ class ReportController extends Controller
             $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
 
             $default_data = LogReport::select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
-            'report_logs.check_out_date' , 'report_logs.assistance',
+            'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
             'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
             ->where('report_logs.user_id' , user_id() )
             ->where('report_logs.check_in_date' ,'>=', $date_7_days_ago )
@@ -314,7 +314,7 @@ class ReportController extends Controller
         $filter_query = LogReport::query();
         
         $filter_query->select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
-        'report_logs.check_out_date' , 'report_logs.assistance',
+        'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
         'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company');
         
         $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');

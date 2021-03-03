@@ -18,6 +18,7 @@
         <th>Assistance Required</th>
         <th>Access</th>
         <th>Visiting/Business</th>
+        <th>Area(s) Accessed</th>
         </tr>
             @foreach($data as $trakr)
                 <tr>
@@ -35,6 +36,7 @@
                             {{ $trakr->name_of_company }}
                         @endif
                     </td>
+                    <td> {{ $trakr->area_access }} </td>
                 </tr>
             @endforeach
         </table>
