@@ -16,8 +16,8 @@
         <tr>
             <td>{{ $list->firstName }} {{ $list->lastName }}</td>
             <td>{{ $list->phoneNumber }}</td>
-            <td>{{ $list->check_in_date }}</td>
-            <td>{{ $list->check_out_date }}</td>
+            <td>{{ \Carbon\Carbon::parse($list->check_in_date)->timezone( userTz() ) }}</td>
+            <td>{{ \Carbon\Carbon::parse($list->check_out_date)->timezone( userTz() ) }}</td>
             <td>{{ $list->visitor_type }}</td>
             <td>{{ $list->assistance == 0 ? 'No' : 'Yes' }}</td>
             <td>{{ $list->status == 0 ? 'Allowed' : 'Denied' }}</td>
