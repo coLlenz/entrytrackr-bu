@@ -133,6 +133,7 @@
                                         <th class="text-center">Assistance</th>
                                         <th class="text-center">Access</th>
                                         <th class="text-center">Visiting/Business</th>
+                                        <th class="text-center">Area(s) Accessed</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -158,6 +159,7 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center"> {{ $list->trakr_type_id == 1 ? $list->who : $list->name_of_company }}</td>
+                                                <td class="text-center"> {{ 'data here' }} </td>
                                             </tr>
                                         @endforeach
                                     @else

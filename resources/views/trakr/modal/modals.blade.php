@@ -207,6 +207,7 @@
                 type: $(this).attr('method'),
                 data: $(this).serialize() + "&user_id=" + "{{$view_data['userid']}}",
                 success: function(response){
+                    
                     if (response.status == 'nodata') {
                         Swal.fire({
                             icon: 'warning',
@@ -229,14 +230,16 @@
                             confirmButtonAriaLabel: 'Thumbs up, great!',
                         });
                     }
+
+
     
                     if (response.status == 'success') {
                         $('#checkoutModal').modal('hide');
-
-                        if (response.can_feedback) {
-                            showFeedBack(response);
-                        }else{
+                        
+                        if (!response.visitor_addition_info.visitor_type === 2) {
                             showCheckOutMessage(response);
+                        }else{
+                            contractor_area_access(response);
                         }
                     }
     
@@ -666,6 +669,58 @@
         `;
         
         return html;
+    }
+
+    function contractor_area_access( response ){
+        Swal.fire({
+            reverseButtons: true,
+            customClass: {
+                confirmButton: 'et_btn et_btn_clored',
+                cancelButton: 'et_btn et_btn_secondary mr-2'
+            },
+            buttonsStyling: false,
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            input: 'textarea',
+            inputLabel: 'What area(s) did you access during your visit today?',
+            inputPlaceholder: 'Type here...',
+            showCloseButton: false,
+            allowOutsideClick : false,
+            showCancelButton: true,
+            cancelButtonText: 'Skip',
+            confirmButtonText: 'Continue',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Input is required'
+                }
+            },
+        }).then(complete => {
+            if (complete.isConfirmed) {
+                Swal.showLoading();
+                $.ajax({
+                    url: "{{route('area-access')}}",
+                    method:'POST',
+                    data: {trakr_info: response.visitor_addition_info , area_access : complete.value },
+                    success:function(request_response){
+                       if (request_response.status == 'success') {
+                           if (response.can_feedback) {
+                                showFeedBack(response);
+                           }else{
+                                showCheckOutMessage(response);
+                           }
+                       }
+                    },
+                })
+            }else{
+                if (response.can_feedback) {
+                    showFeedBack(response);
+                }else{
+                    showCheckOutMessage(response);
+                }
+            }
+        });
     }
     
     $(document).on('click' , '.btnCancelQuestion' , function(){
