@@ -122,12 +122,16 @@ class ReportController extends Controller
             $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
             $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
             $filename = strtotime(date('Y-m-d H:i:s'));
-            $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
-            ->where('user_id' , user_id() )
-            ->where('created_at' ,'>=', $date_7_days_ago )
-            ->where('created_at' , '<=' ,  $date_now )
-            ->orderBy('created_at' , 'DESC' )
+            $default_data = LogReport::select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+            'report_logs.check_out_date' , 'report_logs.assistance',
+            'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
+            ->where('report_logs.user_id' , user_id() )
+            ->where('report_logs.created_at' ,'>=', $date_7_days_ago )
+            ->where('report_logs.created_at' , '<=' ,  $date_now )
+            ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
+            ->orderBy('report_logs.created_at' , 'DESC' )
             ->get();
+            
             view()->share('data',$default_data);
             $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
             return $pdf->download($filename.'.pdf');
