@@ -337,12 +337,19 @@ class TrakrViewController extends Controller
                         'user_id' => $updated_data->user_id
                     ];
                 }
+                
+                $visitor_info = [
+                    'visitor_id' =>  $updated_data->id,
+                    'visitor_user_id' => $updated_data->user_id,
+                    'visitor_type' => $updated_data->trakr_type_id
+                ];
 
                 return response()->json(
                     [
                         'status' => 'success' ,
                         'name' => $updated_data->firstName ,
                         'check_date' => $this->carbonFormat($updated_data->check_out_date , $timezone),
+                        'visitor_addition_info' =>  $visitor_info,
                         'can_feedback' => $can_feedback ?  $feedback_data : false
                     ] , 200 );
             }
@@ -350,6 +357,21 @@ class TrakrViewController extends Controller
             // validation errors
             return response()->json(['validation_error' => $validator->errors()->all()] , 200 );
         }
+    }
+
+    public function areaAccess(Request $request){
+        $user_id = $request->trakr_info['visitor_user_id'];
+        $visitor_id = $request->trakr_info['visitor_id'];
+
+        $log = LogReport::where(['user_id' =>  $user_id , 'visitor_id' => $visitor_id])->latest()->first();
+        
+        $log->area_access = $request->area_access ? $request->area_access : '';
+
+        if ($log->save()) {
+            return response()->json(['status' => 'success']);
+        }
+
+        return response()->json(['status' => 'error']);
     }
     
     public function visitingWho(Request $request){

@@ -1,0 +1,1 @@
+ALTER TABLE `report_logs` ADD `area_access` VARCHAR(100) NULL DEFAULT NULL AFTER `name_of_company`;
