@@ -236,7 +236,7 @@
                     if (response.status == 'success') {
                         $('#checkoutModal').modal('hide');
                         
-                        if (!response.visitor_addition_info.visitor_type === 2) {
+                        if (!response.visitor_addition_info.visitor_type == 2) {
                             showCheckOutMessage(response);
                         }else{
                             contractor_area_access(response);
