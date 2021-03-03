@@ -281,7 +281,7 @@ class ReportController extends Controller
     }
 
     public function export_csv(Request $request){
-        $filename = time().'_report.xlsx';
+        $filename = time().'_report.csv';
 
         if ( count($request->all()) == 0 ) {
             $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
@@ -369,8 +369,8 @@ class ReportController extends Controller
         
         $data = $filter_query->get();
         
-        return (new ReportExport( $data  ))->download($filename, \Maatwebsite\Excel\Excel::XLSX, [
-            'X-Vapor-Base64-Encode' => 'True'
+        return (new ReportExport( $data  ))->download($filename, \Maatwebsite\Excel\Excel::CSV, [
+            'X-Vapor-Base64-Encode' => 'true'
           ]);
     }
 }

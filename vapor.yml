@@ -26,7 +26,6 @@ environments:
         layers:
             - 'vapor:php-7.4'
             - 'vapor:php-7.4:imagick'
-            - 'vapor:php-7.4:php_gd2'
         runtime: php-7.4
         database: entrytrakr
         build:
