@@ -238,7 +238,7 @@
                         
                         if (response.visitor_addition_info.visitor_type == 2) {
                             contractor_area_access(response);
-                        }elseif(response.can_feedback){
+                        }else if(response.can_feedback){
                             showFeedBack(response);
                         }else{
                             showCheckOutMessage(response);
