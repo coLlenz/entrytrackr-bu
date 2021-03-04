@@ -395,7 +395,7 @@
     
     
     function showCheckInMessage(details){
-        var time_set = "{{ $view_data['msg_timer']->signin ? $view_data['msg_timer']->signin : 5}}";
+        var time_set = "{{ isset($view_data['msg_timer']->signin) ? $view_data['msg_timer']->signin : 5}}";
         var timer = time_set * 1000;
 
         Swal.fire({
@@ -417,7 +417,7 @@
     }
     
     function showCheckOutMessage(details){
-        var time_set = "{{ $view_data['msg_timer']->signout ? $view_data['msg_timer']->signout : 5 }}";
+        var time_set = "{{ isset($view_data['msg_timer']->signout) ? $view_data['msg_timer']->signout : 5 }}";
         var timer = time_set * 1000;
 
         Swal.fire({
@@ -757,6 +757,8 @@
                 if (response.examStatus) {
                     createTrakrID(response);
                 }else{
+                    var time_set = "{{ isset($view_data['msg_timer']->accessdenied) }}";
+                    var timer = time_set * 1000;
                     Swal.fire({
                         title: '<strong>Access Denied</strong>',
                         icon: 'error',
@@ -765,8 +767,8 @@
                         showCloseButton: false,
                         focusConfirm: false,
                         showConfirmButton:false,
-                        timer: "{{ $view_data['msg_timer']->accessdenied }}",
-                        footer: '<p> This message will automatically close in '+"{{ $view_data['msg_timer']->accessdenied }}"+' seconds. </p>'
+                        timer: timer ,
+                        footer: '<p> This message will automatically close in '+ time_set +' seconds. </p>'
                     })
                     // form[0].reset();
                 }
