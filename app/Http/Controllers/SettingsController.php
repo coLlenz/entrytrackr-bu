@@ -16,9 +16,12 @@ use Session;
 class SettingsController extends Controller{
     
     public function index(){
-        $settings = DB::table('question_view_settings')->select('auto_sign_out')->where('user_id' , user_id())->first();
+        $settings = DB::table('question_view_settings')->select('auto_sign_out' , 'confirmation_msg')->where('user_id' , user_id())->first();
         $json = $settings ? json_decode($settings->auto_sign_out) : [];
-        return view('profile.show')->with('settings' , $json);
+        $confirmation = $settings ? json_decode($settings->confirmation_msg) : [];
+        return view('profile.show')
+        ->with('settings' , $json)
+        ->with('confirmation' ,  $confirmation);
     }
     
     public function customerAdmins(){
@@ -141,6 +144,35 @@ class SettingsController extends Controller{
         }
         
         return back();
+    }
+
+    public function confirmationSettings(Request $request){
+        $settings = DB::table('question_view_settings')->where('user_id' , user_id())->first();
+
+        $result = false;
+
+        $settings_data = [
+            'signin' => isset( $request->set_signin ) ? $request->set_signin : 0,
+            'signout' => isset( $request->set_signout ) ? $request->set_signout : 0,
+            'accessdenied' => isset( $request->set_accessdenied ) ? $request->set_accessdenied : 0
+        ];
+
+        $encode = json_encode( $settings_data );
+        if (!$settings) {
+
+            $result = DB::table('question_view_settings')->insert([
+                'user_id' => user_id(),
+                'confirmation_msg' => $encode
+            ]);
+
+        }else{
+
+            $result = DB::table('question_view_settings')->where('user_id' , user_id() )
+            ->update(['confirmation_msg' => $encode ]); 
+
+        }
+
+        return $result;
     }
     
     public function accountDetails(Request $request){

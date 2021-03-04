@@ -454,6 +454,7 @@ class TrakrViewController extends Controller
     public function stepper($visitor_id , $userid , $question_id){
         $question = DB::table('template_copy')->select('questions' , 'title' , 'description')->where(['id' => $question_id , 'user_id' => $userid ])->first();
         $json = json_decode($question->questions , true);
+        $confirmations_msg_timer = DB::table('question_view_settings')->select('confirmation_msg')->where('user_id' ,$userid )->first();
         $title = $question->title;
         $description = $question->description;
         return view('trakr.modal.stepperquestion')
@@ -462,7 +463,8 @@ class TrakrViewController extends Controller
         ->with('question_id' ,  $question_id)
         ->with('title' , $title)
         ->with('description' , $description)
-        ->with('questions' ,$json );
+        ->with('questions' ,$json )
+        ->with('confirmation' , $confirmations_msg_timer ? json_decode($confirmations_msg_timer->confirmation_msg) : []);
     }
     
     public function stepperSave(Request $req){
@@ -572,6 +574,8 @@ class TrakrViewController extends Controller
     
     public function QRLoginView( $uuid , $userid ){
         $user = DB::table('users')->where('id' ,$userid)->first();
+        $confirmations_msg_timer = DB::table('question_view_settings')->select('confirmation_msg')->where('user_id' ,$userid )->first();
+
         $view_data = [];
         $view_data['is_mobile'] = true;
         $view_data['uuid'] = $uuid;
@@ -579,6 +583,7 @@ class TrakrViewController extends Controller
         $view_data['qr_path'] = $user->qr_path;
         $view_data['timezone'] = $user->timezone;
         $view_data['has_profile'] = $user->profile_path ? $user->profile_path : false;
+        $view_data['msg_timer'] = $confirmations_msg_timer ? json_decode($confirmations_msg_timer->confirmation_msg) : [];
         return view('trakr.mobile')->with('view_data' , $view_data);
     }
     
