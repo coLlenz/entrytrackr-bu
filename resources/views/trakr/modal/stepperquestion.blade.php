@@ -175,7 +175,7 @@
         }
         
         function showCheckInMessage(details){
-            var time_set = "{{ $confirmation->signin ? $confirmation->signin : 5}}";
+            var time_set = "{{ isset($confirmation->signin) ? $confirmation->signin : 5}}";
             var timer = time_set * 1000;
             Swal.fire({
                 showClass: {
@@ -200,7 +200,7 @@
         }
         
         function showDenied(){
-            var time_set = "{{ $confirmation->accessdenied ? $confirmation->accessdenied : 10 }}";
+            var time_set = "{{ isset($confirmation->accessdenied) ? $confirmation->accessdenied : 10 }}";
             var timer = time_set * 1000;
             Swal.fire({
                 title: '<strong>Access Denied</strong>',
