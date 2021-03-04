@@ -395,6 +395,9 @@
     
     
     function showCheckInMessage(details){
+        var time_set = "{{ $view_data['msg_timer']->signin ? $view_data['msg_timer']->signin : 5}}";
+        var timer = time_set * 1000;
+
         Swal.fire({
             showClass: {
                 popup: 'swal2-noanimation',
@@ -408,12 +411,15 @@
             '<b>'+details.check_date+'</b>',
             showCloseButton: false,
             showConfirmButton:false,
-            timer: 5000,
-            footer: '<p> This message will automatically close in 5 seconds. </p>'
+            timer: timer,
+            footer: '<p> This message will automatically close in '+ time_set +' seconds. </p>'
         })
     }
     
     function showCheckOutMessage(details){
+        var time_set = "{{ $view_data['msg_timer']->signout ? $view_data['msg_timer']->signout : 5 }}";
+        var timer = time_set * 1000;
+
         Swal.fire({
             title: '<strong>Goodbye, '+details.name+'</strong>',
             icon: 'success',
@@ -423,8 +429,8 @@
             '<b>'+details.check_date+'</b>',
             showCloseButton: false,
             showConfirmButton:false,
-            timer: 5000,
-            footer: '<p> This message will automatically close in 5 seconds. </p>'
+            timer: timer,
+            footer: '<p> This message will automatically close in '+ time_set +' seconds. </p>'
         })
     }
     
@@ -759,8 +765,8 @@
                         showCloseButton: false,
                         focusConfirm: false,
                         showConfirmButton:false,
-                        timer: 10000,
-                        footer: '<p> This message will automatically close in 10 seconds. </p>'
+                        timer: "{{ $view_data['msg_timer']->accessdenied }}",
+                        footer: '<p> This message will automatically close in '+"{{ $view_data['msg_timer']->accessdenied }}"+' seconds. </p>'
                     })
                     // form[0].reset();
                 }
