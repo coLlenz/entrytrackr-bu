@@ -16,7 +16,7 @@ use Session;
 class SettingsController extends Controller{
     
     public function index(){
-        $settings = DB::table('question_view_settings')->select('auto_sign_out' , 'feedback_settings')->where('user_id' , user_id())->first();
+        $settings = DB::table('question_view_settings')->select('auto_sign_out' , 'feedback_settings' , 'confirmation_msg')->where('user_id' , user_id())->first();
         $json = $settings ? json_decode($settings->auto_sign_out) : [];
         $feedback = $settings ? json_decode($settings->feedback_settings) : [];
         $confirmation = $settings ? json_decode($settings->confirmation_msg) : [];
