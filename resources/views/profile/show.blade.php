@@ -117,10 +117,7 @@
                 <div class="card mb-4">
                     <div class="card-body">
                     <h4 class="mb-4"> Feedback Settings </h4>
-                    <p></p>
-                    <div class="alert alert-info" style="display:none;">
-                        <span>{{'Save'}}</span>
-                    </div>
+                    <p>Select the visitor type(s) to activate and collect feedback during sign out.</p>
                     <form action="{{route('feedbackSettings')}}" id="feedbackForm">
                         @csrf
                         <div class="et_signout_settings">
@@ -213,6 +210,7 @@
 @endsection
 @section('script')
 <script src="{{ asset('js/vendor/jquery.validate/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('js/vendor/sweetalert2@10.js')}}"></script>
 <script>
     $(document).ready(function() {
         $.ajaxSetup({
@@ -255,11 +253,21 @@
                 data : data,
                 success:function(res){
                     if (res) {
-                        $('.alert-info').show();
+                        success(); 
                     }
                 }
             })
         });
+
+        function success(){
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Changes has been saved.',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        }
         
     });
 </script>
