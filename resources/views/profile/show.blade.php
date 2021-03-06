@@ -254,7 +254,7 @@
                 data : $(this).serialize(),
                 success:function(response_data){
                     if (response_data) {
-                        $('.confirmation_success').show();
+                        success(); 
                     }
                 }
             })
