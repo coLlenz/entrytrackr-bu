@@ -113,6 +113,32 @@
                           
                     </div>
                 </div> 
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                    <h4 class="mb-4"> Feedback Settings </h4>
+                    <p>Select the visitor type(s) to activate and collect feedback during sign out.</p>
+                    <form action="{{route('feedbackSettings')}}" id="feedbackForm">
+                        @csrf
+                        <div class="et_signout_settings">
+                            <div class="settings_">
+                                <input type="checkbox" name="employee" value="1" id="feed_employee" {{isset($feedback->employee) && $feedback->employee != 0 ? 'checked' : ''}}>
+                                <label for="feed_employee">Employee</label>
+                            </div>
+                            <div class="settings_">
+                                <input type="checkbox" name="visitor" value="1" id="feed_visitor" {{isset($feedback->visitor) && $feedback->visitor != 0 ? 'checked' : ''}}>
+                                <label for="feed_visitor">Visitor</label>
+                            </div>
+                            <div class="settings_">
+                                <input type="checkbox" name="contractor" value="1" id="feed_contractor" {{isset($feedback->contractor) && $feedback->contractor != 0 ? 'checked' : ''}}>
+                                <label for="feed_contractor">Contractor</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-md" name="saveBtn_feed">Save</button>
+                    </form>
+                    </div>
+                </div>
+
                 <div class="card mb-4">
                     <div class="card-body">
                         <h4 class="mb-4"> QR Code </h4>
@@ -184,11 +210,13 @@
 @endsection
 @section('script')
 <script src="{{ asset('js/vendor/jquery.validate/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('js/vendor/sweetalert2@10.js')}}"></script>
 <script>
     $(document).ready(function() {
         $.ajaxSetup({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
         });
+
         $('#add_admin_user').on('submit' , function(e) {
             e.preventDefault();
             $.ajax({
@@ -212,7 +240,34 @@
                     }
                 }
             })
-        })
+        });
+
+        $('#feedbackForm').on('submit' , function(form){
+            form.preventDefault();
+            var data = $(this).serialize();
+            var url = $(this).attr('action');
+
+            $.ajax({
+                url : url ,
+                type : 'POST',
+                data : data,
+                success:function(res){
+                    if (res) {
+                        success(); 
+                    }
+                }
+            })
+        });
+
+        function success(){
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Changes has been saved.',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        }
         
     });
 </script>
