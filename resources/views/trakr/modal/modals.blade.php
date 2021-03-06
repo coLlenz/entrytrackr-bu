@@ -207,6 +207,7 @@
                 type: $(this).attr('method'),
                 data: $(this).serialize() + "&user_id=" + "{{$view_data['userid']}}",
                 success: function(response){
+                    
                     if (response.status == 'nodata') {
                         Swal.fire({
                             icon: 'warning',
@@ -229,11 +230,15 @@
                             confirmButtonAriaLabel: 'Thumbs up, great!',
                         });
                     }
+
+
     
                     if (response.status == 'success') {
                         $('#checkoutModal').modal('hide');
-
-                        if (response.can_feedback) {
+                        
+                        if (response.visitor_addition_info.visitor_type == 2) {
+                            contractor_area_access(response);
+                        }else if(response.can_feedback){
                             showFeedBack(response);
                         }else{
                             showCheckOutMessage(response);
@@ -390,6 +395,9 @@
     
     
     function showCheckInMessage(details){
+        var time_set = "{{ isset($view_data['msg_timer']->signin) && $view_data['msg_timer']->signin != 0 ? $view_data['msg_timer']->signin : 5}}";
+        var timer = time_set * 1000;
+
         Swal.fire({
             showClass: {
                 popup: 'swal2-noanimation',
@@ -403,12 +411,15 @@
             '<b>'+details.check_date+'</b>',
             showCloseButton: false,
             showConfirmButton:false,
-            timer: 5000,
-            footer: '<p> This message will automatically close in 5 seconds. </p>'
+            timer: timer,
+            footer: '<p> This message will automatically close in '+ time_set +' seconds. </p>'
         })
     }
     
     function showCheckOutMessage(details){
+        var time_set = "{{ isset($view_data['msg_timer']->signout) && $view_data['msg_timer']->signout != 0  ? $view_data['msg_timer']->signout : 5 }}";
+        var timer = time_set * 1000;
+
         Swal.fire({
             title: '<strong>Goodbye, '+details.name+'</strong>',
             icon: 'success',
@@ -418,8 +429,8 @@
             '<b>'+details.check_date+'</b>',
             showCloseButton: false,
             showConfirmButton:false,
-            timer: 5000,
-            footer: '<p> This message will automatically close in 5 seconds. </p>'
+            timer: timer,
+            footer: '<p> This message will automatically close in '+ time_set +' seconds. </p>'
         })
     }
     
@@ -667,6 +678,58 @@
         
         return html;
     }
+
+    function contractor_area_access( response ){
+        Swal.fire({
+            reverseButtons: true,
+            customClass: {
+                confirmButton: 'et_btn et_btn_clored',
+                cancelButton: 'et_btn et_btn_secondary mr-2'
+            },
+            buttonsStyling: false,
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            input: 'textarea',
+            inputLabel: 'What area(s) did you access during your visit today?',
+            inputPlaceholder: 'Type here...',
+            showCloseButton: false,
+            allowOutsideClick : false,
+            showCancelButton: true,
+            cancelButtonText: 'Skip',
+            confirmButtonText: 'Continue',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Input is required'
+                }
+            },
+        }).then(complete => {
+            if (complete.isConfirmed) {
+                Swal.showLoading();
+                $.ajax({
+                    url: "{{route('area-access')}}",
+                    method:'POST',
+                    data: {trakr_info: response.visitor_addition_info , area_access : complete.value },
+                    success:function(request_response){
+                       if (request_response.status == 'success') {
+                           if (response.can_feedback) {
+                                showFeedBack(response);
+                           }else{
+                                showCheckOutMessage(response);
+                           }
+                       }
+                    },
+                })
+            }else{
+                if (response.can_feedback) {
+                    showFeedBack(response);
+                }else{
+                    showCheckOutMessage(response);
+                }
+            }
+        });
+    }
     
     $(document).on('click' , '.btnCancelQuestion' , function(){
         var trakr_id = $(this).attr('cancel-btn-data');
@@ -694,6 +757,8 @@
                 if (response.examStatus) {
                     createTrakrID(response);
                 }else{
+                    var time_set = "{{ isset($view_data['msg_timer']->accessdenied) && $view_data['msg_timer']->accessdenied != 0 ? $view_data['msg_timer']->accessdenied : 5 }}";
+                    var timer = time_set * 1000;
                     Swal.fire({
                         title: '<strong>Access Denied</strong>',
                         icon: 'error',
@@ -702,8 +767,8 @@
                         showCloseButton: false,
                         focusConfirm: false,
                         showConfirmButton:false,
-                        timer: 10000,
-                        footer: '<p> This message will automatically close in 10 seconds. </p>'
+                        timer: timer ,
+                        footer: '<p> This message will automatically close in '+ time_set +' seconds. </p>'
                     })
                     // form[0].reset();
                 }

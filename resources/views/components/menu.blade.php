@@ -60,7 +60,7 @@
                 </li>
                 <li>
                     <a href="{{ route('feedback') }}">
-                        <i class=""></i> <span class="d-inline-block font-weight-bold">Feedbacks</span>
+                        <i class=""></i> <span class="d-inline-block font-weight-bold">Visitor Feedback</span>
                     </a>
                 </li>
             </ul>

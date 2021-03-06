@@ -30,6 +30,7 @@ environments:
         database: entrytrakr
         build:
             - 'composer install'
+            - 'composer dump-autoload'
             - 'php artisan event:cache'
             - 'npm ci && npm run dev && rm -rf node_modules'
 

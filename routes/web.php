@@ -64,6 +64,7 @@ Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
 	Route::post('/question-settings' , [SettingsController::class , 'saveSettings'])->name('saveSettings');
 	Route::post('/signin-settings' , [SettingsController::class , 'signOutSettings'])->name('signOutSettings');
 	Route::post('/feedback-settings' , [SettingsController::class , 'feedbackSettings'])->name('feedbackSettings');
+	Route::post('/confirmation-settings' , [SettingsController::class , 'confirmationSettings'])->name('confirmationSettings');
 	Route::post('/get-account-details' , [SettingsController::class , 'accountDetails'])->name('accountDetails');
 	Route::post('/save-account-details' , [SettingsController::class , 'accountDetailsSave'])->name('accountDetailsSave');
 });
@@ -109,6 +110,7 @@ Route::prefix('trakr')->group(function () {
 	Route::post('/visitor/checktrakrid' , [TrakrViewController::class , 'trakrIdCheck'])->name('check-trakr-id');
 	Route::post('/visitor/save/trakr' , [TrakrViewController::class , 'saveTrakrId'])->name('save-trakr-id');
 	Route::get('/visitor/cancel/{trakr}' , [TrakrViewController::class , 'cancelSignin'])->name('cancelSignin');
+	Route::post('/visitor/contractor/area-access' , [TrakrViewController::class ,'areaAccess'])->name('area-access');
 	// qr
 	Route::get('/qr/login/{uuid}/{userid}' , [TrakrViewController::class,'QRLoginView'])->name('qr-login-view');
 	Route::post('/qr/login/{userid?}' , [TrakrViewController::class,'create'])->name('qr-login');
@@ -139,6 +141,7 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 	Route::post('/summary/get/results/download/' , [ReportController::class , 'downloadResult'])->name('downloadResult');
 	Route::get('/summary/search/results' , [ReportController::class , 'searchSummary'])->name('searchSummary');
 	Route::get('/feedbacks' , [FeedBackController::class , 'feedback'])->name('feedback');
+	Route::get('/export_csv' , [ReportController::class , 'export_csv'])->name('export_csv');
 });
 
 Route::prefix('locations')->middleware(['auth'])->group(function() {

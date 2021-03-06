@@ -1,7 +1,9 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Trakr;
+use App\Models\LogReport;
 use Illuminate\Http\Request;
+use App\Exports\ReportExport;
+use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 use DB;
 use Carbon\Carbon;
@@ -16,11 +18,14 @@ class ReportController extends Controller
         $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
         $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
         
-        $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
-        ->where('user_id' , user_id() )
-        ->where('check_in_date' ,'>=', $date_7_days_ago )
-        ->where('check_in_date' , '<=' ,  $date_now )
-        ->orderBy('check_in_date' , 'DESC' )
+        $default_data = LogReport::select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+        'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
+        'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
+        ->where('report_logs.user_id' , user_id() )
+        ->where('report_logs.created_at' ,'>=', $date_7_days_ago )
+        ->where('report_logs.created_at' , '<=' ,  $date_now )
+        ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
+        ->orderBy('report_logs.created_at' , 'DESC' )
         ->paginate(10);
         $formdata = [
             'fdate' => Carbon::parse( $date_7_days_ago )->format('Y-m-d'),
@@ -45,60 +50,65 @@ class ReportController extends Controller
         $type_of_visitor = $request->input('tvis');
         $status = $request->input('acc');
         $form_data = $request->all();
-        $filter_query = Trakr::query();
-        $filter_query->select('firstName','lastName' ,'trakr_type_id' , 'phoneNumber' ,'who' ,'name_of_company','check_in_date' , 'check_out_date' , 'assistance' , 'status');
+        $filter_query = LogReport::query();
         
-        $filter_query->where('user_id' , user_id() );
+        $filter_query->select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+        'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
+        'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company');
+        
+        $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');
+
+        $filter_query->where('report_logs.user_id' , user_id() );
         
         $filter_query->when($start_date,function($q , $start_date) {
-            return $q->where('check_in_date' , '>=' , $start_date);
+            return $q->where('report_logs.created_at' , '>=' , $start_date);
         });
         
         $filter_query->when($end_date,function($q , $end_date ) {
-            return $q->where('check_in_date' , '<=' , $end_date);
+            return $q->where('report_logs.created_at' , '<=' , $end_date);
         });
         
         $filter_query->when($assistance == 'all',function($q , $assistance ) {
-            return $q->where('assistance' , '>=' , 0);
+            return $q->where('report_logs.assistance' , '>=' , 0);
         });
         
         $filter_query->when($assistance == '1',function($q , $assistance ) {
-            return $q->where('assistance' , '=' , 1);
+            return $q->where('report_logs.assistance' , '=' , 1);
         });
         
         $filter_query->when($assistance == '0',function($q , $assistance ) {
-            return $q->where('assistance' , '=' , 0);
+            return $q->where('report_logs.assistance' , '=' , 0);
         });
         
         $filter_query->when($type_of_visitor == 'all',function($q , $type_of_visitor ) {
-            return $q->where('trakr_type_id' , '>' , 0);
+            return $q->where('report_logs.trakr_type_id' , '>' , 0);
         });
         
         $filter_query->when($type_of_visitor == '1',function($q , $type_of_visitor ) {
-            return $q->where('trakr_type_id' , '=' , 1);
+            return $q->where('report_logs.trakr_type_id' , '=' , 1);
         });
         
         $filter_query->when($type_of_visitor == '2',function($q , $type_of_visitor ) {
-            return $q->where('trakr_type_id' , '=' , 2);
+            return $q->where('report_logs.trakr_type_id' , '=' , 2);
         });
         
         $filter_query->when($type_of_visitor == '3',function($q , $type_of_visitor ) {
-            return $q->where('trakr_type_id' , '=' , 3);
+            return $q->where('report_logs.trakr_type_id' , '=' , 3);
         });
         
         $filter_query->when($status == 'all',function($q , $status ) {
-            return $q->where('status' , '>=' , 0);
+            return $q->where('report_logs.status' , '>=' , 0);
         });
         
         $filter_query->when($status == '0',function($q , $status ) {
-            return $q->where('status' , '=' , 0);
+            return $q->where('report_logs.status' , '=' , 0);
         });
         
         $filter_query->when($status == '1',function($q , $status ) {
-            return $q->where('status' , '=' , 1);
+            return $q->where('report_logs.status' , '=' , 1);
         });
         
-        $filter_query->orderBy('check_in_date' , 'DESC');
+        $filter_query->orderBy('report_logs.created_at' , 'DESC');
         
         $data = $filter_query->paginate(10);
         // $query = DB::getQueryLog();
@@ -107,18 +117,21 @@ class ReportController extends Controller
     }
     
     public function generate_pdf(Request $request){
-        DB::enableQueryLog();
         
         if ( count($request->all()) == 0 ) {
             $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
             $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
             $filename = strtotime(date('Y-m-d H:i:s'));
-            $default_data = Trakr::select('firstName','lastName' ,'trakr_type_id' ,'phoneNumber' , 'check_in_date' , 'check_out_date' , 'assistance' , 'status' , 'who' , 'name_of_company')
-            ->where('user_id' , user_id() )
-            ->where('check_in_date' ,'>=', $date_7_days_ago )
-            ->where('check_in_date' , '<=' ,  $date_now )
-            ->orderBy('check_in_date' , 'DESC' )
+            $default_data = LogReport::select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+            'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
+            'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
+            ->where('report_logs.user_id' , user_id() )
+            ->where('report_logs.created_at' ,'>=', $date_7_days_ago )
+            ->where('report_logs.created_at' , '<=' ,  $date_now )
+            ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
+            ->orderBy('report_logs.created_at' , 'DESC' )
             ->get();
+            
             view()->share('data',$default_data);
             $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
             return $pdf->download($filename.'.pdf');
@@ -131,61 +144,67 @@ class ReportController extends Controller
         $type_of_visitor = $request->input('tvis') ? $request->input('tvis') : '';
         $status = $request->input('acc') ? $request->input('acc') : '';
         $filename = strtotime(date('Y-m-d H:i:s'));
-        $filter_query = Trakr::query();
-        $filter_query->select('firstName','lastName' ,'trakr_type_id' , 'phoneNumber' ,'who' ,'trakr_types.name as visitor_type','name_of_company','check_in_date' , 'check_out_date' , 'assistance' , 'status');
-        $filter_query->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id');
-        $filter_query->where('user_id' , user_id());
+        $filter_query = LogReport::query();
+        
+        $filter_query->select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+        'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
+        'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company');
+        
+        $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');
+
+        $filter_query->where('report_logs.user_id' , user_id() );
         
         $filter_query->when($start_date,function($q , $start_date) {
-            return $q->where('check_in_date' , '>=' , $start_date);
+            return $q->where('report_logs.created_at' , '>=' , $start_date);
         });
         
         $filter_query->when($end_date,function($q , $end_date ) {
-            return $q->where('check_in_date' , '<=' , $end_date);
+            return $q->where('report_logs.created_at' , '<=' , $end_date);
         });
         
         $filter_query->when($assistance == 'all',function($q , $assistance ) {
-            return $q->where('assistance' , '>=' , 0);
+            return $q->where('report_logs.assistance' , '>=' , 0);
         });
         
         $filter_query->when($assistance == '1',function($q , $assistance ) {
-            return $q->where('assistance' , '=' , 1);
+            return $q->where('report_logs.assistance' , '=' , 1);
         });
         
         $filter_query->when($assistance == '0',function($q , $assistance ) {
-            return $q->where('assistance' , '=' , 0);
+            return $q->where('report_logs.assistance' , '=' , 0);
         });
         
         $filter_query->when($type_of_visitor == 'all',function($q , $type_of_visitor ) {
-            return $q->where('trakr_type_id' , '>' , 0);
+            return $q->where('report_logs.trakr_type_id' , '>' , 0);
         });
         
         $filter_query->when($type_of_visitor == '1',function($q , $type_of_visitor ) {
-            return $q->where('trakr_type_id' , '=' , 1);
+            return $q->where('report_logs.trakr_type_id' , '=' , 1);
         });
         
         $filter_query->when($type_of_visitor == '2',function($q , $type_of_visitor ) {
-            return $q->where('trakr_type_id' , '=' , 2);
+            return $q->where('report_logs.trakr_type_id' , '=' , 2);
         });
         
         $filter_query->when($type_of_visitor == '3',function($q , $type_of_visitor ) {
-            return $q->where('trakr_type_id' , '=' , 3);
+            return $q->where('report_logs.trakr_type_id' , '=' , 3);
         });
         
         $filter_query->when($status == 'all',function($q , $status ) {
-            return $q->where('status' , '>=' , 0);
+            return $q->where('report_logs.status' , '>=' , 0);
         });
         
         $filter_query->when($status == '0',function($q , $status ) {
-            return $q->where('status' , '=' , 0);
+            return $q->where('report_logs.status' , '=' , 0);
         });
         
         $filter_query->when($status == '1',function($q , $status ) {
-            return $q->where('status' , '=' , 1);
+            return $q->where('report_logs.status' , '=' , 1);
         });
         
+        $filter_query->orderBy('report_logs.check_in_date' , 'DESC');
+        
         $data = $filter_query->get();
-        $query = DB::getQueryLog();
         
         view()->share('data',$data);
         $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
@@ -263,5 +282,99 @@ class ReportController extends Controller
         return view('report.summary')
         ->with('lists' , $lists)
         ->with('formdata' ,$formdata);
+    }
+
+    public function export_csv(Request $request){
+        $filename = time().'_report.csv';
+
+        if ( count($request->all()) == 0 ) {
+            $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
+            $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
+
+            $default_data = LogReport::select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+            'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
+            'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
+            ->where('report_logs.user_id' , user_id() )
+            ->where('report_logs.check_in_date' ,'>=', $date_7_days_ago )
+            ->where('report_logs.check_in_date' , '<=' ,  $date_now )
+            ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
+            ->orderBy('report_logs.check_in_date' , 'DESC' )
+            ->paginate(10);
+            return Excel::download(new ReportExport( $default_data ), $filename);
+        }
+        
+       
+        // 
+        $start_date = Carbon::parse($request->input('fdate'))->format('Y-m-d 00:00:00');
+        $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
+        $assistance = $request->input('ass') ? $request->input('ass') : '';
+        $type_of_visitor = $request->input('tvis') ? $request->input('tvis') : '';
+        $status = $request->input('acc') ? $request->input('acc') : '';
+       
+        $filter_query = LogReport::query();
+        
+        $filter_query->select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+        'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
+        'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company');
+        
+        $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');
+
+        $filter_query->where('report_logs.user_id' , user_id() );
+        
+        $filter_query->when($start_date,function($q , $start_date) {
+            return $q->where('report_logs.created_at' , '>=' , $start_date);
+        });
+        
+        $filter_query->when($end_date,function($q , $end_date ) {
+            return $q->where('report_logs.created_at' , '<=' , $end_date);
+        });
+        
+        $filter_query->when($assistance == 'all',function($q , $assistance ) {
+            return $q->where('report_logs.assistance' , '>=' , 0);
+        });
+        
+        $filter_query->when($assistance == '1',function($q , $assistance ) {
+            return $q->where('report_logs.assistance' , '=' , 1);
+        });
+        
+        $filter_query->when($assistance == '0',function($q , $assistance ) {
+            return $q->where('report_logs.assistance' , '=' , 0);
+        });
+        
+        $filter_query->when($type_of_visitor == 'all',function($q , $type_of_visitor ) {
+            return $q->where('report_logs.trakr_type_id' , '>' , 0);
+        });
+        
+        $filter_query->when($type_of_visitor == '1',function($q , $type_of_visitor ) {
+            return $q->where('report_logs.trakr_type_id' , '=' , 1);
+        });
+        
+        $filter_query->when($type_of_visitor == '2',function($q , $type_of_visitor ) {
+            return $q->where('report_logs.trakr_type_id' , '=' , 2);
+        });
+        
+        $filter_query->when($type_of_visitor == '3',function($q , $type_of_visitor ) {
+            return $q->where('report_logs.trakr_type_id' , '=' , 3);
+        });
+        
+        $filter_query->when($status == 'all',function($q , $status ) {
+            return $q->where('report_logs.status' , '>=' , 0);
+        });
+        
+        $filter_query->when($status == '0',function($q , $status ) {
+            return $q->where('report_logs.status' , '=' , 0);
+        });
+        
+        $filter_query->when($status == '1',function($q , $status ) {
+            return $q->where('report_logs.status' , '=' , 1);
+        });
+        
+        $filter_query->orderBy('report_logs.created_at' , 'DESC');
+        
+        $data = $filter_query->get();
+        
+        return (new ReportExport( $data  ))->download($filename, \Maatwebsite\Excel\Excel::CSV, [
+            'X-Vapor-Base64-Encode' => 'true'
+          ]);
     }
 }

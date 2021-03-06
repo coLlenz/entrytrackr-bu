@@ -112,15 +112,44 @@
                         </div>
                           
                     </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="mb-4"> Confirmation Screens </h4>
+                        <p>Set the length of time (in seconds) for the sign in and sign out confirmation screens.</p>
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                            <div class="alert alert-info confirmation_success" style="display:none;">
+                                <span>{{'Save'}}</span>
+                            </div>
+                                <form class="" action="{{route('confirmationSettings')}}" method="POST" id="confirmationSettings">
+                                        @csrf
+                                        <div class="et_signout_settings">
+                                            <div class="settings_">
+                                                <label for="set_signin">Sign In Successful</label>
+                                                <input type="number" name="set_signin" value="{{isset($confirmation->signin) ? $confirmation->signin : 0}}" class="et_signOut_input" min="0" >
+                                            </div>
+                                            <div class="settings_">
+                                                <label for="set_signout">Sign Out</label>
+                                                <input type="number" name="set_signout" value="{{isset($confirmation->signout) ? $confirmation->signout : 0}}" class="et_signOut_input" min="0" >
+                                            </div>
+                                            <div class="settings_">
+                                                <label for="set_accessdenied">Access Denied</label>
+                                                <input type="number" name="set_accessdenied" value="{{isset($confirmation->accessdenied) ? $confirmation->accessdenied : 0}}" class="et_signOut_input" min="0" >
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-md" name="saveBtn">Save</button>
+                                </form>
+                            </div>
+                        </div>
+                          
+                    </div>
                 </div> 
 
                 <div class="card mb-4">
                     <div class="card-body">
                     <h4 class="mb-4"> Feedback Settings </h4>
-                    <p></p>
-                    <div class="alert alert-info" style="display:none;">
-                        <span>{{'Save'}}</span>
-                    </div>
+                    <p>Select the visitor type(s) to activate and collect feedback during sign out.</p>
                     <form action="{{route('feedbackSettings')}}" id="feedbackForm">
                         @csrf
                         <div class="et_signout_settings">
@@ -213,6 +242,7 @@
 @endsection
 @section('script')
 <script src="{{ asset('js/vendor/jquery.validate/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('js/vendor/sweetalert2@10.js')}}"></script>
 <script>
     $(document).ready(function() {
         $.ajaxSetup({
@@ -255,11 +285,34 @@
                 data : data,
                 success:function(res){
                     if (res) {
-                        $('.alert-info').show();
+                        success(); 
                     }
                 }
             })
         });
+
+        $('#confirmationSettings').on('submit' , function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                type : 'POST',
+                data : $(this).serialize(),
+                success:function(response_data){
+                    if (response_data) {
+                        success(); 
+                    }
+                }
+            })
+        })
+        function success(){
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Changes has been saved.',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        }
         
     });
 </script>
