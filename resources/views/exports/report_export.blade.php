@@ -8,6 +8,7 @@
         <th>Assistance Required</th>
         <th>Access</th>
         <th>Visiting/Business</th>
+        <th>Area(s) Accessed</th>
     </tr>
     </thead>
     <tbody>
@@ -20,6 +21,7 @@
             <td>{{ $list->assistance == 0 ? 'No' : 'Yes' }}</td>
             <td>{{ $list->status == 0 ? 'Allowed' : 'Denied' }}</td>
             <td>{{ $list->who ? $list->who : $list->name_of_company }}</td>
+            <td>{{ $list->area_access }}</td>
         </tr>
     @endforeach
     </tbody>

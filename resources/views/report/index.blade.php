@@ -166,7 +166,7 @@
                                     @endif
                                 </tbody>
                             </table>
-                            @if(empty($table_data))
+                            @if($table_data->isEmpty())
                             <div class="no_records" style="text-align:center;">
                                 {{"No Results"}}
                             </div>

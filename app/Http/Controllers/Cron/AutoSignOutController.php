@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cron;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Trakr;
+use App\Models\LogReport;
 use DB;
 use Carbon\Carbon;
 class AutoSignOutController extends Controller
@@ -16,7 +17,7 @@ class AutoSignOutController extends Controller
         if (!$signin->isEmpty()) {
         
             foreach ($signin as $key => $value) {
-        
+                
                 $customer = DB::table('users')->select('timezone')->where(['id' => $value->user_id])->first();
                 $expected_sign_out_hour = DB::table('question_view_settings')->select('auto_sign_out')->where('user_id' , $value->user_id)->first();
                 $expected_sign_out_hour = $expected_sign_out_hour ? json_decode( $expected_sign_out_hour->auto_sign_out ) : [];
@@ -56,6 +57,12 @@ class AutoSignOutController extends Controller
                             'action' => 1,
                             'created_at' => Carbon::now()
                         ]);
+
+                        $log_report = LogReport::where(['user_id' => $value->user_id , 'visitor_id' => $value->id ])->first();
+                        $log_report->check_out_date = Carbon::now();
+                        $log_report->checked_in_status = 1;
+                        $log_report->save();
+
                     }
                 }
         

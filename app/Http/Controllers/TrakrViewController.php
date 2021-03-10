@@ -326,17 +326,17 @@ class TrakrViewController extends Controller
                 $report_log_result_id = $report->reportCheckout( $params );
 
                 // check if able to feedback
-                $can_feedback = CheckerController::isAbleToFeedBack( $updated_data->user_id , $updated_data->trakr_type_id  );
-                $feedback_data = [];
+                // $can_feedback = CheckerController::isAbleToFeedBack( $updated_data->user_id , $updated_data->trakr_type_id  );
+                // $feedback_data = [];
 
                 // return additional data
-                if ( $can_feedback && $can_feedback != 0 ) {
-                    $feedback_data = [
-                        'can_feedback' => true,
-                        'visitor_id' =>  $updated_data->id,
-                        'user_id' => $updated_data->user_id
-                    ];
-                }
+                // if ( $can_feedback && $can_feedback != 0 ) {
+                //     $feedback_data = [
+                //         'can_feedback' => true,
+                //         'visitor_id' =>  $updated_data->id,
+                //         'user_id' => $updated_data->user_id
+                //     ];
+                // }
                 
                 $visitor_info = [
                     'visitor_id' =>  $updated_data->id,
@@ -350,7 +350,7 @@ class TrakrViewController extends Controller
                         'name' => $updated_data->firstName ,
                         'check_date' => $this->carbonFormat($updated_data->check_out_date , $timezone),
                         'visitor_addition_info' =>  $visitor_info,
-                        'can_feedback' => $can_feedback ?  $feedback_data : false
+                        // 'can_feedback' => $can_feedback ?  $feedback_data : false
                     ] , 200 );
             }
         }else{
