@@ -134,6 +134,7 @@
                                         <th class="text-center">Access</th>
                                         <th class="text-center">Visiting/Business</th>
                                         <th class="text-center">Area(s) Accessed</th>
+                                        <th class="text-center">Comments</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -160,6 +161,10 @@
                                                 </td>
                                                 <td class="text-center"> {{ $list->trakr_type_id == 1 ? $list->who : $list->name_of_company }}</td>
                                                 <td class="text-center"> {{ $list->area_access }} </td>
+                                                <td class="text-center">
+                                                <input type="hidden" class="comment" value="{{ isset($list->comment) && !empty($list->comment) ? $list->comment : '' }}">
+                                                <i class="fa fa-commenting-o fa-2x add_comment" aria-hidden="true" title="Add comments here" data-id="{{ $list->log_id }}"></i> 
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @else
@@ -175,8 +180,8 @@
                         <div class="row">
                             <div class="col-md-3">
                                 @if($table_data->count() >0)
-                                    <a href="{{ route('list-report', $_GET ) }}" class="btn btn-primary btn-md mr-2">Download PDF</a>
-                                    <a href="{{ route('export_csv' , $_GET ) }}" class="btn btn-primary btn-md">Export CSV</a>
+                                    <a href="{{ route('list-report', $_GET ) }}" class="btn btn-primary btn-md mr-2" title="Generate PDF file">Download PDF</a>
+                                    <a href="{{ route('export_csv' , $_GET ) }}" class="btn btn-primary btn-md" title="Generate CSV file">Export CSV</a>
                                 @endif
                             </div>
                             <div class="col-md-4">
@@ -198,4 +203,65 @@
 
 @section('script')
 <script src="{{ asset('js/vendor/datatables.min.js') }}"></script>
+<script src="{{ asset('js/vendor/sweetalert2@10.js') }}" charset="utf-8"></script>
+<script>
+    $(document).ready(function() {
+        $('.add_comment').on('click' , function() {
+            var data_id = $(this).attr('data-id');
+            var default_comment = $(this).prev('input').val();
+            add_comment(data_id , default_comment , $(this) );
+        });
+        
+        function add_comment( log_id  , default_comment , element){
+            Swal.fire({
+                customClass: {
+                confirmButton: 'et_btn et_btn_clored',
+                cancelButton: 'et_btn et_btn_secondary mr-2'
+                },
+                inputValue: default_comment,
+                reverseButtons: true,
+                buttonsStyling: false,
+                title:'Add Comment',
+                input: 'textarea',
+                showCloseButton: false,
+                showCancelButton:true,
+                allowOutsideClick: false,
+                cancelButtonText:'Close',
+                confirmButtonText:'Save',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Input is required'
+                    }
+                },
+            }).then(complete => {
+                if (complete.isConfirmed) {
+                    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+                    $.ajax({
+                        url: "{{route('add_comment')}}",
+                        type: 'POST',
+                        data : {id:log_id , comment:complete.value},
+                        success:function(response){
+                            success(response);
+                            
+                            if (response.status == 'success') {
+                                element.prev('input').val(complete.value)
+                            }
+                            
+                        }
+                    })
+                }
+            }) 
+        }
+
+        function success(response){
+            Swal.fire({
+                position: 'top-end',
+                icon: response.icon,
+                title: response.msg,
+                showConfirmButton: false,
+                timer: 5000
+            })
+        }
+    })
+</script>
 @endsection
