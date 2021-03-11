@@ -142,6 +142,7 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/summary/search/results' , [ReportController::class , 'searchSummary'])->name('searchSummary');
 	Route::get('/feedbacks' , [FeedBackController::class , 'feedback'])->name('feedback');
 	Route::get('/export_csv' , [ReportController::class , 'export_csv'])->name('export_csv');
+	Route::post('/add_comment' , [ReportController::class , 'add_comment'])->name('add_comment');
 });
 
 Route::prefix('locations')->middleware(['auth'])->group(function() {
