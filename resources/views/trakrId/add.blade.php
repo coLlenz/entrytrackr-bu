@@ -43,13 +43,13 @@
                     <div class="form-group">
                         <label>Visitor Type</label>
                         <select class="form-control select2-single" data-width="100%" name="vtype" required>
-                        <option label="&nbsp;">&nbsp;</option>
                         <option value="1">Visitor</option>
                         <option value="2">Contractor</option>
                         <option value="3">Employee</option>
                         </select>
                     </div>
                     <div class="float-right">
+                        <a href="{{ url()->previous() }}" type="submit" class="btn btn-primary">Cancel</a>
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                     </form>
