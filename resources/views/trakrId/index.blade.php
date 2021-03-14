@@ -42,7 +42,7 @@
                             <td>{{$trakr->trakr_id}}</td>
                             <td>{{$trakr->firstName}}</td>
                             <td>{{$trakr->lastName}}</td>
-                            <td>{{ \Carbon\Carbon::parse($trakr->check_in_date)->timezone(userTz())->format('d-m-Y H:i') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($trakr->created_at)->timezone(userTz())->format('d-m-Y H:i') }}</td>
                             <td>{{$trakr->type}}</td>
                             <td class="text-center">
                                 <button class="btn btn-primary dropdown-toggle mb-1" type="button"

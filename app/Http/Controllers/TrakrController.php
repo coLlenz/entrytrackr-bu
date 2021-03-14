@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DB;
 use Session;
+use Illuminate\Support\Facades\Validator;
 class TrakrController extends Controller
 {
     /**
@@ -15,11 +16,11 @@ class TrakrController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $list_data = Trakr::select('trakr_id','firstName' , 'lastName' , 'trakr_types.name as type' , 'trakrs.id' , 'check_in_date')
+        $list_data = Trakr::select('trakr_id','firstName' , 'lastName' , 'trakr_types.name as type' , 'trakrs.id' , 'trakrs.created_at')
         ->join('trakr_types', 'trakr_types.id', '=', 'trakrs.trakr_type_id')
         ->whereNotNull('trakr_id')
         ->where('user_id' , user_id())
-        ->orderBy('trakrs.lastName' , 'ASC')
+        ->orderBy('trakrs.firstName' , 'ASC')
         ->paginate(50);
         return view('trakrId.index',compact("list_data"));
     }
@@ -40,37 +41,41 @@ class TrakrController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        $this->validate($request, [
-            'fname' => 'required|min:3|max:255',
+        $validator = Validator::make($request->all() , [
+            'fname' => 'required',
             'lname' => 'required',
             'trakrid' => 'required',
             'number' => 'required',
             'vtype' => 'required',
         ]);
+       
+        if (!$validator->fails()) {
+            $checker = self::trakrIdCheck($request->trakrid , user_id());
         
-        $checker = $this->trakrIdCheck($request->trakrid , user_id());
-        
-        if ($checker) {
-            Session::flash('error', 'trakrID not available.'); 
-            return back()->withInput();
+            if ($checker) {
+                Session::flash('error', 'trakrID not available.'); 
+                return back()->withInput();
+            }
+            
+            $trakrr = new Trakr;
+            $trakrr->firstName = $request->fname;
+            $trakrr->lastName = $request->lname;
+            $trakrr->trakr_id = $request->trakrid;
+            $trakrr->phoneNumber = $request->number;
+            $trakrr->trakr_type_id = $request->vtype;
+            $trakrr->user_id = user_id();
+            $trakrr->assistance = 0;
+            $trakrr->status = 0;
+            $trakrr->checked_in_status = NULL;
+            
+            if ($trakrr->save()) {
+                return redirect('/trakrid')
+                ->with('success', 'Successfully Added New TrakrID');
+            }
         }
-        
-        $trakrr = new Trakr;
-        $trakrr->firstName = $request->fname;
-        $trakrr->lastName = $request->lname;
-        $trakrr->trakr_id = $request->trakrid;
-        $trakrr->phoneNumber = $request->number;
-        $trakrr->trakr_type_id = $request->vtype;
-        $trakrr->user_id = user_id();
-        $trakrr->assistance = NULL;
-        $trakrr->status = NULL;
-        $trakrr->checked_in_status = NULL;
-        
-        if ($trakrr->save()) {
-            return redirect('/trakrid')
-            ->with('success', 'Successfully Added New TrakrID');
-        }
-        return redirect('/trakrid')->with('success' , 'Complete the Form');
+
+        Session::flash('error', $validator->errors()); 
+        return back()->withInput();
     }
     
     
