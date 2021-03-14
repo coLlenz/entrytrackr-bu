@@ -1,196 +1,88 @@
 @extends('layouts.app')
-
 @section('content')
+<div class="contanier-fluid">
+    <div class="row justify-content-md-center">
+        <div class="col-md-6 col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="contact_tab" data-toggle="tab" href="#contact_content" role="tab" aria-controls="contact_content" aria-selected="true">Contact Support</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#help" role="tab" aria-controls="help" aria-selected="false">Help Center</a>
+                    </li>
+                </ul>
 
-<div class="card">
-    <div class="card-header">
-        <ul class="nav nav-tabs card-header-tabs " role="tablist">
-            <li class="nav-item">
-                <a class="nav-link  active" id="contactus-tab" data-toggle="tab" href="#contactus" role="tab" aria-controls="contactus" aria-selected="false">Contact Support</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="userguide-tab" data-toggle="tab" href="#userguide" role="tab" aria-controls="userguide" aria-selected="true">Help Center</a>
-            </li>
-
-        </ul>
-    </div>
-    <div class="card-body">
-        <div class="tab-content">
-            <div class="tab-pane fade  show active" id="contactus" role="tabpanel" aria-labelledby="contactus-tab">
-                <p>Complete this form to submit a support request with Customer Support Team. Please provide as much information as possible to help as understand the nature of your request so that we can respond to you quickly.<br/> In most cases you will receive  a response from us within 24 hours</p><br/>
-                @if(auth()->user()->is_admin)
-                <table class="data-table data-table-feature">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Business Name</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            {{-- <th>Phone</th> --}}
-                            <th>Message</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($contacts as $key=>$user)
-                        <tr>
-                            <td>{{$key+1}}</td>
-                            <td>{{$user->name}}</td>
-                            <td>{{$user->name}}</td>
-                            <td>{{$user->email}}</td>
-                            <td>{{$user->message}}</td>
-                        </tr>
-                        @endforeach
-
-
-            </div>
-
-            </tbody>
-            </table>
-            @else
-            <div class="row">
-                <div class="col-md-12 mx-auto">
-                    <form action="{{route('contact-store')}}" method="post">
-                        @csrf
-                        @if ($errors->any())
-                        <div class="alert alert-danger" role="alert">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endif
-                        <div class="form-group">
-                            <label class="form-control-label" style="color:red" for="name">Name</label>
-                            <input name="name" type="text" class="form-control" id="name" placeholder="Enter Name" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-control-label" style="color:red" id="message">Message</label>
-                            <textarea name="message" cols="30" class="form-control" rows="10"></textarea>
-                        </div>
-                        <button class="btn btn-primary btn-lg float-right" type="submit">Send</button>
-                    </form>
-                </div>
-            </div>
-            @endif
-
-
-        </div>
-        <div class="tab-pane fade" id="userguide" role="tabpanel" aria-labelledby="userguide-tab">
-            <p> Search our library for help on how to use the various feature of Entrytrakr. If you can't find what you are looking for, please contact our customer support team using the 'Contact Support' tab on this page.  </p>
-            <div class="row">
-                <div class="col-12" id="accordion">
-                    @if(auth()->user()->is_admin)
-                    <form class="mb-2" action="{{route("support-store")}}" method="post" id="quill-notification">
-                        @csrf
-
-                        @if ($errors->any())
-                        <div class="alert alert-danger" role="alert">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endif
-
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" class="form-control" name="title">
-                        </div>
-                        <div class="form-group">
-                            <label>Details</label>
-                            <div class="html-editor" id="quillEditor"></div>
-                        </div>
-
-
-                        <center>
-                            <button type="submit" class="btn btn-primary">Add</button>
-                        </center>
-
-                    </form>
-                    @endif
-                    @foreach ($supports as $support)
-                    <div class="card mb-3">
-                        <div class="d-flex flex-grow-1 min-width-zero" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            <div class="card-body btn btn-empty list-item-heading text-left text-one">
-                                {{$support->title}}
+                <div class="tab-content" id="support_tab_contents">
+                    <div class="tab-pane fade show active" id="contact_content" role="tabpanel" aria-labelledby="contact_tab">
+                        <form action="" class="mt-4" id="send_email">
+                        <p>Complete this form to submit a support request with our Customer Support Team. Please provide as much information as possible to help as understand the nature of your request so that we can respond to you quickly.
+                            In most cases you will receive a response from us within 24 hours</p>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="support_name">Name</label>
+                                    <input type="text" class="form-control" id="support_name" name="support_name"  aria-describedby="support_name" placeholder="Enter name">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="support_email">Email</label>
+                                    <input type="text" class="form-control" id="support_email" name="support_email"  aria-describedby="support_email" placeholder="Enter email">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="support_phone">Phone Number  <span> <i>(optional)</i> </span> </label>
+                                    <input type="text" class="form-control" id="support_phone" name="support_phone"  aria-describedby="support_phone" placeholder="Enter phone">
+                                </div>
                             </div>
-                        </div>
-                        <div id="collapseOne" class="collapse" data-parent="#accordion">
-                            <div class="card-body accordion-content">
-                                {!! $support->content !!}
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="report_request">Message</label>
+                                    <textarea name="report_request" id="" cols="30" rows="10" class="form-control"></textarea>
+                                </div>
                             </div>
-                        </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <button type="submit"  class="btn btn-primary btn-lg float-right">Send</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    @if(auth()->user()->is_admin)
-                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{route("support-edit",$support->id)}}'">
-                        Edit
-                    </button>
-                    @endif
-                    @endforeach
+                    <div class="tab-pane fade" id="help" role="tabpanel" aria-labelledby="help">Help Support</div>
+                   
+                </div>
                 </div>
             </div>
-
-
         </div>
-
     </div>
 </div>
-</div>
-@endsection
-
-@section("script")
-<script src="{{ asset('js/vendor/bootstrap-notify.min.js') }}"></script>
-<script>
-    @if(Session::has('success'))
-    $.notify({
-        message: '{{ session()->get('success') }}'
-    }, {
-        type: 'success',
-        placement: {
-            from: "bottom",
-            align: "right"
-        },
-    });
-    @endif
-</script>
-@if(auth()->user()->is_admin)
-<script src="{{ asset('js/vendor/quill.min.js')}}"></script>
-<script src="{{ asset('js/vendor/datatables.min.js') }}"></script>
+<script src="{{ asset('js/vendor/jquery-3.3.1.min.js')}}"></script>
+<script src="{{ asset('js/vendor/sweetalert2@10.js')}}"></script>
 <script>
     $(document).ready(function() {
-        $table = $(".data-table-feature").DataTable({
-            sDom: '<"row view-filter"<"col-sm-12"<"float-right"l><"float-left"f><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
-
-            drawCallback: function() {
-                $($(".dataTables_wrapper .pagination li:first-of-type"))
-                    .find("a")
-                    .addClass("prev");
-                $($(".dataTables_wrapper .pagination li:last-of-type"))
-                    .find("a")
-                    .addClass("next");
-
-                $(".dataTables_wrapper .pagination").addClass("pagination-sm");
-            },
-            language: {
-                paginate: {
-                    previous: "<i class='simple-icon-arrow-left'></i>",
-                    next: "<i class='simple-icon-arrow-right'></i>"
-                },
-                search: "_INPUT_",
-                searchPlaceholder: "Search...",
-                lengthMenu: "Items Per Page _MENU_"
-            },
+        
+        $('#send_email').on('submit' , function(e) {
+            e.preventDefault();
+            var form = $(this);
+            ajaxSend(form);
         });
 
+       
+       function ajaxSend( form ){
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+            $.ajax({
+                url : "{{ route('support_email') }}",
+                type : 'POST',
+                data : form.serialize(),
+                success:function( response ) {
+                    console.log(response);
+                }
+            })
+       }
+
+       function success(){
+           Swal.fire({
+
+           })
+       }
     });
 </script>
-@endif
 @endsection
-@if(auth()->user()->is_admin)
-@section('style')
-<link rel="stylesheet" href="{{ asset('css/vendor/quill.snow.css')}}" />
-@endsection
-@endif

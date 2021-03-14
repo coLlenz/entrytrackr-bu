@@ -122,6 +122,7 @@ Route::prefix('support')->middleware(['auth', 'verified'])->group(function () {
 	Route::post('support/add', [SupportController::class, 'Supportstore'])->name("support-store");
 	Route::get('support/edit/{id}', [SupportController::class, 'edit'])->name("support-edit");
 	Route::post('support/update/{id}', [SupportController::class, 'update'])->name("support-update");
+	Route::post('/support_email' , [SupportController::class , 'support_email'])->name('support_email');
 });
 
 Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
@@ -152,6 +153,7 @@ Route::prefix('user')->middleware(['auth', 'verified','isAdmin'])->group(functio
 	Route::get('/upload/{id}', [UploadImagesController::class, 'index'])->name('uploadimage-view');
 	Route::post('/upload/{id}', [UploadImagesController::class, 'store'])->name('image-upload');	
 });
+
 
 Route::view('profile', 'profile.edit')
 	->name('profile.edit')
