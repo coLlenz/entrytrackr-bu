@@ -73,8 +73,6 @@ class TrakrController extends Controller
                 ->with('success', 'Successfully Added New TrakrID');
             }
         }
-
-        Session::flash('error', $validator->errors()); 
         return back()->withInput();
     }
     
