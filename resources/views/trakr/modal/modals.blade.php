@@ -727,9 +727,10 @@
     
     $(document).on('click' , '.btnCancelQuestion' , function(){
         var trakr_id = $(this).attr('cancel-btn-data');
+        var user_id = "{{ $view_data['userid'] }}";
         Swal.showLoading();
         $.ajax({
-            url : '/trakr/visitor/cancel/'+trakr_id,
+            url : '/trakr/visitor/cancel/'+trakr_id+'/'+user_id,
             method: 'GET',
             success:function(response){
                 if (response.status === 'success') {
