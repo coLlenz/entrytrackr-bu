@@ -546,11 +546,21 @@ class TrakrViewController extends Controller
         }
     }
     
-    function cancelSignin($trakrID){
+    function cancelSignin($trakrID , $user_id){
         $trakr = Trakr::findOrFail($trakrID);
-        if ( $trakr->delete() ) {
+        $report_log = LogReport::where(['user_id' =>  $user_id , 'visitor_id' => $trakrID ])->latest()->first();
+
+        $trakr->checked_in_status = NULL;
+        $trakr->status = 0;
+        $trakr->assistance= 0;
+        $trakr->check_in_date = NULL;
+        $trakr->check_out_date = NULL;
+
+        if ($trakr->save()) {
+            $report_log->delete();
             return response()->json(['status' => 'success']);
         }
+
         return response()->json(['status' => 'fail']);
     }
     
