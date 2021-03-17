@@ -27,9 +27,11 @@ class ReportController extends Controller
         ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
         ->orderBy('report_logs.created_at' , 'DESC' )
         ->paginate(10);
+
         $formdata = [
             'fdate' => Carbon::parse( $date_7_days_ago )->format('Y-m-d'),
             'edate' => Carbon::parse( $date_now )->format('Y-m-d'),
+            'signin' => 'all',
             'ass' => 'all',
             'tvis' => 'all',
             'acc' => 'all'
@@ -48,12 +50,13 @@ class ReportController extends Controller
         $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
         $assistance = $request->input('ass');
         $type_of_visitor = $request->input('tvis');
+        $signin_status = $request->input('signin');
         $status = $request->input('acc');
         $form_data = $request->all();
         $filter_query = LogReport::query();
         
         $filter_query->select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
-        'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
+        'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.checked_in_status' ,'report_logs.area_access',
         'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company');
         
         $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');
@@ -68,6 +71,19 @@ class ReportController extends Controller
             return $q->where('report_logs.created_at' , '<=' , $end_date);
         });
         
+        $filter_query->when($signin_status , function($q , $signin_status){
+            
+            return $q->where('report_logs.checked_in_status' , '>=' , 0);
+        });
+
+        $filter_query->when($signin_status == '0', function($q , $signin_status){
+            return $q->where('report_logs.checked_in_status' , '=' , 0);
+        });
+
+        $filter_query->when($signin_status == '1' , function($q , $signin_status){
+            return $q->where('report_logs.checked_in_status' , '=' , 1);
+        });
+
         $filter_query->when($assistance == 'all',function($q , $assistance ) {
             return $q->where('report_logs.assistance' , '>=' , 0);
         });
@@ -143,6 +159,7 @@ class ReportController extends Controller
         $assistance = $request->input('ass') ? $request->input('ass') : '';
         $type_of_visitor = $request->input('tvis') ? $request->input('tvis') : '';
         $status = $request->input('acc') ? $request->input('acc') : '';
+        $signin_status = $request->input('signin');
         $filename = strtotime(date('Y-m-d H:i:s'));
         $filter_query = LogReport::query();
         
@@ -162,6 +179,19 @@ class ReportController extends Controller
             return $q->where('report_logs.created_at' , '<=' , $end_date);
         });
         
+        $filter_query->when($signin_status , function($q , $signin_status){
+            
+            return $q->where('report_logs.checked_in_status' , '>=' , 0);
+        });
+
+        $filter_query->when($signin_status == '0', function($q , $signin_status){
+            return $q->where('report_logs.checked_in_status' , '=' , 0);
+        });
+
+        $filter_query->when($signin_status == '1' , function($q , $signin_status){
+            return $q->where('report_logs.checked_in_status' , '=' , 1);
+        });
+
         $filter_query->when($assistance == 'all',function($q , $assistance ) {
             return $q->where('report_logs.assistance' , '>=' , 0);
         });
@@ -307,6 +337,7 @@ class ReportController extends Controller
         // 
         $start_date = Carbon::parse($request->input('fdate'))->format('Y-m-d 00:00:00');
         $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
+        $signin_status = $request->input('signin');
         $assistance = $request->input('ass') ? $request->input('ass') : '';
         $type_of_visitor = $request->input('tvis') ? $request->input('tvis') : '';
         $status = $request->input('acc') ? $request->input('acc') : '';
@@ -329,6 +360,18 @@ class ReportController extends Controller
             return $q->where('report_logs.created_at' , '<=' , $end_date);
         });
         
+        $filter_query->when($signin_status , function($q , $signin_status){
+            return $q->where('report_logs.checked_in_status' , '>=' , 0);
+        });
+
+        $filter_query->when($signin_status == '0', function($q , $signin_status){
+            return $q->where('report_logs.checked_in_status' , '=' , 0);
+        });
+
+        $filter_query->when($signin_status == '1' , function($q , $signin_status){
+            return $q->where('report_logs.checked_in_status' , '=' , 1);
+        });
+
         $filter_query->when($assistance == 'all',function($q , $assistance ) {
             return $q->where('report_logs.assistance' , '>=' , 0);
         });
