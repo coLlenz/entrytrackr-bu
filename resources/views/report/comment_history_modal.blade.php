@@ -19,6 +19,9 @@
                
             </tbody>
         </table>
+        <div id="no_data" style="display:none;">
+            <p class="text-center">  {{"No Results"}} </p>
+        </div>
         <div class="text-center" id="history_load" style="display:none;">
             <div class="spinner-border text-primary " role="status">
                 <span class="sr-only">Loading...</span>

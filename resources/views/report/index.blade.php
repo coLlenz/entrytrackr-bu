@@ -272,16 +272,25 @@
         })
 
         function getCommentHistory(data_id){
+            $('#comment_history_ tbody').html();
             $.ajax({
                 url : '/reports/comment_history/'+data_id,
                 type : 'GET',
                 success : function(response){
                     if (response.status == 'success') {
-                        generateTableData(response.data);
+                        if (response.data.length != 0) {
+                            $('#no_data').hide();
+                            generateTableData(response.data);
+                        }else{
+                            $('#no_data').show();
+                            showLoading(false);
+                        }
+                       
                     }
                 },
             })
         }
+
 
         function generateTableData(history){
             var html = '';
