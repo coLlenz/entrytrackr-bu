@@ -453,5 +453,7 @@ class ReportController extends Controller
         if (!$visitory_history->isEmpty()) {
            return response()->json(['status' => 'success' , 'data' => $visitory_history] , 200);
         }
+
+        return response()->json(['status' => 'success' , 'data' => [] ] , 200);
     }
 }
