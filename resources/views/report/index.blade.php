@@ -283,6 +283,7 @@
                             generateTableData(response.data);
                         }else{
                             $('#no_data').show();
+                            $('#comment_history_ tbody').html();
                             showLoading(false);
                         }
                        
