@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\LogReport;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Exports\ReportExport;
+use App\Exports\CommentExport;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 use DB;
@@ -18,7 +20,7 @@ class ReportController extends Controller
         $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
         $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
         
-        $default_data = LogReport::select('trakrs.firstName','trakrs.lastName' ,'report_logs.id as log_id','report_logs.comment','report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+        $default_data = LogReport::select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
         'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
         'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
         ->where('report_logs.user_id' , user_id() )
@@ -375,16 +377,38 @@ class ReportController extends Controller
         
         return (new ReportExport( $data  ))->download($filename, \Maatwebsite\Excel\Excel::CSV, [
             'X-Vapor-Base64-Encode' => 'true'
-          ]);
+        ]);
     }
 
     public function add_comment(Request $request ){
-       $log_report = LogReport::findOrFail( $request->id );
-       $log_report->comment = $request->comment;
-       if (!$log_report->save()) {
-            return response()->json(['status' => 'error' , 'msg' => 'There\'s an error saving data. Try refreshing the page.' , 'icon' => 'error']);
+       $comment = Comment::create([
+           'user_id' => user_id(),
+           'visitor_id' => $request->id,
+           'comment' => $request->comment,
+       ]);
+
+       if ($comment) {
+           return response()->json(['icon' => 'success' , 'msg' => 'Added comment successfully.' , 'status' => 'success']);
        }
 
-       return response()->json(['status' => 'success' , 'msg' => 'Comment added successfully.' , 'icon' => 'success']);
+       return response()->json(['icon' => 'error' , 'msg' => 'Something went wrong. Please try refreshing the page.' , 'status' => 'error']);
+
+    }
+
+    public function download_comment( $visitor_id ){
+        $data = Comment::where(['user_id' => user_id() , 'visitor_id' => $visitor_id ])->orderBy('created_at' , 'DESC')->get();
+        $filename = time().'_comments.csv';
+        
+        return (new CommentExport( $data  ))->download($filename, \Maatwebsite\Excel\Excel::CSV, [
+            'X-Vapor-Base64-Encode' => 'true'
+        ]);
+    }
+
+    public function getCommentHistory($visitor_id){
+        $visitory_history = Comment::select('created_at' , 'comment')->where(['user_id' => user_id() , 'visitor_id' => $visitor_id])->orderBy('created_at' , 'DESC')->get();
+
+        if (!$visitory_history->isEmpty()) {
+           return response()->json(['status' => 'success' , 'data' => $visitory_history] , 200);
+        }
     }
 }

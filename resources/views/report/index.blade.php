@@ -134,7 +134,7 @@
                                         <th class="text-center">Access</th>
                                         <th class="text-center">Visiting/Business</th>
                                         <th class="text-center">Area(s) Accessed</th>
-                                        <th class="text-center">Comments</th>
+                                        <th class="text-center">Comments History</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -162,8 +162,9 @@
                                                 <td class="text-center"> {{ $list->trakr_type_id == 1 ? $list->who : $list->name_of_company }}</td>
                                                 <td class="text-center"> {{ $list->area_access }} </td>
                                                 <td class="text-center">
-                                                <input type="hidden" class="comment" value="{{ isset($list->comment) && !empty($list->comment) ? $list->comment : '' }}">
-                                                <i class="fa fa-commenting-o fa-2x add_comment" aria-hidden="true" title="Add comments here" data-id="{{ $list->log_id }}"></i> 
+                                                    <a href="#"> <i class="fa fa-commenting fa-lg mr-2 add_comment" aria-hidden="true" title="Add comments here" data-id="{{ $list->visitor_id }}"></i>  </a>
+                                                    <a href="#" > <i class="fa fa-history fa-lg mr-2 see_history" data-id="{{ $list->visitor_id }}" aria-hidden="true" title="See history" class="btn btn-primary"></i> </a>
+                                                    <a href="{{route('download_comment' , [$list->visitor_id ]  )}}"> <i class="fa fa-download fa-lg download_history"   aria-hidden="true" title="Download history"></i> </a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -193,7 +194,9 @@
             </div>
         </div>
     </div>
+    @include( 'report.comment_history_modal' );
 </section>
+
 @endsection
 
 @section('style')
@@ -208,17 +211,15 @@
     $(document).ready(function() {
         $('.add_comment').on('click' , function() {
             var data_id = $(this).attr('data-id');
-            var default_comment = $(this).prev('input').val();
-            add_comment(data_id , default_comment , $(this) );
+            add_comment(data_id , $(this) );
         });
         
-        function add_comment( log_id  , default_comment , element){
+        function add_comment( log_id , element){
             Swal.fire({
                 customClass: {
                 confirmButton: 'et_btn et_btn_clored',
                 cancelButton: 'et_btn et_btn_secondary mr-2'
                 },
-                inputValue: default_comment,
                 reverseButtons: true,
                 buttonsStyling: false,
                 title:'Add Comment',
@@ -261,6 +262,49 @@
                 showConfirmButton: false,
                 timer: 5000
             })
+        }
+
+        $('.see_history').on('click' , function(){
+            showLoading(true);
+            var data_id = $(this).attr('data-id');
+            $('#commentModal').modal('show');
+            getCommentHistory(data_id);
+        })
+
+        function getCommentHistory(data_id){
+            $.ajax({
+                url : '/reports/comment_history/'+data_id,
+                type : 'GET',
+                success : function(response){
+                    if (response.status == 'success') {
+                        generateTableData(response.data);
+                    }
+                },
+            })
+        }
+
+        function generateTableData(history){
+            var html = '';
+            $(history).each( (idx , val) => {
+                var date = "{{ \Carbon\Carbon::parse($list->check_in_date)->timezone(userTz())->format('d-m-Y H:i') }}"
+               html += `
+                    <tr>
+                        <td class="text-center"> ${date} </td>
+                        <td class="text-center"> ${val.comment} </td>
+                    </tr>
+               `;
+            });
+
+            $('#comment_history_ tbody').html(html);
+            showLoading(false);
+        }
+
+        function showLoading(status = true){
+            if (status) {
+                $('#history_load').show();
+            }else{
+                $('#history_load').hide();
+            }
         }
     })
 </script>
