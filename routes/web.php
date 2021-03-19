@@ -143,6 +143,8 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 	Route::get('/feedbacks' , [FeedBackController::class , 'feedback'])->name('feedback');
 	Route::get('/export_csv' , [ReportController::class , 'export_csv'])->name('export_csv');
 	Route::post('/add_comment' , [ReportController::class , 'add_comment'])->name('add_comment');
+	Route::get('/comment_history/{visitor_id}' , [ReportController::class , 'getCommentHistory'])->name('getCommentHistory');
+	Route::get('/download/{visitor_id}' , [ReportController::class , 'download_comment'])->name('download_comment');
 });
 
 Route::prefix('locations')->middleware(['auth'])->group(function() {
