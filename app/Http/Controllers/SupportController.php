@@ -16,8 +16,8 @@ class SupportController extends Controller
      */
     public function index()
     {
-        $supports = Support::all();
-        return view('support.index',compact('supports'));
+        $help = Support::all();
+        return view('support.index')->with('help' , $help);
     }
 
     /**
