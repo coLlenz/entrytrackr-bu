@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'smtp'),
+    'default' => env('MAIL_MAILER', 'ses'),
 
     /*
     |--------------------------------------------------------------------------
@@ -47,6 +47,15 @@ return [
 
         'ses' => [
             'transport' => 'ses',
+            'key' => env('ET_AWS_ACCESSS_KEY_ID'),
+            'secret' => env('ET_AWS_SECRET_ACCESS_KEY'),
+            'host' => env('MAIL_HOST'),
+            'port' => env('MAIL_PORT'),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_USERNAME'),
+            'password' => env('MAIL_PASSWORD'),
+            'region' => env('ET_AWS_DEFAULT_REGION'),
+            'version' => env('ET_AWS_API_VERSION')
         ],
 
         'mailgun' => [

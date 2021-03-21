@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Support;
 use App\Models\Contact;
 use Illuminate\Http\Request;
-
+use App\Mail\SupportMail;
+use Illuminate\Support\Facades\Mail;
 class SupportController extends Controller
 {
     /**
@@ -15,13 +16,8 @@ class SupportController extends Controller
      */
     public function index()
     {
-        if(auth()->user()->is_admin){
-            $contacts = Contact::all();
-            $supports = Support::all();
-            return view('support.index',compact('contacts','supports'));
-        }
-        $supports = Support::all();
-        return view('support.index',compact('supports'));
+        $help = Support::all();
+        return view('support.index')->with('help' , $help);
     }
 
     /**
@@ -107,5 +103,21 @@ class SupportController extends Controller
     public function destroy(Support $support)
     {
         //
+    }
+
+    public function support_email(Request $request) {
+
+        $data = [
+            'name' => $request->support_name,
+            'email' => $request->support_email,
+            'phone' => $request->support_phone,
+            'message' => $request->report_request,
+            'req_sub' => auth()->user()->name
+        ];
+        
+        Mail::to( 'support@entrytrakr.com' )->send(new SupportMail( $data ));
+        
+
+        return response()->json(['status' => 'success' , 'icon' => 'success' , 'msg' => 'Support request sent.']);
     }
 }
