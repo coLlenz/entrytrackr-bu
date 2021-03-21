@@ -114,8 +114,10 @@ class SupportController extends Controller
             'message' => $request->report_request,
             'req_sub' => auth()->user()->name
         ];
-        // return $data ;
+        
         Mail::to( 'amabaderek@gmail.com' )->send(new SupportMail( $data ));
         
+
+        return response()->json(['status' => 'success' , 'icon' => 'success' , 'msg' => 'Support request sent.']);
     }
 }
