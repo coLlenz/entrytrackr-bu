@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\LogReport;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Exports\ReportExport;
+use App\Exports\CommentExport;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 use DB;
@@ -18,7 +20,7 @@ class ReportController extends Controller
         $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
         $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
         
-        $default_data = LogReport::select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+        $default_data = LogReport::select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
         'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
         'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
         ->where('report_logs.user_id' , user_id() )
@@ -52,7 +54,7 @@ class ReportController extends Controller
         $form_data = $request->all();
         $filter_query = LogReport::query();
         
-        $filter_query->select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+        $filter_query->select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
         'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
         'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company');
         
@@ -113,6 +115,7 @@ class ReportController extends Controller
         $data = $filter_query->paginate(10);
         // $query = DB::getQueryLog();
         
+
         return view('report.index')->with('table_data' ,$data)->with('formdata' , $form_data);
     }
     
@@ -122,7 +125,7 @@ class ReportController extends Controller
             $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
             $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
             $filename = strtotime(date('Y-m-d H:i:s'));
-            $default_data = LogReport::select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+            $default_data = LogReport::select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
             'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
             'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
             ->where('report_logs.user_id' , user_id() )
@@ -146,7 +149,7 @@ class ReportController extends Controller
         $filename = strtotime(date('Y-m-d H:i:s'));
         $filter_query = LogReport::query();
         
-        $filter_query->select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+        $filter_query->select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
         'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
         'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company');
         
@@ -375,6 +378,48 @@ class ReportController extends Controller
         
         return (new ReportExport( $data  ))->download($filename, \Maatwebsite\Excel\Excel::CSV, [
             'X-Vapor-Base64-Encode' => 'true'
-          ]);
+        ]);
+    }
+
+    public function add_comment(Request $request ){
+       $comment = Comment::create([
+           'user_id' => user_id(),
+           'visitor_id' => $request->id,
+           'comment' => $request->comment,
+           'created_at' => Carbon::now()
+       ]);
+
+       if ($comment) {
+           return response()->json(['icon' => 'success' , 'msg' => 'Added comment successfully.' , 'status' => 'success']);
+       }
+
+       return response()->json(['icon' => 'error' , 'msg' => 'Something went wrong. Please try refreshing the page.' , 'status' => 'error']);
+
+    }
+
+    public function download_comment( $visitor_id ){
+        $data = Comment::where(['user_id' => user_id() , 'visitor_id' => $visitor_id ])->orderBy('created_at' , 'DESC')->get();
+        $filename = time().'_comments.csv';
+        
+        return (new CommentExport( $data  ))->download($filename, \Maatwebsite\Excel\Excel::CSV, [
+            'X-Vapor-Base64-Encode' => 'true'
+        ]);
+    }
+
+    public function getCommentHistory($visitor_id){
+        $visitor_history = Comment::select('created_at' , 'comment')->where(['user_id' => user_id() , 'visitor_id' => $visitor_id])->orderBy('created_at' , 'DESC')->get();
+        
+        if (!$visitor_history->isEmpty()) {
+            $list = false;
+           foreach ($visitor_history as $key => $value) {
+                $created_at = Carbon::parse( $value->created_at )->timezone( userTz() )->format('d-m-Y H:i');
+                $list[$key]['created_at'] =  $created_at;
+                $list[$key]['comment'] = $value->comment;
+            }
+
+           return response()->json(['status' => 'success' , 'data' =>  $list] , 200);
+        }
+
+        return response()->json(['status' => 'success' , 'data' => [] ] , 200);
     }
 }

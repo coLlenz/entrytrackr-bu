@@ -134,10 +134,11 @@
                                         <th class="text-center">Access</th>
                                         <th class="text-center">Visiting/Business</th>
                                         <th class="text-center">Area(s) Accessed</th>
+                                        <th class="text-center">Comments History</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if(!empty($table_data))
+                                    @if(!$table_data->isEmpty())
                                         @foreach($table_data as $list)
                                             <tr>
                                                 <td>{{$list->firstName}} {{$list->lastName}}</td>
@@ -160,6 +161,11 @@
                                                 </td>
                                                 <td class="text-center"> {{ $list->trakr_type_id == 1 ? $list->who : $list->name_of_company }}</td>
                                                 <td class="text-center"> {{ $list->area_access }} </td>
+                                                <td class="text-center">
+                                                    <a href="#"> <i class="fa fa-commenting fa-lg mr-2 add_comment" aria-hidden="true" title="Add comments here" data-id="{{ $list->visitor_id }}"></i>  </a>
+                                                    <a href="#" > <i class="fa fa-history fa-lg mr-2 see_history" data-id="{{ $list->visitor_id }}" aria-hidden="true" title="See history" class="btn btn-primary"></i> </a>
+                                                    <a href="{{route('download_comment' , [$list->visitor_id ]  )}}"> <i class="fa fa-download fa-lg download_history"   aria-hidden="true" title="Download history"></i> </a>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @else
@@ -175,8 +181,8 @@
                         <div class="row">
                             <div class="col-md-3">
                                 @if($table_data->count() >0)
-                                    <a href="{{ route('list-report', $_GET ) }}" class="btn btn-primary btn-md mr-2">Download PDF</a>
-                                    <a href="{{ route('export_csv' , $_GET ) }}" class="btn btn-primary btn-md">Export CSV</a>
+                                    <a href="{{ route('list-report', $_GET ) }}" class="btn btn-primary btn-md mr-2" title="Generate PDF file">Download PDF</a>
+                                    <a href="{{ route('export_csv' , $_GET ) }}" class="btn btn-primary btn-md" title="Generate CSV file">Export CSV</a>
                                 @endif
                             </div>
                             <div class="col-md-4">
@@ -188,7 +194,9 @@
             </div>
         </div>
     </div>
+    @include( 'report.comment_history_modal' );
 </section>
+
 @endsection
 
 @section('style')
@@ -198,4 +206,111 @@
 
 @section('script')
 <script src="{{ asset('js/vendor/datatables.min.js') }}"></script>
+<script src="{{ asset('js/vendor/sweetalert2@10.js') }}" charset="utf-8"></script>
+<script>
+    $(document).ready(function() {
+        $('.add_comment').on('click' , function() {
+            var data_id = $(this).attr('data-id');
+            add_comment(data_id , $(this) );
+        });
+        
+        function add_comment( log_id , element){
+            Swal.fire({
+                customClass: {
+                confirmButton: 'et_btn et_btn_clored',
+                cancelButton: 'et_btn et_btn_secondary mr-2'
+                },
+                reverseButtons: true,
+                buttonsStyling: false,
+                title:'Add Comment',
+                input: 'textarea',
+                showCloseButton: false,
+                showCancelButton:true,
+                allowOutsideClick: false,
+                cancelButtonText:'Close',
+                confirmButtonText:'Save',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Input is required'
+                    }
+                },
+            }).then(complete => {
+                if (complete.isConfirmed) {
+                    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+                    $.ajax({
+                        url: "{{route('add_comment')}}",
+                        type: 'POST',
+                        data : {id:log_id , comment:complete.value},
+                        success:function(response){
+                            success(response);
+                            
+                            if (response.status == 'success') {
+                                element.prev('input').val(complete.value)
+                            }
+                            
+                        }
+                    })
+                }
+            }) 
+        }
+
+        function success(response){
+            Swal.fire({
+                position: 'top-end',
+                icon: response.icon,
+                title: response.msg,
+                showConfirmButton: false,
+                timer: 5000
+            })
+        }
+
+        $('.see_history').on('click' , function(){
+            showLoading(true);
+            var data_id = $(this).attr('data-id');
+            $('#commentModal').modal('show');
+            getCommentHistory(data_id);
+        })
+
+        function getCommentHistory(data_id){
+            $('#comment_history_ tbody').html();
+            $.ajax({
+                url : '/reports/comment_history/'+data_id,
+                type : 'GET',
+                success : function(response){
+                    if (response.status == 'success') {
+                        if (response.data.length != 0) {
+                            $('#no_data').hide();
+                            generateTableData(response.data);
+                        }else{
+                            $('#no_data').show();
+                            $('#comment_history_ tbody').html('');
+                            showLoading(false);
+                        }
+                       
+                    }
+                },
+            })
+        }
+
+
+        function generateTableData(history){
+            
+            var html = '';
+            $(history).each( (idx , val) => {
+               html += ' <tr><td class="text-center"> '+ val.created_at +' </td> <td class="text-center"> '+val.comment+' </td> </tr>';
+            });
+
+            $('#comment_history_ tbody').html(html);
+            showLoading(false);
+        }
+
+        function showLoading(status = true){
+            if (status) {
+                $('#history_load').show();
+            }else{
+                $('#history_load').hide();
+            }
+        }
+    })
+</script>
 @endsection

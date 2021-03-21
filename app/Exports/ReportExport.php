@@ -1,10 +1,9 @@
 <?php
 
 namespace App\Exports;
-use App\Models\LogReport;
+
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use DB;
 use Maatwebsite\Excel\Concerns\Exportable;
 
 class ReportExport implements FromView
