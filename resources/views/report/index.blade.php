@@ -19,7 +19,35 @@
                         <div class="mb-2">
                             <input type="date" class="form-control" name="edate" value="{{$formdata['edate']}}">
                         </div>
-                        
+                        <h6 class="card-title font-bold mb-2"> Entry status  </h6>
+                        <div class="vs-radio-con vs-radio-primary mb-1">
+                            <input type="radio" name="signin"  {{ ($formdata['signin'] == 'all') ? 'checked' : '' }} value="all" >
+                            <span class="vs-radio">
+                                <span class="vs-radio--border"></span>
+                                <span class="vs-radio--circle"></span>
+                            </span>
+                            <span style="font-size:13px">All</span>
+                        </div>
+
+                        <div class="vs-radio-con vs-radio-primary mb-1">
+                            <input type="radio" name="signin" {{ ($formdata['signin'] == "0") ? 'checked' : '' }} value="0" >
+                            <span class="vs-radio">
+                                <span class="vs-radio--border"></span>
+                                <span class="vs-radio--circle"></span>
+                            </span>
+                            <span style="font-size:13px">Signed in</span>
+                        </div>
+
+                        <div class="vs-radio-con vs-radio-primary mb-1">
+                            <input type="radio" name="signin" {{ ($formdata['signin'] == 1) ? 'checked' : '' }} value="1" >
+                            <span class="vs-radio">
+                                <span class="vs-radio--border"></span>
+                                <span class="vs-radio--circle"></span>
+                            </span>
+                            <span style="font-size:13px">Signed out</span>
+                        </div>
+
+                        <!--  -->
                         <h6 class="card-title font-bold mb-2">Assistance requested</h6>
                         <div class="vs-radio-con vs-radio-primary mb-1">
                             <input type="radio" name="ass" {{ ($formdata['ass'] == 'all') ? 'checked' : '' }} value="all" >
