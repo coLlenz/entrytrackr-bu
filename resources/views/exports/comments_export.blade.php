@@ -9,7 +9,7 @@
     <tbody>
     @foreach($comment_list as $list)
         <tr>
-           <td> {{ $list->created_at }} </td>
+           <td> {{ \Carbon\Carbon::parse($list->created_at)->timezone( userTz() )->format('d-m-Y H:i') }} </td>
            <td> {{ $list->comment }} </td>
         </tr>
     @endforeach

@@ -294,15 +294,10 @@
 
 
         function generateTableData(history){
+            
             var html = '';
             $(history).each( (idx , val) => {
-                var date = "{{ \Carbon\Carbon::parse($list->check_in_date)->timezone(userTz())->format('d-m-Y H:i') }}"
-               html += `
-                    <tr>
-                        <td class="text-center"> ${date} </td>
-                        <td class="text-center"> ${val.comment} </td>
-                    </tr>
-               `;
+               html += ' <tr><td class="text-center"> '+ val.created_at +' </td> <td class="text-center"> '+val.comment+' </td> </tr>';
             });
 
             $('#comment_history_ tbody').html(html);
