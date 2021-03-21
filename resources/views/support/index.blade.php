@@ -60,6 +60,7 @@
     $(document).ready(function() {
         
         $('#send_email').on('submit' , function(e) {
+            Swal.showLoading();
             e.preventDefault();
             var form = $(this);
             ajaxSend(form);
@@ -73,16 +74,20 @@
                 type : 'POST',
                 data : form.serialize(),
                 success:function( response ) {
-                    console.log(response);
+                    if (response.status == 'success') {
+                        success( response )
+                    }
                 }
             })
        }
 
-       function success(){
-           Swal.fire({
-
-           })
-       }
+        function success(sett){
+            Swal.fire({
+                position: 'top-end',
+                title: sett.msg,
+                icon: sett.icon,  
+            });
+        }
     });
 </script>
 @endsection
