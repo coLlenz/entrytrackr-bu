@@ -175,6 +175,8 @@
         }
         
         function showCheckInMessage(details){
+            var time_set = "{{ isset($confirmation->signin) && $confirmation->signin !=0 ? $confirmation->signin : 5}}";
+            var timer = time_set * 1000;
             Swal.fire({
                 showClass: {
                     popup: 'swal2-noanimation',
@@ -188,16 +190,18 @@
                 '<b>'+details.check_date+'</b>',
                 showCloseButton: false,
                 showConfirmButton:false,
-                timer: 5000,
-                footer: '<p> This message will automatically close in 5 seconds. </p>'
+                timer: timer,
+                footer: '<p> This message will automatically close in '+ time_set +' seconds. </p>'
             });
             
             setTimeout(function () {
                 window.history.back();
-            }, 5000);
+            }, timer);
         }
         
         function showDenied(){
+            var time_set = "{{ isset($confirmation->accessdenied) && $confirmation->signin !=0 ? $confirmation->accessdenied : 10 }}";
+            var timer = time_set * 1000;
             Swal.fire({
                 title: '<strong>Access Denied</strong>',
                 icon: 'error',
@@ -206,13 +210,13 @@
                 showCloseButton: false,
                 focusConfirm: false,
                 showConfirmButton:false,
-                timer: 5000,
-                footer: '<p> This message will automatically close in 5 seconds. </p>'
+                timer: timer,
+                footer: '<p> This message will automatically close in '+ time_set +' seconds. </p>'
             });
             
             setTimeout(function () {
                 window.history.back();
-            }, 5000);
+            }, timer);
         }
         
         function createTrakrID(trakr_data = false){
