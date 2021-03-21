@@ -82,11 +82,6 @@
                         <p>Set the length of time (in hours) for each Visitor Type to be automatically signed out.</p>
                         <div class="row align-items-center">
                             <div class="col-md-12">
-                                @if (Session::has('message'))
-                                   <div class="alert alert-info">
-                                       <span>{{Session::get('message')}}</span>
-                                   </div>
-                                @endif
                                 <form class="" action="{{route('signOutSettings')}}" method="POST" id="signOutSettings">
                                         @csrf
                                         <div class="et_signout_settings">
@@ -213,6 +208,22 @@
                 }
             })
         })
+
+        $('#signOutSettings').on('submit' , function(e){
+            e.preventDefault();
+            
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data : $(this).serialize(),
+                success:function(response){
+                   if(response.status == 'success'){
+                        success(); 
+                   }
+                }
+            })
+
+        });
         
     });
 </script>
