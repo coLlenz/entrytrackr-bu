@@ -211,6 +211,7 @@
 @endsection
 @section('script')
 <script src="{{ asset('js/vendor/jquery.validate/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('js/vendor/sweetalert2@10.js')}}"></script>
 <script>
     $(document).ready(function() {
         $.ajaxSetup({
@@ -269,6 +270,16 @@
             })
             
         });
+
+        function success(){
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Changes has been saved.',
+                showConfirmButton: false,
+                timer: 2000
+            })
+        }
         
     });
 </script>
