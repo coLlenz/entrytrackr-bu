@@ -138,7 +138,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if(!empty($table_data))
+                                    @if(!$table_data->isEmpty())
                                         @foreach($table_data as $list)
                                             <tr>
                                                 <td>{{$list->firstName}} {{$list->lastName}}</td>
