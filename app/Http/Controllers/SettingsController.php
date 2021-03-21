@@ -140,12 +140,11 @@ class SettingsController extends Controller{
         }
         
         if ($result) {
-            Session::flash('message', 'Save'); 
+            return response()->json(['status' => 'success']);
         }else{
-            Session::flash('message', 'Error saving Settings'); 
+            return response()->json(['status' => 'error']);
         }
-        
-        return back();
+       
     }
 
     public function confirmationSettings(Request $request){
