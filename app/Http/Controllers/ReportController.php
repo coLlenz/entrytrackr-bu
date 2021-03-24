@@ -31,6 +31,7 @@ class ReportController extends Controller
         ->paginate(10);
 
         $formdata = [
+            'firstname' => '',
             'fdate' => Carbon::parse( $date_7_days_ago )->format('Y-m-d'),
             'edate' => Carbon::parse( $date_now )->format('Y-m-d'),
             'signin' => 'all',
@@ -48,6 +49,7 @@ class ReportController extends Controller
      */
     public function filter(Request $request){
         DB::enableQueryLog();
+        $firstname = $request->input('firstname');
         $start_date = Carbon::parse($request->input('fdate'))->format('Y-m-d 00:00:00');
         $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
         $assistance = $request->input('ass');
@@ -64,7 +66,11 @@ class ReportController extends Controller
         $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');
 
         $filter_query->where('report_logs.user_id' , user_id() );
-        
+       
+        $filter_query->when($firstname , function($q , $firstname) {
+            $q->where('trakrs.firstName', 'like', $firstname.'%');
+        });
+
         $filter_query->when($start_date,function($q , $start_date) {
             return $q->where('report_logs.created_at' , '>=' , $start_date);
         });
@@ -157,6 +163,7 @@ class ReportController extends Controller
         }
         
         // 
+        $firstname = $request->input('firstname');
         $start_date = Carbon::parse($request->input('fdate'))->format('Y-m-d 00:00:00');
         $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
         $assistance = $request->input('ass') ? $request->input('ass') : '';
@@ -173,7 +180,11 @@ class ReportController extends Controller
         $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');
 
         $filter_query->where('report_logs.user_id' , user_id() );
-        
+
+        $filter_query->when($firstname , function($q , $firstname) {
+            $q->where('trakrs.firstName', 'like', $firstname.'%');
+        });
+
         $filter_query->when($start_date,function($q , $start_date) {
             return $q->where('report_logs.created_at' , '>=' , $start_date);
         });
@@ -338,6 +349,7 @@ class ReportController extends Controller
         
        
         // 
+        $firstname = $request->input('firstname');
         $start_date = Carbon::parse($request->input('fdate'))->format('Y-m-d 00:00:00');
         $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
         $signin_status = $request->input('signin');
@@ -354,6 +366,10 @@ class ReportController extends Controller
         $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');
 
         $filter_query->where('report_logs.user_id' , user_id() );
+
+        $filter_query->when($firstname , function($q , $firstname) {
+            $q->where('trakrs.firstName', 'like', $firstname.'%');
+        });
         
         $filter_query->when($start_date,function($q , $start_date) {
             return $q->where('report_logs.created_at' , '>=' , $start_date);
