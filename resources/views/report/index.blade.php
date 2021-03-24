@@ -11,6 +11,10 @@
             <div class="card">
                 <form class="" action="{{route('report-filter')}}" method="GET">
                     <div class="card-body">
+                        <h6 class="card-title font-bold mb-2">First name</h6>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" name="firstname" value="{{$formdata['firstname']}}">
+                        </div>
                         <h6 class="card-title font-bold mb-2">From</h6>
                         <div class="mb-2">
                             <input type="date" class="form-control" name="fdate" value="{{$formdata['fdate']}}">
@@ -19,6 +23,7 @@
                         <div class="mb-2">
                             <input type="date" class="form-control" name="edate" value="{{$formdata['edate']}}">
                         </div>
+
                         <h6 class="card-title font-bold mb-2"> Entry status  </h6>
                         <div class="vs-radio-con vs-radio-primary mb-1">
                             <input type="radio" name="signin"  {{ ($formdata['signin'] == 'all') ? 'checked' : '' }} value="all" >
@@ -222,7 +227,7 @@
             </div>
         </div>
     </div>
-    @include( 'report.comment_history_modal' );
+    @include( 'report.comment_history_modal' )
 </section>
 
 @endsection
