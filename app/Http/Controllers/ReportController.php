@@ -49,7 +49,6 @@ class ReportController extends Controller
      */
     public function filter(Request $request){
         DB::enableQueryLog();
-        $firstname = $request->input('firstname');
         $start_date = Carbon::parse($request->input('fdate'))->format('Y-m-d 00:00:00');
         $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
         $assistance = $request->input('ass');
@@ -67,9 +66,6 @@ class ReportController extends Controller
 
         $filter_query->where('report_logs.user_id' , user_id() );
        
-        $filter_query->when($firstname , function($q , $firstname) {
-            $q->where('trakrs.firstName', 'like', $firstname.'%');
-        });
 
         $filter_query->when($start_date,function($q , $start_date) {
             return $q->where('report_logs.created_at' , '>=' , $start_date);
@@ -141,7 +137,14 @@ class ReportController extends Controller
         return view('report.index')->with('table_data' ,$data)->with('formdata' , $form_data);
     }
     
+    public function printData($data , $filename){
+        view()->share('data',$data);
+        $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
+        return $pdf->download($filename.'.pdf');
+    }
+
     public function generate_pdf(Request $request){
+
         
         if ( count($request->all()) == 0 ) {
             $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
@@ -161,9 +164,25 @@ class ReportController extends Controller
             $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
             return $pdf->download($filename.'.pdf');
         }
+
+        if (isset($request->search)) {
+
+            $filename = strtotime(date('Y-m-d H:i:s'));
+            $search_data = LogReport::select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+            'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
+            'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
+            ->where('report_logs.user_id' , user_id() )
+            ->where('trakrs.firstName' , 'like' , $request->search.'%')
+            ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
+            ->orderBy('report_logs.created_at' , 'DESC' )->get();
+
+            view()->share('data', $search_data);
+            $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
+            return $pdf->download($filename.'.pdf');
+        }
+
         
         // 
-        $firstname = $request->input('firstname');
         $start_date = Carbon::parse($request->input('fdate'))->format('Y-m-d 00:00:00');
         $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
         $assistance = $request->input('ass') ? $request->input('ass') : '';
@@ -180,10 +199,6 @@ class ReportController extends Controller
         $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');
 
         $filter_query->where('report_logs.user_id' , user_id() );
-
-        $filter_query->when($firstname , function($q , $firstname) {
-            $q->where('trakrs.firstName', 'like', $firstname.'%');
-        });
 
         $filter_query->when($start_date,function($q , $start_date) {
             return $q->where('report_logs.created_at' , '>=' , $start_date);
@@ -346,10 +361,25 @@ class ReportController extends Controller
             ->paginate(10);
             return Excel::download(new ReportExport( $default_data ), $filename);
         }
+
+        if (isset($request->search)) {
+
+            $filename = strtotime(date('Y-m-d H:i:s'));
+            $search_data = LogReport::select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+            'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
+            'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
+            ->where('report_logs.user_id' , user_id() )
+            ->where('trakrs.firstName' , 'like' , $request->search.'%')
+            ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
+            ->orderBy('report_logs.created_at' , 'DESC' )->get();
+            
+            view()->share('data', $search_data);
+            $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
+            return $pdf->download($filename.'.pdf');
+        }
         
        
         // 
-        $firstname = $request->input('firstname');
         $start_date = Carbon::parse($request->input('fdate'))->format('Y-m-d 00:00:00');
         $end_date = Carbon::parse($request->input('edate'))->format('Y-m-d 23:59:59');
         $signin_status = $request->input('signin');
@@ -366,10 +396,6 @@ class ReportController extends Controller
         $filter_query->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id');
 
         $filter_query->where('report_logs.user_id' , user_id() );
-
-        $filter_query->when($firstname , function($q , $firstname) {
-            $q->where('trakrs.firstName', 'like', $firstname.'%');
-        });
         
         $filter_query->when($start_date,function($q , $start_date) {
             return $q->where('report_logs.created_at' , '>=' , $start_date);
@@ -480,5 +506,29 @@ class ReportController extends Controller
         }
 
         return response()->json(['status' => 'success' , 'data' => [] ] , 200);
+    }
+
+    public function search(Request $request){
+        $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
+        $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
+        $formdata = [
+            'firstname' => '',
+            'fdate' => Carbon::parse( $date_7_days_ago )->format('Y-m-d'),
+            'edate' => Carbon::parse( $date_now )->format('Y-m-d'),
+            'signin' => 'all',
+            'ass' => 'all',
+            'tvis' => 'all',
+            'acc' => 'all'
+        ];
+
+        $search_filter = LogReport::select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+        'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
+        'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
+        ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
+        ->where('report_logs.user_id' , user_id() )
+        ->where('trakrs.firstName' , 'like' , $request->search.'%')
+        ->orWhere('trakrs.lastName' , 'like' , $request->search.'%')->paginate(10);
+        
+        return view('report.index')->with('table_data' ,$search_filter)->with('formdata' , $formdata);
     }
 }

@@ -139,6 +139,7 @@ Route::prefix('reports')->middleware(['auth', 'verified'])->group(function () {
 	Route::post('/add_comment' , [ReportController::class , 'add_comment'])->name('add_comment');
 	Route::get('/comment_history/{visitor_id}' , [ReportController::class , 'getCommentHistory'])->name('getCommentHistory');
 	Route::get('/download/{visitor_id}' , [ReportController::class , 'download_comment'])->name('download_comment');
+	Route::get('/search' , [ReportController::class , 'search'])->name('searchReport');
 });
 
 Route::prefix('locations')->middleware(['auth'])->group(function() {
