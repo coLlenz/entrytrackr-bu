@@ -166,13 +166,22 @@ class ReportController extends Controller
         }
 
         if (isset($request->search)) {
-
+            $search = $request->search;
             $filename = strtotime(date('Y-m-d H:i:s'));
             $search_data = LogReport::select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
             'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
             'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
             ->where('report_logs.user_id' , user_id() )
             ->where('trakrs.firstName' , 'like' , $request->search.'%')
+            ->when( $search , function($query ,  $search){
+
+                return $query->where('trakrs.firstName' , 'like' ,  $search.'%');
+
+            }, function($query){
+
+                return null;
+
+            })
             ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
             ->orderBy('report_logs.created_at' , 'DESC' )->get();
 
@@ -349,7 +358,7 @@ class ReportController extends Controller
         if ( count($request->all()) == 0 ) {
             $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
             $date_7_days_ago = Carbon::now()->subDays( 7 )->timezone( userTz() )->format('Y-m-d 00:00:00');
-
+            
             $default_data = LogReport::select('trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
             'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
             'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
@@ -357,25 +366,28 @@ class ReportController extends Controller
             ->where('report_logs.check_in_date' ,'>=', $date_7_days_ago )
             ->where('report_logs.check_in_date' , '<=' ,  $date_now )
             ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
-            ->orderBy('report_logs.check_in_date' , 'DESC' )
-            ->paginate(10);
+            ->orderBy('report_logs.check_in_date' , 'DESC' )->get();
             return Excel::download(new ReportExport( $default_data ), $filename);
         }
 
         if (isset($request->search)) {
-
-            $filename = strtotime(date('Y-m-d H:i:s'));
+            $search = $request->search;
             $search_data = LogReport::select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
             'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
             'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
             ->where('report_logs.user_id' , user_id() )
-            ->where('trakrs.firstName' , 'like' , $request->search.'%')
+            ->when( $search , function($query ,  $search){
+
+                return $query->where('trakrs.firstName' , 'like' ,  $search.'%');
+
+            }, function($query){
+
+                return null;
+                
+            })
             ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
             ->orderBy('report_logs.created_at' , 'DESC' )->get();
-            
-            view()->share('data', $search_data);
-            $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
-            return $pdf->download($filename.'.pdf');
+            return Excel::download(new ReportExport( $search_data ), $filename);
         }
         
        
