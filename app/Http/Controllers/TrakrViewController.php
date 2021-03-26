@@ -47,7 +47,9 @@ class TrakrViewController extends Controller
                 'phoneNumber'   => isset($request->last_name)   ?  $request->phoneNumber: "",
                 'user_id'       => $userid
             ];
-           
+            
+            $checking = CheckerController::checkIfLoggedIn($conditions);
+            
             if (isset($checking['has_record']) && $checking['has_record']) {
                 // check if already sign in
                 if (isset( $checking['is_loggedin'] ) && $checking['is_loggedin'] == 0) {
