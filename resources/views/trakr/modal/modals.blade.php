@@ -607,7 +607,7 @@
                 title: content.questions.data.title,
                 icon: 'info',
                 customClass:'questionBox',
-                html: makeHtml(content.questions.data , content.trakrid),
+                html: makeHtml(content.questions.data , content.trakrid , content.allowTempRecord),
                 allowOutsideClick:false,
                 focusConfirm: false,
                 showConfirmButton:false,
@@ -625,7 +625,7 @@
         
     }
     
-    function makeHtml(questions , trakrid){
+    function makeHtml(questions , trakrid , allowTempRecord){
         var html = questions.content_html;
         var form = document.createElement('form');
         var button = `
@@ -660,7 +660,11 @@
             });
             
         })
-        $(form).append( tempCheck() );
+
+        if (allowTempRecord) {
+            $(form).append( tempCheck() );
+        }
+        
         $(form).append(button);
         return form;
     }

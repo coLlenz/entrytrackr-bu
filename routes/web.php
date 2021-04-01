@@ -65,6 +65,7 @@ Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
 	Route::post('/signin-settings' , [SettingsController::class , 'signOutSettings'])->name('signOutSettings');
 	Route::post('/feedback-settings' , [SettingsController::class , 'feedbackSettings'])->name('feedbackSettings');
 	Route::post('/confirmation-settings' , [SettingsController::class , 'confirmationSettings'])->name('confirmationSettings');
+	Route::post('/temp-check' , [SettingsController::class , 'tempCheckSettings'])->name('tempCheckSettings');
 	Route::post('/get-account-details' , [SettingsController::class , 'accountDetails'])->name('accountDetails');
 	Route::post('/save-account-details' , [SettingsController::class , 'accountDetailsSave'])->name('accountDetailsSave');
 });
