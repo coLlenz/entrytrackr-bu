@@ -314,6 +314,7 @@
                 }
             })
         })
+
         function success(){
             Swal.fire({
                 position: 'top-end',
@@ -337,6 +338,7 @@
                    }
                 }
             })
+        })
 
         $('.et_btn_switch').on('click' , function(){
             if ( $('.temp_check_').is(':checked') ) {
@@ -366,8 +368,7 @@
                 timer: 2000
             })
         }
-        });
-        
+
     });
 </script>
 
