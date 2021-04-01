@@ -97,6 +97,7 @@ class TrakrViewController extends Controller
                         'type_of_visitor' => $visitor->trakr_type_id,
                         'trakrid' => $visitor->id,
                         'questions' => $this->getVisitorQuestions(  $visitor->user_id  , $visitor->trakr_type_id),
+                        'allowTempRecord' => CheckerController::allowTempRecord( user_id() ),
                         'report_log' => $report_log_result_id
                     ],200);
             }
@@ -143,6 +144,7 @@ class TrakrViewController extends Controller
                         'type_of_visitor' => $trakr_new->trakr_type_id,
                         'trakrid' => $trakr_new->id,
                         'questions' => $this->getVisitorQuestions(  $trakr_new->user_id  , $trakr_new->trakr_type_id ),
+                        'allowTempRecord' => CheckerController::allowTempRecord( user_id() ),
                         'report_log' => $report_log_result_id
                 ],200);
             }else{
@@ -232,6 +234,7 @@ class TrakrViewController extends Controller
             ];
             
             $report = new LogReport();
+            $checker = new CheckerController();
             $report_log_result_id = $report->saveReport( $params );
 
             return response()->json(
@@ -244,6 +247,7 @@ class TrakrViewController extends Controller
                     'type_of_visitor' => $check_in_data->trakr_type_id,
                     'trakrid' => $check_in_data->id,
                     'questions' => $this->getVisitorQuestions(  $check_in_data->user_id  , $check_in_data->trakr_type_id),
+                    'allowTempRecord' => $checker->allowTempRecord( user_id() ),
                     'report_log' => $report_log_result_id
                 ] , 200);
         }else{
@@ -494,7 +498,7 @@ class TrakrViewController extends Controller
             'visitor_name' => $visitor_name ? $visitor_name : '',
             'question_id' => $request->questionId ? $request->questionId : '',
             'question_title' => $question->title ? $question->title : '',
-            'temperature' => $request->temp_check ? $request->temp_check : '',
+            'temperature' => $request->temp_check ? $request->temp_check : 0,
             'freetext' =>  $request->freetext ? json_encode($request->freetext) : '',
             'answers' => json_encode($answers),
             'status' => $wrong > 0 ? 1 : 0,
@@ -590,8 +594,10 @@ class TrakrViewController extends Controller
         $question = DB::table('template_copy')->select('questions' , 'title' , 'description')->where(['id' => $question_id , 'user_id' => $userid ])->first();
         $json = json_decode($question->questions , true);
         $confirmations_msg_timer = DB::table('question_view_settings')->select('confirmation_msg')->where('user_id' ,$userid )->first();
+        $temp_check_settings = DB::table('question_view_settings')->select('temperature_check')->where('user_id' ,$userid )->first();
         $title = $question->title;
         $description = $question->description;
+        $temp_check_enabled = isset($temp_check_settings->temperature_check) && $temp_check_settings->temperature_check == 1 ? true : false;
         return view('trakr.modal.stepperquestion')
         ->with('visitor_id' , $visitor_id)
         ->with('user_id' , $userid )
@@ -599,7 +605,8 @@ class TrakrViewController extends Controller
         ->with('title' , $title)
         ->with('description' , $description)
         ->with('questions' ,$json )
-        ->with('confirmation' , $confirmations_msg_timer ? json_decode($confirmations_msg_timer->confirmation_msg) : []);
+        ->with('confirmation' , $confirmations_msg_timer ? json_decode($confirmations_msg_timer->confirmation_msg) : [])
+        ->with('temp_check_enabled' , $temp_check_enabled );
     }
     
     public function stepperSave(Request $req){
@@ -671,7 +678,7 @@ class TrakrViewController extends Controller
                 'visitor_name' => $visitor_name ? $visitor_name : '',
                 'question_id' => $question->id ? $question->id : '',
                 'question_title' => $question->title ? $question->title : '',
-                'temperature' => $req->temp ? $req->temp : '',
+                'temperature' => $req->temp ? $req->temp : 0,
                 'freetext' =>  $freetext ? json_encode($freetext) : '',
                 'answers' => $answers ? json_encode($answers) : [],
                 'status' => $wrong > 0 ? 1 : 0,

@@ -139,7 +139,23 @@
                         </div>
                           
                     </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="mb-4"> Questionnaire Temperature Recording </h4>
+                        <p>
+                            Include or remove the temperature recording option from questionnaires.
+                        </p>
+                        
+                        <div class="custom-switch custom-switch-primary-inverse mb-2 et_pop_switch">
+                        <p>Disabled / Enabled</p>
+                            <input class="custom-switch-input temp_check_" id="switch3" type="checkbox" name="temp_check" {{ $temperature_check  ? 'checked' : '' }}> 
+                            <label class="custom-switch-btn et_btn_switch" for="switch3"></label>
+                        </div>
+                    </div>
                 </div> 
+
                 <div class="card mb-4">
                     <div class="card-body">
                         <h4 class="mb-4"> QR Code </h4>
@@ -270,6 +286,25 @@
             })
             
         });
+
+        $('.et_btn_switch').on('click' , function(){
+            if ( $('.temp_check_').is(':checked') ) {
+                tempCheckAjax(0);
+            }else{
+                tempCheckAjax(1);
+            }
+        });
+        
+        function tempCheckAjax(settings){
+            $.ajax({
+                url: "{{route('tempCheckSettings')}}",
+                type:"POST",
+                data: {settings : settings},
+                success:function(response){
+                    console.log('updated')
+                }
+            })
+        }
 
         function success(){
             Swal.fire({
