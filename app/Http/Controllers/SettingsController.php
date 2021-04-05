@@ -16,14 +16,17 @@ use Session;
 class SettingsController extends Controller{
     
     public function index(){
-        $settings = DB::table('question_view_settings')->select('auto_sign_out' , 'feedback_settings' , 'confirmation_msg')->where('user_id' , user_id())->first();
-        $json = $settings ? json_decode($settings->auto_sign_out) : [];
-        $feedback = $settings ? json_decode($settings->feedback_settings) : [];
-        $confirmation = $settings ? json_decode($settings->confirmation_msg) : [];
+        $settings = DB::table('question_view_settings')->select('auto_sign_out' , 'feedback_settings' , 'confirmation_msg' , 'temperature_check')->where('user_id' , user_id())->first();
+        $json = $settings->auto_sign_out ? json_decode($settings->auto_sign_out) : [];
+        $feedback = $settings->feedback_settings ? json_decode($settings->feedback_settings) : [];
+        $confirmation = $settings->confirmation_msg ? json_decode($settings->confirmation_msg) : [];
+        $temperature_check =  isset($settings->temperature_check) && $settings->temperature_check == 1 ? 1 : false;
+        
         return view('profile.show')
         ->with('settings' , $json)
         ->with('feedback' , $feedback)
-        ->with('confirmation' ,  $confirmation);
+        ->with('confirmation' ,  $confirmation)
+        ->with('temperature_check' , $temperature_check);
     }
     
     public function customerAdmins(){
@@ -174,6 +177,14 @@ class SettingsController extends Controller{
         }
 
         return $result;
+    }
+
+    public function tempCheckSettings(Request $request){
+        $settings = DB::table('question_view_settings')->updateOrInsert(
+            ['user_id' => user_id()],
+            ['temperature_check' => $request->settings]
+        );
+        return $settings;
     }
     
     public function accountDetails(Request $request){

@@ -23,15 +23,17 @@
                             </section>
                         @endforeach
                         
-                        <section class="et_section_none">
-                            <div class="choiceContainer" >
-                            <h3 class="mb-4 font-weight-bold">{{'Temperature Check'}}</h3>
-                            <span> <p> <h2>My temperature has been tested on entry today and the result was:</h2> </p> </span>
-                                <div>
-                                    <input step=".1"type="number" name="name" class="form-control freetext tp" data-idx="temperature"></input>
+                        @if ($temp_check_enabled)
+                            <section class="et_section_none">
+                                <div class="choiceContainer" >
+                                <h3 class="mb-4 font-weight-bold">{{'Temperature Check'}}</h3>
+                                <span> <p> <h2>My temperature has been tested on entry today and the result was:</h2> </p> </span>
+                                    <div>
+                                        <input step=".1"type="number" name="name" class="form-control freetext tp" data-idx="temperature"></input>
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
+                            </section>        
+                        @endif
                         
                     </div>
 
@@ -62,7 +64,7 @@
         $('.et_btn_cancel').on('click' ,function(){
             $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
             $.ajax({
-                url :"{{route('cancelSignin' , $visitor_id)}}",
+                url : '/trakr/visitor/cancel/'+"{{$visitor_id}}"+'/'+"{{$user_id}}",
                 type : 'GET',
                 success : function(response){
                     if (response.status == 'success') {
@@ -139,19 +141,21 @@
             var user_id = "{{$user_id}}";
             var question_id = "{{$question_id}}";
             var visitor_id = "{{$visitor_id}}";
+            var temp = false;
             
-            if (typeof answers['temperature'] === 'undefined') {
-                return alert('Temperature is required.');
-            }
-            
-            var temp = answers['temperature'].answer;
+            @if ($temp_check_enabled)
+                if (typeof answers['temperature'] === 'undefined') {
+                    return alert('Temperature is required.');
+                }    
+                var temp = answers['temperature'].answer;
+            @endif
             
             $.ajax({
                 url : "{{route('stepperSave')}}",
                 type: 'POST',
                 data : {
                     answers : data , 
-                    temp:  temp , 
+                    temp:  temp ? temp : 0 , 
                     user_id : user_id , 
                     question_id: question_id , 
                     visitor_id : visitor_id
