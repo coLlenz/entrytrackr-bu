@@ -113,11 +113,11 @@ class AdminController extends Controller
             return view('admin.clients.edit')->with('id' , $client_data);
         }
     }
-    
+
     public function updateClient(Request $request, User $id){
         if ($request->input('password')) {
             $this->validate($request, [
-                'email' => 'required|unique:users',
+                'email' => 'required|unique:users,email,' . $id->id,
                 'name' => 'required',
                 'cname' => 'required',
                 'password' => 'min:8|required_with:confirmpassword|same:confirmpassword',
