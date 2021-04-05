@@ -46,7 +46,7 @@
     </style>
 </head>
 
-<body id="app-container" class="menu-default show-spinner">
+<body id="app-container" class="menu-default show-spinner fullscreen_window">
     <div class="bg" style=""></div>
     <img src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/img/entrytrakr-white.png" style="position: absolute;margin-top: -80px; width: 10rem; height:auto;"  class="ml-3">
     <div id="app" style="">
