@@ -16,11 +16,26 @@ use Session;
 class SettingsController extends Controller{
     
     public function index(){
+        $default_temp_check = true;
         $settings = DB::table('question_view_settings')->select('auto_sign_out' , 'feedback_settings' , 'confirmation_msg' , 'temperature_check')->where('user_id' , user_id())->first();
-        $json = $settings->auto_sign_out ? json_decode($settings->auto_sign_out) : [];
-        $feedback = $settings->feedback_settings ? json_decode($settings->feedback_settings) : [];
-        $confirmation = $settings->confirmation_msg ? json_decode($settings->confirmation_msg) : [];
-        $temperature_check =  isset($settings->temperature_check) && $settings->temperature_check == 1 ? 1 : false;
+        $json = isset($settings->auto_sign_out) ? json_decode($settings->auto_sign_out) : [];
+        $feedback = isset($settings->feedback_settings) ? json_decode($settings->feedback_settings) : [];
+        $confirmation = isset($settings->confirmation_msg) ? json_decode($settings->confirmation_msg) : [];
+        
+        if (!isset($settings->temperature_check) ) {
+            $temperature_check = 1;
+        }
+
+        if (isset($settings->temperature_check) && $settings->temperature_check == 1 ) {
+            $temperature_check = 1;
+        }
+
+        if (isset($settings->temperature_check)  && $settings->temperature_check == 0 ) {
+            $temperature_check = 0;
+        }
+
+
+        // $temperature_check =  isset($settings->temperature_check) && $settings->temperature_check == 1 ? 1 : $default_temp_check;
         
         return view('profile.show')
         ->with('settings' , $json)
