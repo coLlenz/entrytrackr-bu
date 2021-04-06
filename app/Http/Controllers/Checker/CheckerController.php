@@ -84,7 +84,7 @@ class CheckerController extends Controller
         }
     }
 
-    public function allowTempRecord( $user_id ){
+    public static function allowTempRecord( $user_id ){
         $settings = DB::table('question_view_settings')
         ->select('temperature_check')
         ->where('user_id' , $user_id)
