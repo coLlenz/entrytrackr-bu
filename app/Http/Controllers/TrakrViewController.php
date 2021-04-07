@@ -97,7 +97,7 @@ class TrakrViewController extends Controller
                         'type_of_visitor' => $visitor->trakr_type_id,
                         'trakrid' => $visitor->id,
                         'questions' => $this->getVisitorQuestions(  $visitor->user_id  , $visitor->trakr_type_id),
-                        'allowTempRecord' => CheckerController::allowTempRecord( user_id() ),
+                        'allowTempRecord' => CheckerController::allowTempRecord( $userid ),
                         'report_log' => $report_log_result_id
                     ],200);
             }
@@ -144,7 +144,7 @@ class TrakrViewController extends Controller
                         'type_of_visitor' => $trakr_new->trakr_type_id,
                         'trakrid' => $trakr_new->id,
                         'questions' => $this->getVisitorQuestions(  $trakr_new->user_id  , $trakr_new->trakr_type_id ),
-                        'allowTempRecord' => CheckerController::allowTempRecord( user_id() ),
+                        'allowTempRecord' => CheckerController::allowTempRecord( $userid ),
                         'report_log' => $report_log_result_id
                 ],200);
             }else{
@@ -247,7 +247,7 @@ class TrakrViewController extends Controller
                     'type_of_visitor' => $check_in_data->trakr_type_id,
                     'trakrid' => $check_in_data->id,
                     'questions' => $this->getVisitorQuestions(  $check_in_data->user_id  , $check_in_data->trakr_type_id),
-                    'allowTempRecord' => $checker->allowTempRecord( user_id() ),
+                    'allowTempRecord' => $checker->allowTempRecord( $user_id ),
                     'report_log' => $report_log_result_id
                 ] , 200);
         }else{
@@ -295,8 +295,10 @@ class TrakrViewController extends Controller
             //get user datas
             if (isset($request->trakrid) && !empty($request->trakrid)) {
                 
-                $trakr = Trakr::where(['trakr_id' => $request->trakrid , 'user_id' => $user_id])->first();
-                
+                $trakr = Trakr::whereRaw("BINARY trakr_id = '$request->trakrid' ")
+                ->where('user_id' , $user_id)
+                ->first();
+            
             }else{
                 
                 $trakr = Trakr::where([
