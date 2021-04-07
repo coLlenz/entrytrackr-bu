@@ -24,7 +24,7 @@ class CheckerController extends Controller
         $firstname = isset($conditions['first_name']) ? $conditions['first_name'] : "";
         $lastname = isset($conditions['last_name']) ? $conditions['last_name'] : "";
         $phoneNumber = isset($conditions['phoneNumber']) ? $conditions['phoneNumber'] : "";
-        $trakr_id = isset($conditions['trakr_id']) ? (string)$conditions['trakr_id'] : "";
+        $trakr_id = isset($conditions['trakr_id']) ? $conditions['trakr_id'] : "";
         $user_id = isset($conditions['user_id']) ? (int)$conditions['user_id'] : "";
         $returndata = [];
         
@@ -42,7 +42,7 @@ class CheckerController extends Controller
             return $query->where('phoneNumber' , $phoneNumber);
         })
         ->when($trakr_id , function ($query , $trakr_id){
-            return $query->where('trakr_id' , $trakr_id);
+            return $query->whereRaw("BINARY trakr_id = '$trakr_id' ");
         })->first();
         
         if ($checker_query) {
