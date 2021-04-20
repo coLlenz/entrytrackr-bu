@@ -14,7 +14,6 @@
         <th>Telephone</th>
         <th>Date & Time of Entry</th>
         <th>Date & Time of Exit</th>
-        <th>Visitor Type</th>
         <th>Assistance Required</th>
         <th>Access</th>
         <th>Visiting/Business</th>
@@ -26,7 +25,6 @@
                     <td class="color-theme-1">{{$trakr->phoneNumber}}</td>
                     <td>{{ \Carbon\Carbon::parse($trakr->check_in_date)->format('d-m-y H:i') }}</td>
                     <td>{{ $trakr->check_out_date ? \Carbon\Carbon::parse($trakr->check_out_date)->format('d-m-y H:i') : 'Pending'}}</td>
-                    <td>{{ $trakr->visitor_type}}</td>
                     <td>{{ $trakr->assistance == 1 ? 'Yes' : 'No'  }}</td>
                     <td>{{ $trakr->status == 'accepted' ? 'Allowed' : 'Denied'  }}</td>
                     <td>
