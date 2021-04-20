@@ -168,7 +168,7 @@ class ReportController extends Controller
         if (isset($request->search)) {
             $search = $request->search;
             $search_filter = DB::table('trakrs')
-            ->select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'report_logs.user_id','trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+            ->select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'report_logs.user_id','report_logs.status','trakrs.phoneNumber' , 'report_logs.check_in_date' , 
             'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
             'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
             ->join('report_logs' , 'report_logs.visitor_id' , '=' , 'trakrs.id')
@@ -265,22 +265,6 @@ class ReportController extends Controller
         
         $data = $filter_query->get();
         
-        if (isset($request->search)) {
-            $search = $request->search;
-            $search_filter = DB::table('trakrs')
-            ->select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'report_logs.user_id','trakrs.phoneNumber' , 'report_logs.check_in_date' , 
-            'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
-            'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
-            ->join('report_logs' , 'report_logs.visitor_id' , '=' , 'trakrs.id')
-            ->where('trakrs.user_id' , user_id())
-            ->where('trakrs.firstName' , 'Like' ,$request->search.'%')
-            ->orWhere('trakrs.lastName' , 'Like' ,$request->search.'%')
-            ->orderBy('report_logs.created_at' , 'DESC' )->get();
-            dd($search_filter);
-            view()->share('data',$search_filter);
-            $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
-            return $pdf->download($filename.'.pdf');
-        }
 
         view()->share('data',$data);
         $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
