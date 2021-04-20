@@ -532,15 +532,17 @@ class ReportController extends Controller
             'tvis' => 'all',
             'acc' => 'all'
         ];
-
-        $search_filter = LogReport::select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+        
+        $search_filter = DB::table('trakrs')
+        ->select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'report_logs.user_id','trakrs.phoneNumber' , 'report_logs.check_in_date' , 
         'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
         'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
-        ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
-        ->where('report_logs.user_id' , user_id() )
-        ->where('trakrs.firstName' , 'like' , $request->search.'%')
-        ->orWhere('trakrs.lastName' , 'like' , $request->search.'%')->paginate(10);
-        
+        ->join('report_logs' , 'report_logs.visitor_id' , '=' , 'trakrs.id')
+        ->where('trakrs.user_id' , user_id())
+        ->where('trakrs.firstName' , 'Like' ,$request->search.'%')
+        ->orWhere('trakrs.lastName' , 'Like' ,$request->search.'%')
+        ->paginate(10);
+
         return view('report.index')->with('table_data' ,$search_filter)->with('formdata' , $formdata);
     }
 }
