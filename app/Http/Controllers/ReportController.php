@@ -144,7 +144,7 @@ class ReportController extends Controller
     }
 
     public function generate_pdf(Request $request){
-
+        $filename = strtotime(date('Y-m-d H:i:s'));
         
         if ( count($request->all()) == 0 ) {
             $date_now = Carbon::now()->timezone( userTz() )->format('Y-m-d 23:59:59');
@@ -167,25 +167,17 @@ class ReportController extends Controller
 
         if (isset($request->search)) {
             $search = $request->search;
-            $filename = strtotime(date('Y-m-d H:i:s'));
-            $search_data = LogReport::select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
-            'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
+            $search_filter = DB::table('trakrs')
+            ->select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'report_logs.user_id','trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+            'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
             'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
-            ->where('report_logs.user_id' , user_id() )
-            ->where('trakrs.firstName' , 'like' , $request->search.'%')
-            ->when( $search , function($query ,  $search){
-
-                return $query->where('trakrs.firstName' , 'like' ,  $search.'%');
-
-            }, function($query){
-
-                return null;
-
-            })
-            ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
+            ->join('report_logs' , 'report_logs.visitor_id' , '=' , 'trakrs.id')
+            ->where('trakrs.user_id' , user_id())
+            ->where('trakrs.firstName' , 'Like' ,$request->search.'%')
+            ->orWhere('trakrs.lastName' , 'Like' ,$request->search.'%')
             ->orderBy('report_logs.created_at' , 'DESC' )->get();
-
-            view()->share('data', $search_data);
+            
+            view()->share('data',$search_filter);
             $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
             return $pdf->download($filename.'.pdf');
         }
@@ -198,7 +190,6 @@ class ReportController extends Controller
         $type_of_visitor = $request->input('tvis') ? $request->input('tvis') : '';
         $status = $request->input('acc') ? $request->input('acc') : '';
         $signin_status = $request->input('signin');
-        $filename = strtotime(date('Y-m-d H:i:s'));
         $filter_query = LogReport::query();
         
         $filter_query->select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
@@ -274,6 +265,23 @@ class ReportController extends Controller
         
         $data = $filter_query->get();
         
+        if (isset($request->search)) {
+            $search = $request->search;
+            $search_filter = DB::table('trakrs')
+            ->select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'report_logs.user_id','trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+            'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
+            'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
+            ->join('report_logs' , 'report_logs.visitor_id' , '=' , 'trakrs.id')
+            ->where('trakrs.user_id' , user_id())
+            ->where('trakrs.firstName' , 'Like' ,$request->search.'%')
+            ->orWhere('trakrs.lastName' , 'Like' ,$request->search.'%')
+            ->orderBy('report_logs.created_at' , 'DESC' )->get();
+            dd($search_filter);
+            view()->share('data',$search_filter);
+            $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
+            return $pdf->download($filename.'.pdf');
+        }
+
         view()->share('data',$data);
         $pdf = PDF::loadView('pdf.report_pdf')->setPaper('a4', 'landscape');;
         return $pdf->download($filename.'.pdf');
@@ -372,22 +380,16 @@ class ReportController extends Controller
 
         if (isset($request->search)) {
             $search = $request->search;
-            $search_data = LogReport::select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'trakrs.phoneNumber' , 'report_logs.check_in_date' , 
-            'report_logs.check_out_date' , 'report_logs.assistance', 'report_logs.area_access',
+            $search_filter = DB::table('trakrs')
+            ->select('trakrs.id as visitor_id','trakrs.firstName','trakrs.lastName' ,'report_logs.trakr_type_id' ,'report_logs.user_id','trakrs.phoneNumber' , 'report_logs.check_in_date' , 
+            'report_logs.check_out_date' , 'report_logs.assistance','report_logs.area_access',
             'report_logs.status' , 'report_logs.who' , 'report_logs.name_of_company')
-            ->where('report_logs.user_id' , user_id() )
-            ->when( $search , function($query ,  $search){
-
-                return $query->where('trakrs.firstName' , 'like' ,  $search.'%');
-
-            }, function($query){
-
-                return null;
-                
-            })
-            ->join('trakrs' , 'trakrs.id' , '=' , 'report_logs.visitor_id')
+            ->join('report_logs' , 'report_logs.visitor_id' , '=' , 'trakrs.id')
+            ->where('trakrs.user_id' , user_id())
+            ->where('trakrs.firstName' , 'Like' ,$request->search.'%')
+            ->orWhere('trakrs.lastName' , 'Like' ,$request->search.'%')
             ->orderBy('report_logs.created_at' , 'DESC' )->get();
-            return Excel::download(new ReportExport( $search_data ), $filename);
+            return Excel::download(new ReportExport(  $search_filter ), $filename);
         }
         
        
