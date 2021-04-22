@@ -56,6 +56,11 @@ class AutoSignOutController extends Controller
                             'action' => 1,
                             'created_at' => Carbon::now()
                         ]);
+
+                        $log_report = LogReport::where(['user_id' => $value->user_id , 'visitor_id' => $value->id ])->first();
+                        $log_report->check_out_date = Carbon::now();
+                        $log_report->checked_in_status = 1;
+                        $log_report->save();
                     
                     }
                 }
