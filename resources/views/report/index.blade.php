@@ -155,7 +155,7 @@
                            <div class="float-right">
                            <form action="{{route('searchReport')}}" method="GET" style="display: flex">
                                 <button type="submit" name="button" class="btn btn-primary entry_md_btn mr-2"> Search </button>
-                                <input type="text" name="search" value="{{isset($_GET['search']) ? $_GET['search'] : ''}}" class="form-control" placeholder="Enter name" require>
+                                <input type="text" name="search" value="{{isset($_GET['search']) ? $_GET['search'] : ''}}" class="form-control" placeholder="Enter name" required>
                             </form>
                            </div>
                         </div>
