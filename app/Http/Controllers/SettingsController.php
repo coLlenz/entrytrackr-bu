@@ -134,9 +134,9 @@ class SettingsController extends Controller{
         $result = false;
         
         $settings_data = [
-            'employee' => isset( $request->employee ) ? $request->set_employee : 0,
-            'visitor' => isset( $request->visitor ) ? $request->set_visitor : 0,
-            'contractor' => isset( $request->contractor ) ? $request->set_contractor : 0
+            'employee' => isset( $request->set_employee ) ? $request->set_employee : 0,
+            'visitor' => isset( $request->set_visitor ) ? $request->set_visitor : 0,
+            'contractor' => isset(  $request->set_contractor ) ? $request->set_contractor : 0
         ];
         
         $encode = json_encode( $settings_data );
