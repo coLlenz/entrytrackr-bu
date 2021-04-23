@@ -86,7 +86,6 @@ var toolbarOptions = [
     });
     
     $('#formEditor').on('submit' , function(e){
-        swal.showLoading();
         // editor.getContents() //json data
         // editor.root.innerHTML //
         e.preventDefault();
