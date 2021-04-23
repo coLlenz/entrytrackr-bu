@@ -79,7 +79,6 @@ var toolbarOptions = [
     
     $('#formEditor').on('submit' , function(e){
         e.preventDefault();
-        swal.showLoading();
         var formdata = new FormData();
         formdata.append('_token' , $('input[name=_token]').val());
         formdata.append('title' , $('input[name=template_name]').val());
