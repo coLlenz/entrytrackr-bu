@@ -18,10 +18,10 @@
                                 <p class="font-weight-bold p_line"> Date of Entry:</p> <p class="p_line"> {{ \Carbon\Carbon::parse($results->created_at)->timezone(userTz())->format('d-m-Y H:i') }} </p>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="visitorInfo">
                                 <p class="font-weight-bold p_line" > Questionnaire:</p> <p class="p_line"> {{ $results->question_title }} </p> <br>
-                                <p class="font-weight-bold p_line"> Temperature: </p> <p class="p_line"> {{ $results->temperature }} </p>
+                                <p class="font-weight-bold p_line"> Date of Exit:</p> <p class="p_line"> {{ \Carbon\Carbon::parse($results->created_at)->timezone(userTz())->format('d-m-Y H:i') }} </p>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -31,6 +31,11 @@
                                 @else
                                 <p class="font-weight-bold p_line" > Status:</p> <span class="badge badge-dark">Denied</span>
                                 @endif
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="visitorInfo">
+                                <p class="font-weight-bold p_line"> Temperature: </p> <p class="p_line"> {{ $results->temperature }} </p>
                             </div>
                         </div>
                     </div>

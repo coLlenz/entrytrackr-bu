@@ -249,6 +249,7 @@ class ReportController extends Controller
         ->where('user_id' , user_id() )
         ->orderBy('created_at' , 'DESC')
         ->get();
+        
         $formdata = 'all';
         return view('report.summary')
         ->with('lists' , $lists)
@@ -284,9 +285,11 @@ class ReportController extends Controller
             'template_type' => 0,
         ])->first();
         
-        $results = DB::table('question_logs')->where([
-            'id' =>$log_id
-        ])->first();
+        $results = DB::table('question_logs')
+        ->select('visitor_type' , 'visitor_name' , 'question_title' , 'temperature','freetext','answers' , 'status' , 'created_at')
+        
+        ->where([ 'id' =>$log_id ])
+        ->first();
         
         $results->freetext = $results->freetext ? json_decode($results->freetext) : [];
         $results->answers =$results->answers ? json_decode($results->answers) : [];
