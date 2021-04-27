@@ -55,7 +55,7 @@
     </div>
 </div>
 <script type="text/javascript">
-
+    var trakr_sign_in = false;
     var container = document.getElementById('editor_container');
     var editor = new Quill( container ,{
         theme : 'snow',
@@ -65,8 +65,27 @@
     });
     editor.enable(false);
     
-    $('#simple_checkin').on('click', function() {
-            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    function checkNotification(){
+        $.ajax({
+            url : "{{ $view_data['is_mobile'] ? route('notification-check' , $view_data['userid']) : route('notification-check') }}",
+            method: 'GET',
+            success:function(response){
+                if (response.status == 'success') {
+                    if (response.has_notif) {
+                        var json_content = JSON.parse(response.notif.content_json);
+                        editor.setContents(json_content);
+                        $('#notificationModal').modal({backdrop: 'static', keyboard: false});
+                        trakr_sign_in = true;
+                    }else{
+                        trakrID_SignIn();
+                    }
+                }
+            }
+        })
+    }
+
+    function trakrID_SignIn(){
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
             Swal.fire({
             title: 'Enter your trakrID',
             input: 'text',
@@ -122,6 +141,10 @@
                     }
                 }
             })
+    }
+
+    $('#simple_checkin').on('click', function() {
+        checkNotification();
     })
     // forms;
     let form = document.getElementById("form_checkin");
@@ -257,6 +280,7 @@
     });
     
     $('#modalCheckin').on('click' , function() {
+        trakr_sign_in = false;
         $.ajax({
             url : "{{ $view_data['is_mobile'] ? route('notification-check' , $view_data['userid']) : route('notification-check') }}",
             method: 'GET',
@@ -277,7 +301,9 @@
     
     $('#continue').on('click' , function() {
         $('#notificationModal').modal('toggle');
-        signIn();
+        
+        trakr_sign_in ?  trakrID_SignIn() : signIn()
+        
     });
     
     function signIn(){
