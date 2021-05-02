@@ -381,6 +381,11 @@
                 <input type="hidden" name="timezone" value="{{ $view_data['timezone'] }}">
                 @endif
                 @csrf
+
+                <div style="max-width: 0; max-height: 0; overflow: hidden;">
+                    <input autofocus="true" readonly/>
+                </div>
+
                 <div class="form-group sign_in_box">
                     <label for="first_name" class="col-form-label">First Name</label>
                     <input type="text" class="form-control" name="first_name" required>
@@ -409,7 +414,7 @@
                     <label for="trakrid" class="col-form-label font-weight-bold ">Sign Out with trakrID</label>
                     <input type="text" class="form-control" name="trakrid" required>
                 </div>
-                
+            
                 <div class="modal-footer">
                     <button type="button" class="et_btn et_btn_secondary cancel_btn_out btn_entry">Cancel</button>
                     <button type="submit" class="et_btn et_btn_clored save_check_out btn_entry">Sign Out</button>
