@@ -19,6 +19,7 @@
                         <div class="mb-2">
                             <input type="date" class="form-control" name="edate" value="{{$formdata['edate']}}">
                         </div>
+
                         <h6 class="card-title font-bold mb-2"> Entry status  </h6>
                         <div class="vs-radio-con vs-radio-primary mb-1">
                             <input type="radio" name="signin"  {{ ($formdata['signin'] == 'all') ? 'checked' : '' }} value="all" >
@@ -38,7 +39,7 @@
                             <span style="font-size:13px">Signed in</span>
                         </div>
 
-                        <div class="vs-radio-con vs-radio-primary mb-1">
+                        <div class="vs-radio-con vs-radio-primary mb-3">
                             <input type="radio" name="signin" {{ ($formdata['signin'] == 1) ? 'checked' : '' }} value="1" >
                             <span class="vs-radio">
                                 <span class="vs-radio--border"></span>
@@ -147,8 +148,16 @@
                     <div class="card-body card-dashboard">
                         <div class="card-header">
                             <h4>Visitor Log</h4>
-                            <p>Visitor entry and exit records for the past 7 days are shown below.<br/>
+                           <div class="float-left">
+                           <p>Visitor entry and exit records for the past 7 days are shown below.<br/>
                             Use the filter options to change the date range and adjust the information that is displayed.</p>
+                           </div>
+                           <div class="float-right">
+                           <form action="{{route('searchReport')}}" method="GET" style="display: flex">
+                                <button type="submit" name="button" class="btn btn-primary entry_md_btn mr-2"> Search </button>
+                                <input type="text" name="search" value="{{isset($_GET['search']) ? $_GET['search'] : ''}}" class="form-control" placeholder="Enter name" required>
+                            </form>
+                           </div>
                         </div>
                         <div class="table-responsive">
                             <table class="table zero-configuration" id="zero-configuration">
@@ -222,7 +231,7 @@
             </div>
         </div>
     </div>
-    @include( 'report.comment_history_modal' );
+    @include( 'report.comment_history_modal' )
 </section>
 
 @endsection
