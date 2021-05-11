@@ -20,7 +20,7 @@
             <div class="float-right">
                 <form action="{{route('searchSummary')}}" method="GET" style="display: flex">
                     <button type="submit" name="button" class="btn btn-primary entry_md_btn mr-2"> Search </button>
-                    <input type="text" name="search" value="{{isset($_GET['search']) ? $_GET['search'] : ''}}" class="form-control">
+                    <input type="text" name="search" value="{{isset($_GET['search']) ? $_GET['search'] : ''}}" class="form-control" required>
                 </form>
             </div>
         </div>
@@ -61,6 +61,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{$lists->onEachSide(1)->links()}}
                     <h3 class="text-center"> <i> {{ $lists->isEmpty() ? 'No Results' : ''}} </i> </h3>
                 </div>
             </div>
