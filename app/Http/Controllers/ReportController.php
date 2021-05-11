@@ -275,7 +275,7 @@ class ReportController extends Controller
         $lists = DB::table('question_logs')
         ->where('user_id' , user_id() )
         ->orderBy('created_at' , 'DESC')
-        ->get();
+        ->paginate(20);
         $formdata = 'all';
         return view('report.summary')
         ->with('lists' , $lists)
@@ -291,13 +291,13 @@ class ReportController extends Controller
             ->where('visitor_type' ,'>',0)
             ->where('user_id' , user_id())
             ->orderBy('created_at' , 'DESC')
-            ->get();
+            ->paginate(20);
         }else {
             $lists = DB::table('question_logs')
             ->where('visitor_type' , $type)
             ->where('user_id' , user_id())
             ->orderBy('created_at' , 'DESC')
-            ->get();
+            ->paginate(20);
         }
         
         return view('report.summary')
