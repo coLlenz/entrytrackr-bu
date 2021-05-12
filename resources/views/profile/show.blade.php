@@ -310,7 +310,7 @@
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
-                title: 'Changes has been saved.',
+                title: 'Changes have been saved.',
                 showConfirmButton: false,
                 timer: 2000
             })

@@ -74,7 +74,7 @@ class AdminController extends Controller
         $users = User::where('is_admin' , '=' , 0)->where('status' , 0)
         ->where('sub_account' , 0)
         ->where('sub_account_id' , 0)
-        ->orderBy('created_at' , 'DESC')->get();
+        ->orderBy('created_at' , 'DESC')->paginate(10);
         return view('admin.clients.index')->with('users' ,$users );
     }
     
