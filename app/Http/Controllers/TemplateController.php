@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Carbon\Carbon;
+use Session;
+
 class TemplateController extends Controller
 {
 
@@ -243,5 +245,28 @@ class TemplateController extends Controller
     public function deactivate($tempalte_id){
         DB::table('template_copy')->where('id' , $tempalte_id)->update(["status"=> 0]);
         return redirect()->route("template-index")->with('success', 'Template Deactivated Successfully');
+    }
+
+    public function copyTemplate($template){
+        $template_data = DB::table('template_copy')->where('id' , $template)->first();
+
+        $new_template = DB::table('template_copy')->insert([
+            'user_id' => $template_data->user_id,
+            'title'   => $template_data->title.'(Copy)',
+            'description' => $template_data->description,
+            'content_html' => $template_data->content_html,
+            'content_json' => $template_data->content_json,
+            'questions' => $template_data->questions,
+            'questions_to_flg' => $template_data->questions_to_flg,
+            'template_type' => $template_data->template_type,
+            'status' => 0,
+        ]);
+        
+        if ($new_template) {
+            Session::flash('message', 'New template added.'); 
+            return redirect()->back();
+        }
+        
+        
     }
 }

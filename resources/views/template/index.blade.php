@@ -14,6 +14,9 @@
 </div>
 <div class="card">
     <div class="card-body">
+        @if(Session::has('message'))
+            <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
+        @endif
         <table class="table ">
             <thead>
                 <tr>
@@ -35,7 +38,6 @@
                         <td>{{$template->template_type == 1 ? 'Notification' : 'Questionnaire' }}</td>
                         <td>{{ \Carbon\Carbon::parse($template->created_at)->format('d-m-Y H:i') }}</td>
                         <td>{{ \Carbon\Carbon::parse($template->updated_at)->format('d-m-Y H:i') }}</td>
-                        @if(!auth()->user()->is_admin)
                         <td class="text-center">
                             @if($template->status)
                                 <span class="badge badge-primary mb-1">Active</span>
@@ -43,7 +45,6 @@
                                 <span class="badge badge-warning mb-1">Disabled</span>
                             @endif
                         </td>
-                        @endif
                         <td class="text-center">
                         <button class="btn btn-primary dropdown-toggle mb-1" type="button"
                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
@@ -52,25 +53,22 @@
                         </button>
                         @if($template->template_type == 1)
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @if( !auth()->user()->is_admin )
-                                @if($template->status)
+                            @if($template->status)
                                 <a class="dropdown-item" href="{{route("deactivate",$template->id)}}">Deactivate</a>
                                 @else
                                 <a class="dropdown-item" href="{{route("activate",$template->id)}}">Activate</a>
-                                @endif
                             @endif
                             <a class="dropdown-item" href="{{route("notification-edit",$template->id)}}">Edit</a>
                             <a class="dropdown-item" href="{{route("template-delete",$template->id)}}">Delete</a>
                         </div>
                         @else
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @if( !auth()->user()->is_admin )
-                                @if($template->status)
+                            @if($template->status)
                                 <a class="dropdown-item" href="{{route("deactivate",$template->id)}}">Deactivate</a>
                                 @else
                                 <a class="dropdown-item" href="{{route("change_status",$template->id)}}">Activate</a>
-                                @endif
                             @endif
+                            <a class="dropdown-item" href="{{route("copy-template",$template->id)}}">Copy</a>
                             <a class="dropdown-item" href="{{route("question-edit",$template->id)}}">Edit</a>
                             <a class="dropdown-item" href="{{route("template-delete",$template->id)}}">Delete</a>
                         </div>
