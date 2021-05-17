@@ -11,7 +11,9 @@
 
 
     <a class="navbar-logo" href="/">
-        <span class="logo d-none d-xs-block"></span>
+        <span class="logo d-none d-xs-block">
+            <img src="{{ url('img/logo-black.svg') }}" alt="" class="et_logo">
+        </span>
         <span class="logo-mobile d-block d-xs-none"></span>
     </a>
 

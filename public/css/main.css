@@ -320,4 +320,9 @@ body.show-spinner::after{
     border: 1px solid #922c88!important;
 }
 
+.logo .et_logo{
+    width: 200px;
+    height: 35px;
+}
+
 
