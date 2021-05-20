@@ -94,6 +94,11 @@ Route::prefix('templates')->middleware(['auth', 'verified'])->group(function () 
 	Route::get('/question/change_status/{id}', [TemplateController::class, 'QuestionChangeStatus'])->name("change_status");
 	Route::post('/add', [TemplateController::class, 'save_new_notifications'])->name("template-store");
 	Route::get('/delete/{template}', [TemplateController::class, 'destroy'])->name("template-delete");
+	Route::get('/test-ordering' , function() {
+		$data = DB::table('template_copy')->where('id' , 69)->first();
+		$questions = json_decode( $data->questions );
+		return view('template.ordering')->with('questions' , $questions);
+	});
 });
 Route::prefix('trakr')->group(function () {
 	Route::get('/notification-checking/{userid?}' , [TrakrViewController::class , 'notificationCheck'])->name('notification-check');
