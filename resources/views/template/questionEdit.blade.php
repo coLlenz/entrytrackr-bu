@@ -23,7 +23,6 @@
                     <div class="form-group">
                         <textarea class="form-control" name="question_description"  rows="3" placeholder="Description here...">{{$template->description}} </textarea>
                     </div>
-                    @if( !auth()->user()->is_admin )
                     <div class="form-check form-check-inline">
                         <input type="checkbox" class="form-check-input" id="visitor" name="toVisitor" value=1 {!! in_array('1', $template->questions_to_flg ) ? 'checked' : '' !!} >
                         <label class="form-check-label" for="visitor">Visitor</label>
@@ -36,7 +35,6 @@
                         <input type="checkbox" class="form-check-input" id="employee"  name="toVisitor" value=3 {!! in_array('3', $template->questions_to_flg ) ? 'checked' : '' !!}>
                         <label class="form-check-label" for="employee">Employee</label>
                     </div>
-                    @endif
                     <hr/>
                     <div id="generated_container">
                         {!!html_entity_decode($template->content_html)!!}
@@ -50,6 +48,12 @@
 <script type="text/javascript" src="{{ asset('js/vendor/jquery-3.3.1.min.js') }}"></script>
 <script src="{{ asset('js/vendor/sweetalert2@10.js')}}"></script>
 <script src="{{ asset('js/question.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
+<script>
+    $('#generated_container').sortable();
+    
+</script>
 <script type="text/javascript">
     //set question from database;
     myQuestions = {!! $template->questions !!};
