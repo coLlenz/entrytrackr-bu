@@ -6,8 +6,10 @@
             <div class="col-12 col-md-6 mx-auto my-auto">
                 <div class="card auth-card">
                     <div class="card-body">
-                        <a href="/">
-                            <span class="logo-single"></span>
+                        <a href="/" style="margin-bottom:10px">
+                        <span class="logo d-none d-xs-block mb-4">
+                            <img src="https://qrlogins.s3-ap-southeast-2.amazonaws.com/img/logo-black.svg" alt="" class="">
+                        </span>
                         </a>
                         <h6 class="mb-4">Login</h6>
                         <form method="POST" action="{{ route('login') }}">
