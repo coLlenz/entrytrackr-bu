@@ -68,6 +68,7 @@ Route::prefix('settings')->middleware(['auth', 'verified'])->group(function () {
 	Route::post('/temp-check' , [SettingsController::class , 'tempCheckSettings'])->name('tempCheckSettings');
 	Route::post('/get-account-details' , [SettingsController::class , 'accountDetails'])->name('accountDetails');
 	Route::post('/save-account-details' , [SettingsController::class , 'accountDetailsSave'])->name('accountDetailsSave');
+	Route::post('/set-audio-settings' , [SettingsController::class , 'audioSettings'])->name('audioSettings');
 });
 
 Route::prefix('trakrid')->middleware(['auth', 'verified'])->group(function () {

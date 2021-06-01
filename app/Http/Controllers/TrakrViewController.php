@@ -524,7 +524,8 @@ class TrakrViewController extends Controller
                 'status' => 'success',
                 'examStatus' => false, 
                 'logs' => $logs ? true : false, 
-                'report_log' => $report_result ? true : false
+                'report_log' => $report_result ? true : false,
+                'playAudio' => CheckerController::playAudio( $trakr->user_id ),
                 ],200);
 
         }else{
@@ -549,7 +550,8 @@ class TrakrViewController extends Controller
                     'trakrid' => $trakr->id,
                     'examStatus' => true,
                     'logs' => $logs ? true : false,
-                    'report_log' => $report_log ? true : false
+                    'report_log' => $report_log ? true : false,
+                    'playAudio' => CheckerController::playAudio( $trakr->user_id ),
             ],200);
         }
     }

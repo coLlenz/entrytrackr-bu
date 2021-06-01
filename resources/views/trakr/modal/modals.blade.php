@@ -795,7 +795,7 @@ var soundID = "Thunder";
                 if (response.examStatus) {
                     createTrakrID(response);
                 }else{
-                    playSound("denied");
+                   
                     var time_set = "{{ isset($view_data['msg_timer']->accessdenied) && $view_data['msg_timer']->accessdenied != 0 ? $view_data['msg_timer']->accessdenied : 5 }}";
                     var timer = time_set * 1000;
                     Swal.fire({
@@ -809,6 +809,11 @@ var soundID = "Thunder";
                         timer: timer ,
                         footer: '<p> This message will automatically close in '+ time_set +' seconds. </p>'
                     })
+                    
+                    if(response.playAudio){
+                        playSound("denied");
+                    }
+
                     // form[0].reset();
                 }
             }
