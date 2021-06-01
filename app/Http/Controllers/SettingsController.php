@@ -17,22 +17,24 @@ class SettingsController extends Controller{
     
     public function index(){
         $default_temp_check = true;
-        $settings = DB::table('question_view_settings')->select('auto_sign_out' , 'feedback_settings' , 'confirmation_msg' , 'temperature_check')->where('user_id' , user_id())->first();
+        $settings = DB::table('question_view_settings')->select('auto_sign_out' , 'feedback_settings' , 'confirmation_msg' , 'temperature_check' , 'sound_setting')->where('user_id' , user_id())->first();
         $json = isset($settings->auto_sign_out) ? json_decode($settings->auto_sign_out) : [];
         $feedback = isset($settings->feedback_settings) ? json_decode($settings->feedback_settings) : [];
         $confirmation = isset($settings->confirmation_msg) ? json_decode($settings->confirmation_msg) : [];
-        
-        if (!isset($settings->temperature_check) ) {
-            $temperature_check = 1;
-        }
+        $audio = $settings->sound_setting ? $settings->sound_setting : null;
+        $temperature_check = $settings->temperature_check ? $settings->temperature_check : null;
 
-        if (isset($settings->temperature_check) && $settings->temperature_check == 1 ) {
-            $temperature_check = 1;
-        }
+        // if (!isset($settings->temperature_check) ) {
+        //     $temperature_check = 1;
+        // }
 
-        if (isset($settings->temperature_check)  && $settings->temperature_check == 0 ) {
-            $temperature_check = 0;
-        }
+        // if (isset($settings->temperature_check) && $settings->temperature_check == 1 ) {
+        //     $temperature_check = 1;
+        // }
+
+        // if (isset($settings->temperature_check)  && $settings->temperature_check == 0 ) {
+        //     $temperature_check = 0;
+        // }
 
 
         // $temperature_check =  isset($settings->temperature_check) && $settings->temperature_check == 1 ? 1 : $default_temp_check;
@@ -41,7 +43,8 @@ class SettingsController extends Controller{
         ->with('settings' , $json)
         ->with('feedback' , $feedback)
         ->with('confirmation' ,  $confirmation)
-        ->with('temperature_check' , $temperature_check);
+        ->with('temperature_check' , $temperature_check)
+        ->with('audio' , $audio);
     }
     
     public function customerAdmins(){
@@ -239,5 +242,14 @@ class SettingsController extends Controller{
         }
         
         return response()->json(['form_error'=>$validator->errors()->all()]);
+    }
+
+    public function audioSettings(Request $request){
+        $settings = DB::table('question_view_settings')->updateOrInsert(
+            ['user_id' => user_id()],
+            ['sound_setting' => $request->settings]
+        );
+
+        return $settings;
     }
 }

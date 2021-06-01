@@ -311,7 +311,7 @@ body.show-spinner::after{
     cursor: pointer;
 }
 
-.et_pop_switch{
+.et_pop_switch , .audio_settings{
     padding: 0px!important;
     text-align: left;
 }
