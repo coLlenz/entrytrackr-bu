@@ -140,6 +140,21 @@
 
                 <div class="card mb-4">
                     <div class="card-body">
+                        <h4 class="mb-4"> Access Denied Sound Alert </h4>
+                        <p>
+                            Play an audio tone when the 'Access Denied' pop-up screen is displayed.
+                        </p>
+
+                        <div class="custom-switch custom-switch-primary-inverse mb-2 audio_settings">
+                        <p>Off / On</p>
+                            <input class="custom-switch-input audio_set_val" id="audio_set" type="checkbox" name="audio_settings" {{ $audio ? 'checked' : '' }}> 
+                            <label class="custom-switch-btn audio_set_btn" for="audio_set"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
                         <h4 class="mb-4"> Questionnaire Temperature Recording </h4>
                         <p>
                             Include or remove the temperature recording option from questionnaires.
@@ -344,7 +359,27 @@
                 tempCheckAjax(1);
             }
         });
-                
+
+        $('.audio_set_btn').on('click' , function() {
+            if ( $('.audio_set_val').is(':checked') ) {
+                audio_settings(0);
+            }else{
+                audio_settings(1);
+            }
+        })
+        
+        function audio_settings(setting){
+            $.ajax({
+                url: "{{route('audioSettings')}}",
+                type:'POST',
+                data: {settings:setting},
+                success:function(response){
+                    console.log('updated audio');
+                    success();
+                }
+            })
+        }
+        
         function tempCheckAjax(settings){
             $.ajax({
                 url: "{{route('tempCheckSettings')}}",
@@ -352,6 +387,7 @@
                 data: {settings : settings},
                 success:function(response){
                     console.log('updated')
+                    success()
                 }
             })
         }

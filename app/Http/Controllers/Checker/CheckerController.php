@@ -97,5 +97,13 @@ class CheckerController extends Controller
 
         return isset($settings->temperature_check) && $settings->temperature_check == 1 ? true : false;
     }
- 
+
+    public static function playAudio($user_id){
+        $settings = DB::table('question_view_settings')
+        ->select('sound_setting')
+        ->where('user_id' , $user_id)
+        ->first();      
+
+        return isset($settings->sound_setting) && $settings->sound_setting == 1 ? true : false;
+    }
 }
