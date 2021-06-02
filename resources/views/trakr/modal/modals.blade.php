@@ -195,6 +195,9 @@ var soundID = "Thunder";
     $(document).on('submit' , '#form_checkin',function(e) {
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         e.preventDefault();
+
+        $('.save_check_in').prop('disabled' , true);
+
             $.ajax({
                 url : $(this).attr('action'),
                 type: $(this).attr('method'),
@@ -220,6 +223,8 @@ var soundID = "Thunder";
                         $('.invalid-email').show();
                         alert('Please fill out the form properly');
                     }
+
+                    $('.save_check_in').prop('disabled' , false);
                 }
             })
     });
