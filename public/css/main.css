@@ -319,5 +319,11 @@ body.show-spinner::after{
     background: #922c88!important;
     border: 1px solid #922c88!important;
 }
+.btn_entry:disabled{
+    background-color: #6c757d;
+    border-color: #6c757d;
+    cursor: wait;
+    color:#fff;
+}
 
 
