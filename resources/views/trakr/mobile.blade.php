@@ -2,6 +2,7 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/vendor/quill.snow.css') }}" />
 <script src="{{ asset('js/vendor/jquery-3.3.1.min.js')}}"></script>
+<script src="{{ asset('js/sound_effect.js')}}"></script>
 <style media="screen">
 /* .trakr_box_hover:hover{
      transform: scale(1.1);

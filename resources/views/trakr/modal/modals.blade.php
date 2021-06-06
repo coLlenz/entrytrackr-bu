@@ -55,6 +55,8 @@
     </div>
 </div>
 <script type="text/javascript">
+var soundID = "Thunder";
+    
     var trakr_sign_in = false;
     var container = document.getElementById('editor_container');
     var editor = new Quill( container ,{
@@ -793,6 +795,7 @@
                 if (response.examStatus) {
                     createTrakrID(response);
                 }else{
+                    playSound("denied");
                     var time_set = "{{ isset($view_data['msg_timer']->accessdenied) && $view_data['msg_timer']->accessdenied != 0 ? $view_data['msg_timer']->accessdenied : 5 }}";
                     var timer = time_set * 1000;
                     Swal.fire({
