@@ -1,3 +1,11 @@
+<style>
+    @media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+        .swal2-popup {
+            font-size: 12px!important;
+        }
+    }
+</style>
 <div class="checkin">
     <!-- Modal -->
     <div class="modal fade" id="checkinModal" tabindex="-1" role="dialog" aria-labelledby="checkin" aria-hidden="true">
