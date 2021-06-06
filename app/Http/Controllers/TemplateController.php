@@ -252,7 +252,7 @@ class TemplateController extends Controller
 
         $new_template = DB::table('template_copy')->insert([
             'user_id' => $template_data->user_id,
-            'title'   => $template_data->title.' Copy',
+            'title'   => $template_data->title.' COPY',
             'description' => $template_data->description,
             'content_html' => $template_data->content_html,
             'content_json' => $template_data->content_json,
